@@ -1,10 +1,15 @@
-import { Button, Center, HStack } from "@chakra-ui/react";
+import SlideShow from "@/components/slide-show/SlideShow";
+import { fetchSlideShow } from "@/lib/actions/fetchDataMovie";
 
-const Page = () => {
+const Page = async () => {
+  // const data = await fetchSlideShow();
+  // console.log(data);
+
   return (
-    <Center>
-      <h1>Hello world</h1>
-    </Center>
+    <div>
+      <SlideShow />
+      <div></div>
+    </div>
   );
 };
 
