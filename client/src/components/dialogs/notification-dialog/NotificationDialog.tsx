@@ -8,12 +8,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-interface NotifyDialogProps {
+interface NotificationDialogProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const NotifyDialog = ({ isOpen, onClose }: NotifyDialogProps) => {
+const NotifyDialog = ({ isOpen, onClose }: NotificationDialogProps) => {
   return (
     <DialogRoot open={isOpen} onOpenChange={onClose}>
       <DialogContent padding={1}>

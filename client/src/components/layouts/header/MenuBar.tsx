@@ -15,13 +15,13 @@ const MenuBar = () => {
   if (windowWidth < 1024) return null;
 
   return (
-    <ul className="flex items-center gap-2">
-      <li className="text-sm text-green-50 relative transition-all hover:text-[#0891b2]">
+    <ul className="flex items-center gap-2 text-gray-50">
+      <li className="text-sm relative transition-all hover:text-[#f1c40f]">
         <Link href="#" className="p-2">
           Phim lẻ
         </Link>
       </li>
-      <li className="text-sm text-green-50 relative transition-all hover:text-[#0891b2]">
+      <li className="text-sm relative transition-all hover:text-[#f1c40f]">
         <Link href="#" className="p-2">
           Phim bộ
         </Link>

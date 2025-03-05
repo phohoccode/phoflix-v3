@@ -1,7 +1,9 @@
-type TypeSystemSlice = {
+type SystemSlice = {
   isOpenModalSearch: boolean;
   isOpenModalNotification: boolean;
   isOpenDrawer: boolean;
   windowWidth: number;
-  loaded: boolean;  
-}
+  loaded: boolean;
+  lastScrollY: number;
+  isVisiable: boolean;
+};

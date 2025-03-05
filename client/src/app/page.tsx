@@ -1,16 +1,7 @@
-import SlideShow from "@/components/slide-show/SlideShow";
-import { fetchSlideShow } from "@/lib/actions/fetchDataMovie";
+import Home from "@/components/client-render-page/home/Home";
 
-const Page = async () => {
-  // const data = await fetchSlideShow();
-  // console.log(data);
-
-  return (
-    <div>
-      <SlideShow />
-      <div></div>
-    </div>
-  );
+const Page = () => {
+  return <Home />;
 };
 
 export default Page;

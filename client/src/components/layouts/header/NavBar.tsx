@@ -4,7 +4,7 @@ import { Box } from "@chakra-ui/react";
 import Link from "next/link";
 import SearchButton from "./SearchButton";
 import AuthButton from "./AuthButton";
-import NotifyButton from "./NotifyButton";
+import NotificationButton from "./NotificationButton";
 import AvartarUser from "./AvatarUser";
 import MenuBar from "./MenuBar";
 import BarButton from "./BarButton";
@@ -14,18 +14,23 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 const NavBar = () => {
-  const { loaded, windowWidth } = useSelector(
+  const { loaded, windowWidth, isVisiable, lastScrollY } = useSelector(
     (state: RootState) => state.system
   );
 
   return (
-    <header className="flex  items-center justify-between pl-4 pr-4 h-14 fixed left-0 right-0 top-0 z-50 bg-transparent">
+    <header
+      className={`flex items-center justify-between fixed left-0 right-0 top-0 z-50 h-14 
+        bg-transparent pl-4 pr-4 transition-all 
+        ${isVisiable ? "translate-y-0" : "-translate-y-full"} 
+        ${lastScrollY > 0 ? "backdrop-blur" : ""}`}
+    >
       <Box className="flex items-center gap-6">
         {loaded && <BarButton />}
         {windowWidth > 456 && (
           <Link
             href="/"
-            className="text-[#0891b2] font-bold lg:text-lg text-sm"
+            className="text-[#f1c40f] font-bold lg:text-lg text-sm"
           >
             PHOFLIX-V3
           </Link>
@@ -34,7 +39,7 @@ const NavBar = () => {
       </Box>
       <Box className="flex items-center gap-4">
         <SearchButton />
-        <NotifyButton />
+        <NotificationButton />
         <AuthButton />
         {windowWidth > 1024 && <AvartarUser />}
       </Box>

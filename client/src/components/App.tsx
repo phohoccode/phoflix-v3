@@ -9,16 +9,22 @@ import {
   setIsOpenDrawer,
   setIsOpenModalNotification,
   setIsOpenModalSearch,
+  setIsVisiable,
+  setLastScrollY,
   setLoaded,
   setWidth,
 } from "@/store/slices/systemSlice";
-import NotifyDialog from "./dialogs/notify-dialog/NotifyDialog";
+import NotifyDialog from "./dialogs/notification-dialog/NotificationDialog";
 import { useEffect } from "react";
 import DrawerCustom from "./drawer/DrawerCustom";
 
 const App = ({ children }: { children: React.ReactNode }) => {
-  const { isOpenModalNotification, isOpenModalSearch, isOpenDrawer } =
-    useSelector((state: RootState) => state.system);
+  const {
+    isOpenModalNotification,
+    lastScrollY,
+    isOpenModalSearch,
+    isOpenDrawer,
+  } = useSelector((state: RootState) => state.system);
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
@@ -36,6 +42,24 @@ const App = ({ children }: { children: React.ReactNode }) => {
 
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY > lastScrollY && currentScrollY > 0) {
+        dispatch(setIsVisiable(false));
+      } else {
+        dispatch(setIsVisiable(true));
+      }
+
+      dispatch(setLastScrollY(currentScrollY));
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
 
   return (
     <Box>

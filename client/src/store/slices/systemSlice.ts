@@ -1,11 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState: TypeSystemSlice = {
+const initialState: SystemSlice = {
   isOpenModalSearch: false,
   isOpenModalNotification: false,
   isOpenDrawer: false,
   windowWidth: 0,
   loaded: false,
+  lastScrollY: 0,
+  isVisiable: true,
 };
 
 const systemSlice = createSlice({
@@ -27,6 +29,12 @@ const systemSlice = createSlice({
     setIsOpenDrawer: (state, action) => {
       state.isOpenDrawer = action.payload;
     },
+    setLastScrollY: (state, action) => {
+      state.lastScrollY = action.payload;
+    },
+    setIsVisiable: (state, action) => {
+      state.isVisiable = action.payload;
+    },
   },
 });
 
@@ -34,6 +42,8 @@ export const {
   setIsOpenModalSearch,
   setIsOpenModalNotification,
   setWidth,
+  setIsVisiable,
+  setLastScrollY,
   setIsOpenDrawer,
   setLoaded,
 } = systemSlice.actions;

@@ -11,13 +11,13 @@ const AuthButton = () => {
   return (
     <Box className="flex items-center gap-4">
       <Link href="/auth/login">
-        <Button size={"xs"} colorPalette={"cyan"}>
+        <Button rounded={"full"} size={"sm"} colorPalette={"gray"} variant="solid">
           Đăng nhập
         </Button>
       </Link>
       {windowWidth > 1024 && (
         <Link href="/auth/register">
-          <Button size={"xs"} colorPalette={"cyan"} variant={"surface"}>
+          <Button rounded={"full"} size={"sm"} className="bg-[#ffffff5e]" variant={"solid"}>
             Đăng ký
           </Button>
         </Link>

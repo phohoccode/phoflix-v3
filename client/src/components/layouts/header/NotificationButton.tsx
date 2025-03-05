@@ -6,20 +6,20 @@ import { AppDispatch } from "@/store/store";
 import { IconButton } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 
-const NotifyButton = () => {
+const NotificationButton = () => {
   const dispatch: AppDispatch = useDispatch();
 
   return (
     <IconButton
       onClick={() => dispatch(setIsOpenModalNotification(true))}
-      size={"xs"}
-      variant="surface"
-      colorScheme={"gray"}
-      className="bg-transparent text-gray-50"
+      size={"sm"}
+      variant="solid"
+      className="bg-[#ffffff5e]"
+      rounded={"full"}
     >
       <BellIcon />
     </IconButton>
   );
 };
 
-export default NotifyButton;
+export default NotificationButton;

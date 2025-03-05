@@ -1,8 +1,5 @@
-/* @tailwind base;
-@tailwind components; */
 @tailwind utilities;
 @import "tailwindcss";
-
 
 @theme {
   --font-sans: var(--font-geist-sans);
@@ -23,6 +20,10 @@
 
 body {
   color: var(--foreground);
-  background: var(--background);
+  background: #191b24;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.text-shadow {
+  text-shadow: rgba(0, 0, 0, 0.5) 2px 2px;
 }
