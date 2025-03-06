@@ -7,7 +7,6 @@ import "swiper/css/thumbs";
 import "swiper/css/effect-fade";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import {} from "@/store/asyncThunks/movieAsyncThunk";
 import SlideItem from "./SlideItem";
 import { Skeleton } from "@chakra-ui/react";
 import Error from "../Error";

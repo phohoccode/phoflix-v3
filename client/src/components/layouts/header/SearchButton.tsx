@@ -27,8 +27,8 @@ const SearchButton = () => {
         <IconButton
           onClick={() => dispatch(setIsOpenModalSearch(true))}
           size={"xs"}
-          variant={"surface"}
-          colorScheme={"gray"}
+          className="bg-[#ffffff5e]"
+          variant={"solid"}
         >
           <SearchIcon />
         </IconButton>

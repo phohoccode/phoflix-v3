@@ -18,15 +18,15 @@ const MovieThumbTitle = ({
   href,
   title,
   gradient,
-  error
+  error,
 }: MovieThumbTitleProps) => {
-  // if (loading) return <SkeletonMovieThumbTitle />;
-  // if (error) return null;
+  if (loading) return <SkeletonMovieThumbTitle />;
+  if (error) return null;
 
   return (
     <Box className="flex justify-between items-center gap-2 mb-6">
       <h3
-        className={`lg:text-3xl md:text-2xl text-lg font-bold bg-gradient-to-r ${gradient} inline-block text-transparent bg-clip-text`}
+        className={`lg:text-2xl uppercase md:text-xl text-lg font-bold bg-gradient-to-r ${gradient} inline-block text-transparent bg-clip-text`}
       >
         {title}
       </h3>

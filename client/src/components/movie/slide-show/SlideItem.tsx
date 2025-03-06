@@ -14,24 +14,28 @@ const SlideItem = ({ item }: any) => {
     <Box className="relative before:absolute before:inset-0 before:bg-[url('/images/dotted.png')] before:bg-repeat before:opacity-20 before:z-[1]">
       <Link href={"#"}>
         <Image
-          src={item.thumb_url}
-          alt={item.name}
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src = "/images/placeholder.png";
+          }}
+          src={item?.thumb_url ?? "/images/placeholder.jpg"}
+          alt={item?.name ?? "Không xác định"}
           objectFit="cover"
           loading="lazy"
           className="lg:h-[600px] md:h-[400px] h-[300px] w-full brightness-[0.85]"
         />
       </Link>
 
-      <Box className="absolute bottom-2 left-2 right-2 lg:pl-6 lg:pr-6 lg:pb-20 p-4 slide-in">
-        <h4 className="font-bold lg:text-4xl md:text-2xl bg-gradient-to-r from-[#f1c40f] via-[#22d3ee] to-indigo-400 inline-block text-transparent bg-clip-text text-xl truncate text-center lg:text-left">
-          {item?.name}
+      <Box className="absolute bottom-2 left-2 right-2 lg:pl-6 lg:pr-6 lg:pb-20 p-4 slide-in z-10">
+        <h4 className="font-bold lg:text-4xl md:text-2xl bg-gradient-to-r from-[#f1c40f] via-[#22d3ee] to-indigo-400 block text-transparent bg-clip-text text-xl truncate lg:text-left text-center ">
+          {item?.name ?? "Không xác định"}
         </h4>
-        <Box className="flex gap-2 items-center flex-wrap justify-center lg:justify-start mt-3">
-          <TagClassic text={item?.quality} />
-          <TagClassic text={item?.year} />
-          <TagClassic text={item?.lang} />
-          <TagClassic text={item?.time} />
-          <TagClassic text={item?.episode_current} />
+        <Box className="flex gap-2 items-center flex-wrap lg:justify-start justify-center mt-3">
+          <TagClassic text={item?.quality ?? "Không xác định"} />
+          <TagClassic text={item?.year ?? "Không xác định"} />
+          <TagClassic text={item?.lang ?? "Không xác định"} />
+          <TagClassic text={item?.time ?? "Không xác định"} />
+          <TagClassic text={item?.episode_current ?? "Không xác định"} />
         </Box>
         {windowWidth > 1024 && (
           <>
@@ -39,7 +43,7 @@ const SlideItem = ({ item }: any) => {
               {item?.category?.map((caterogy: any, index: number) => (
                 <TagClassic
                   key={index}
-                  text={caterogy.name}
+                  text={caterogy?.name ?? "Không xác định"}
                   isRedirect
                   href="#"
                 />
@@ -85,7 +89,11 @@ interface TagClassicProps {
   href?: string;
 }
 
-const TagClassic = ({ text, isRedirect, href = "#" }: TagClassicProps) => {
+export const TagClassic = ({
+  text,
+  isRedirect,
+  href = "#",
+}: TagClassicProps) => {
   return (
     <>
       {!isRedirect ? (

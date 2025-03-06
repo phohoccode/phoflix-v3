@@ -3,30 +3,53 @@
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
 
-const SkeletonMovieThumb = () => {
-  const windowWidth = useSelector(
-    (state: RootState) => state.system.windowWidth
-  );
+interface SkeletonMovieThumbProps {
+  orientation: "horizontal" | "vertical";
+}
 
+const SkeletonMovieThumb = ({ orientation }: SkeletonMovieThumbProps) => {
   return (
     <Swiper
-      spaceBetween={20}
       className="movie-slider"
       breakpoints={{
-        320: { slidesPerView: 2 },
-        768: { slidesPerView: 3 },
-        1024: { slidesPerView: 4 },
-        1280: { slidesPerView: 4 },
-        1440: { slidesPerView: 5 },
-        1920: { slidesPerView: 6 },
+        320: {
+          slidesPerView: orientation === "horizontal" ? 2 : 3,
+          spaceBetween: 8,
+        },
+        768: {
+          slidesPerView: orientation === "horizontal" ? 3 : 4,
+          spaceBetween: 8,
+        },
+        1024: {
+          slidesPerView: orientation === "horizontal" ? 3 : 4,
+          spaceBetween: 8,
+        },
+        1280: {
+          slidesPerView: orientation === "horizontal" ? 4 : 5,
+          spaceBetween: 12,
+        },
+        1440: {
+          slidesPerView: orientation === "horizontal" ? 5 : 6,
+          spaceBetween: 16,
+        },
+        1920: {
+          slidesPerView: orientation === "horizontal" ? 6 : 8,
+          spaceBetween: 18,
+        },
       }}
     >
       {[...Array(10)].map((_, index) => (
         <SwiperSlide key={index} className="relative">
-          <Skeleton className="lg:h-48 h-24 w-full rounded-xl" />
+          <Skeleton
+            className={`w-full rounded-xl
+            ${
+              orientation === "horizontal"
+                ? "lg:h-48 md:h-36 h-24"
+                : "lg:h-72 md:h-64 h-48"
+            }
+            `}
+          />
           <SkeletonText noOfLines={1} className="mt-2" />
         </SwiperSlide>
       ))}

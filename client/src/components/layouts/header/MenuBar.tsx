@@ -12,7 +12,7 @@ const MenuBar = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const { windowWidth } = useSelector((state: RootState) => state.system);
 
-  if (windowWidth < 1024) return null;
+  if (windowWidth <= 1024) return null;
 
   return (
     <ul className="flex items-center gap-2 text-gray-50">

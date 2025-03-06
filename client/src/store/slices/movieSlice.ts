@@ -32,6 +32,27 @@ const initialState: MovieSlice = {
       loading: false,
       error: false,
     },
+    vietnameseMovies: {
+      items: [],
+      breadCrumb: [],
+      params: {},
+      loading: false,
+      error: false,
+    },
+    chineseMovies: {
+      items: [],
+      breadCrumb: [],
+      params: {},
+      loading: false,
+      error: false,
+    },
+    koreanMovies: {
+      items: [],
+      breadCrumb: [],
+      params: {},
+      loading: false,
+      error: false,
+    },
   },
 };
 
@@ -57,10 +78,11 @@ const movieSlice = createSlice({
       state.movieData.televisonSeries.loading = true;
       state.movieData.featureFilms.loading = true;
       state.movieData.cartoon.loading = true;
+      state.movieData.vietnameseMovies.loading = true;
+      state.movieData.chineseMovies.loading = true;
+      state.movieData.koreanMovies.loading = true;
     });
     builder.addCase(fetchDataMovie.fulfilled, (state, action) => {
-      console.log(action.payload);
-
       switch (action.payload?.type) {
         case "phim-bo":
           state.movieData.televisonSeries.loading = false;
@@ -77,17 +99,57 @@ const movieSlice = createSlice({
           state.movieData.cartoon.items =
             action.payload?.res?.data?.items ?? [];
           break;
+        case "viet-nam":
+          state.movieData.vietnameseMovies.loading = false;
+          state.movieData.vietnameseMovies.items =
+            action.payload?.res?.data?.items ?? [];
+          break;
+        case "trung-quoc":
+          state.movieData.chineseMovies.loading = false;
+          state.movieData.chineseMovies.items =
+            action.payload?.res?.data?.items ?? [];
+          break;
+        case "han-quoc":
+          state.movieData.koreanMovies.loading = false;
+          state.movieData.koreanMovies.items =
+            action.payload?.res?.data?.items ?? [];
+          break;
+
         default:
           break;
       }
     });
-    builder.addCase(fetchDataMovie.rejected, (state, action) => {
-      state.movieData.televisonSeries.loading = false;
-      state.movieData.televisonSeries.error = true;
-      state.movieData.featureFilms.loading = false;
-      state.movieData.featureFilms.error = true;
-      state.movieData.cartoon.loading = false;
-      state.movieData.cartoon.error = true;
+    builder.addCase(fetchDataMovie.rejected, (state, action: any) => {
+      console.log(action);
+      switch (action.payload?.type) {
+        case "phim-bo":
+          state.movieData.televisonSeries.loading = false;
+          state.movieData.televisonSeries.error = true;
+          break;
+        case "phim-le":
+          state.movieData.featureFilms.loading = false;
+          state.movieData.featureFilms.error = true;
+          break;
+        case "hoat-hinh":
+          state.movieData.cartoon.loading = false;
+          state.movieData.cartoon.error = true;
+          break;
+        case "viet-nam":
+          state.movieData.vietnameseMovies.loading = false;
+          state.movieData.vietnameseMovies.error = true;
+          break;
+        case "trung-quoc":
+          state.movieData.chineseMovies.loading = false;
+          state.movieData.chineseMovies.error = true;
+          break;
+        case "han-quoc":
+          state.movieData.koreanMovies.loading = false;
+          state.movieData.koreanMovies.error = true;
+          break;
+
+        default:
+          break;
+      }
     });
   },
 });
