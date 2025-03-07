@@ -26,6 +26,11 @@ const MenuBar = () => {
           Phim bộ
         </Link>
       </li>
+      <li className="text-sm relative transition-all hover:text-[#f1c40f]">
+        <Link href="#" className="p-2">
+          Phim hoạt hình
+        </Link>
+      </li>
       <li
         className="text-sm flex gap-1 items-center relative p-2 cursor-pointer"
         onMouseEnter={() => setOpenDropdown("country")}

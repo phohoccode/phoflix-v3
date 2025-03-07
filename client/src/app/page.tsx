@@ -1,4 +1,4 @@
-import Home from "@/components/client-render-page/home/Home";
+import Home from "@/components/csr/home/Home";
 
 const Page = () => {
   return <Home />;

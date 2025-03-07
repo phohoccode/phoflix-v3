@@ -38,6 +38,8 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
         const { top, left, width, height } = getPositionElement(
           cuurentElementRef.current
         );
+
+        // lấy vị trí của element hiện tại
         setTooltip({
           top: top + window.scrollY - (height * 1.5) / 2 + height / 2,
           left: left + window.scrollX - (width * 1.5) / 2 + width / 2,
@@ -56,19 +58,15 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
 
   return (
     <Box
-      className="relative "
+      className="relative"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <Link href="#" className="flex flex-col gap-2 group">
         <Box
-          className={`w-full 
-          ${
-            orientation === "horizontal"
-              ? "lg:h-48 md:h-36 sm:h-32 h-26"
-              : "lg:h-72 md:h-64 sm:h-48 h-36"
-          }
-            `}
+          className={`h-0 relative ${
+            orientation === "horizontal" ? "pb-[62%]" : "pb-[150%]"
+          } rounded-xl overflow-hidden`}
         >
           <Image
             onError={({ currentTarget }) => {
@@ -81,11 +79,11 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
             )}
             alt={data?.name ?? "Không xác định"}
             objectFit="cover"
-            className="w-full rounded-xl h-full border border-gray-800 group-hover:brightness-75 transition-all"
+            className="absolute inset-0 w-full h-full rounded-xl border border-gray-800 group-hover:brightness-75 transition-all"
             loading="lazy"
           />
         </Box>
-        <span className="lg:text-sm text-xs text-gray-50 truncate font-semibold group-hover:text-[#f1c40f] transition-all">
+        <span className="lg:text-sm text-xs text-gray-50 truncate group-hover:text-[#f1c40f] transition-all">
           {data?.name}
         </span>
       </Link>

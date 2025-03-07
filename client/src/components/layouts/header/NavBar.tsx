@@ -30,7 +30,7 @@ const NavBar = () => {
         {windowWidth > 456 && (
           <Link
             href="/"
-            className="text-[#f1c40f] font-bold lg:text-lg text-sm"
+            className="text-primary font-bold lg:text-lg text-sm"
           >
             PHOFLIX-V3
           </Link>

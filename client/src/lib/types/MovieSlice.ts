@@ -11,6 +11,12 @@ type SlideItem = {
   year: number;
 };
 
+type Movies = {
+  items: any;
+  loading: boolean;
+  error: boolean;
+};
+
 type MovieSlice = {
   slideShows: {
     items: SlideItem[];
@@ -18,49 +24,21 @@ type MovieSlice = {
     error: boolean;
   };
   movieData: {
-    televisonSeries: {
-      items: any;
-      breadCrumb: any;
-      params: any;
-      loading: boolean;
-      error: boolean;
-    };
-    featureFilms: {
-      items: any;
-      breadCrumb: any;
-      params: any;
-      loading: boolean;
-      error: boolean;
-    };
-    cartoon: {
-      items: any;
-      breadCrumb: any;
-      params: any;
-      loading: boolean;
-      error: boolean;
-    };
-    vietnameseMovies: {
-      items: any;
-      breadCrumb: any;
-      params: any;
-      loading: boolean;
-      error: boolean;
-    };
-    chineseMovies: {
-      items: any;
-      breadCrumb: any;
-      params: any;
-      loading: boolean;
-      error: boolean;
-    };
-    koreanMovies: {
-      items: any;
-      breadCrumb: any;
-      params: any;
-      loading: boolean;
-      error: boolean;
-    };
+    vietnameseMovies: Movies;
+    chineseMovies: Movies;
+    koreanMovies: Movies;
+    actionMovies: Movies;
+    horrorMovies: Movies;
+    emotionalMovies: Movies;
+    familyMovies: Movies;
+    historicalDramaMovies: Movies;
+    scienceFictionMovies: Movies;
   };
+  searchPreview: {
+    items: any;
+    loading: boolean;
+    error: boolean;
+  }
 };
 
 type Categories =

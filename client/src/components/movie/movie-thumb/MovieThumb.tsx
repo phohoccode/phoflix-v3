@@ -8,13 +8,18 @@ import Error from "../Error";
 import "@/assets/css/swiper_custom.css";
 
 interface MovieThumbProps {
-  data: any;
+  items: any;
   loading: boolean;
   error: boolean;
   orientation: "horizontal" | "vertical";
 }
 
-const MovieThumb = ({ data, loading, error, orientation }: MovieThumbProps) => {
+const MovieThumb = ({
+  items,
+  loading,
+  error,
+  orientation,
+}: MovieThumbProps) => {
   if (loading) return <SkeletonMovieThumb orientation={orientation} />;
   if (error) return <Error />;
 
@@ -48,7 +53,7 @@ const MovieThumb = ({ data, loading, error, orientation }: MovieThumbProps) => {
           },
         }}
       >
-        {data?.map((item: any, index: number) => (
+        {items?.map((item: any, index: number) => (
           <SwiperSlide key={index} className="relative">
             <MovieCard data={item} orientation={orientation} />
           </SwiperSlide>

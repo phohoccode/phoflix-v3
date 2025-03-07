@@ -3,6 +3,7 @@
 import { Skeleton, SkeletonText } from "@/components/ui/skeleton";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { Box } from "@chakra-ui/react";
 
 interface SkeletonMovieThumbProps {
   orientation: "horizontal" | "vertical";
@@ -41,15 +42,13 @@ const SkeletonMovieThumb = ({ orientation }: SkeletonMovieThumbProps) => {
     >
       {[...Array(10)].map((_, index) => (
         <SwiperSlide key={index} className="relative">
-          <Skeleton
-            className={`w-full rounded-xl
-            ${
-              orientation === "horizontal"
-                ? "lg:h-48 md:h-36 h-24"
-                : "lg:h-72 md:h-64 h-48"
-            }
-            `}
-          />
+          <Box
+            className={`h-0 relative ${
+              orientation === "horizontal" ? "pb-[62%]" : "pb-[150%]"
+            } rounded-xl overflow-hidden`}
+          >
+            <Skeleton className="absolute inset-0 w-full h-full rounded-xl" />
+          </Box>
           <SkeletonText noOfLines={1} className="mt-2" />
         </SwiperSlide>
       ))}

@@ -65,3 +65,21 @@ export const fetchDataMovie = createAsyncThunk(
     }
   }
 );
+
+// ==================== Fetch data movie detail ==================== //
+// ==================== Fetch data movie preview ==================== //
+interface FetchDataMoviePreview {
+  keyword: string;
+  limit: number;
+}
+
+export const fetchDataMoviePreview = createAsyncThunk(
+  "movie/fetchDataMoviePreview",
+  async ({ keyword, limit }: FetchDataMoviePreview, { rejectWithValue }) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/api/tim-kiem?keyword=${keyword}&limit=${limit}`
+    );
+    return response.json();
+  }
+);
+// ==================== Fetch data movie search ==================== //

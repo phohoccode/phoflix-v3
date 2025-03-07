@@ -1,9 +1,8 @@
 "use client";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, EffectFade, Thumbs } from "swiper/modules";
+import { Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css";
-import "swiper/css/thumbs";
 import "swiper/css/effect-fade";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -29,12 +28,13 @@ const SlideShow = () => {
 
   return (
     <Swiper
-      modules={[Autoplay, Thumbs, EffectFade]}
+      slidesPerView={10}
+      modules={[Autoplay, EffectFade]}
       autoplay={{ delay: 3000, disableOnInteraction: false }}
+      grabCursor={true}
       effect="fade"
-      allowTouchMove={true}
-      loop={true}
-      className="w-full lg:h-[600px] md:h-[400px] h-[300px] relative"
+      loop={items.length > 1}
+      className="w-full relative"
     >
       {items.map((item, index: number) => (
         <SwiperSlide key={index} className="h-full">

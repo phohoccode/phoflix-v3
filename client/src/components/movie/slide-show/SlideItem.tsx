@@ -6,12 +6,15 @@ import PlayIcon from "../../icons/PlayIcon";
 import InfoIcon from "../../icons/InfoIcon";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
+import { TagClassic } from "../TagClassic";
+import "@/assets/css/movie.css";
+import MovieActionsButton from "../movie-thumb/MovieActionsButton";
 
 const SlideItem = ({ item }: any) => {
   const { windowWidth } = useSelector((state: RootState) => state.system);
 
   return (
-    <Box className="relative before:absolute before:inset-0 before:bg-[url('/images/dotted.png')] before:bg-repeat before:opacity-20 before:z-[1]">
+    <Box className="relative lg:before:absolute lg:before:inset-0 lg:before:bg-[url('/images/dotted.png')] lg:before:bg-repeat lg:before:opacity-20 lg:before:z-[1]">
       <Link href={"#"}>
         <Image
           onError={({ currentTarget }) => {
@@ -27,7 +30,7 @@ const SlideItem = ({ item }: any) => {
       </Link>
 
       <Box className="absolute bottom-2 left-2 right-2 lg:pl-6 lg:pr-6 lg:pb-20 p-4 slide-in z-10">
-        <h4 className="font-bold lg:text-4xl md:text-2xl bg-gradient-to-r from-[#f1c40f] via-[#22d3ee] to-indigo-400 block text-transparent bg-clip-text text-xl truncate lg:text-left text-center ">
+        <h4 className="font-bold slide-title-text lg:text-4xl md:text-2xl lg:inline-block block text-xl truncate lg:text-left text-center ">
           {item?.name ?? "Không xác định"}
         </h4>
         <Box className="flex gap-2 items-center flex-wrap lg:justify-start justify-center mt-3">
@@ -50,29 +53,7 @@ const SlideItem = ({ item }: any) => {
               ))}
             </Box>
             <Box className="flex gap-2 items-center mt-6">
-              <Link href="#">
-                <Button
-                  size="sm"
-                  rounded={"full"}
-                  colorPalette="purple"
-                  variant="solid"
-                >
-                  <PlayIcon />
-                  Xem ngay
-                </Button>
-              </Link>
-              <Link href="#">
-                <Button
-                  rounded={"full"}
-                  size="sm"
-                  colorPalette="gray"
-                  colorScheme={"gray"}
-                  variant="subtle"
-                >
-                  <InfoIcon />
-                  Chi tiết
-                </Button>
-              </Link>
+              <MovieActionsButton />
             </Box>
           </>
         )}
@@ -82,32 +63,3 @@ const SlideItem = ({ item }: any) => {
 };
 
 export default SlideItem;
-
-interface TagClassicProps {
-  text: string;
-  isRedirect?: boolean;
-  href?: string;
-}
-
-export const TagClassic = ({
-  text,
-  isRedirect,
-  href = "#",
-}: TagClassicProps) => {
-  return (
-    <>
-      {!isRedirect ? (
-        <span className="p-1 h-6 rounded-md bg-[#ffffff10] text-gray-50 inline-flex items-center text-xs border border-gray-50">
-          {text}
-        </span>
-      ) : (
-        <Link
-          href={href as string}
-          className="p-1 h-6 rounded-md bg-[#ffffff10] text-gray-50 inline-flex items-center text-xs transition-all hover:text-[#f1c40f]"
-        >
-          {text}
-        </Link>
-      )}
-    </>
-  );
-};

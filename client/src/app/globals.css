@@ -24,6 +24,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.text-shadow {
-  text-shadow: rgba(0, 0, 0, 0.5) 2px 2px;
+.text-primary {
+  color: #f1c40f
 }
