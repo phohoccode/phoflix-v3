@@ -9,13 +9,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { InputGroup } from "@/components/ui/input-group";
-import useDebounce from "@/hooks/useDebounce";
 import { fetchDataMoviePreview } from "@/store/asyncThunks/movieAsyncThunk";
 import { AppDispatch, RootState } from "@/store/store";
 import { Box, Input } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SearchPreview from "./SearchPreview";
+import _ from "lodash";
+import { useRouter } from "next/navigation";
+import { setIsOpenModalSearch } from "@/store/slices/systemSlice";
 
 interface SearchDialogProps {
   isOpen: boolean;
@@ -23,16 +25,31 @@ interface SearchDialogProps {
 }
 
 const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
-  const { searchPreview } = useSelector((state: RootState) => state.movie);
+  const { searchMoviePreview } = useSelector((state: RootState) => state.movie);
   const [keyword, setKeyword] = useState("");
-  const debouncedKeyword = useDebounce(keyword, 500);
   const dispatch: AppDispatch = useDispatch();
+  const router = useRouter();
 
-  useEffect(() => {
-    if (debouncedKeyword) {
-      dispatch(fetchDataMoviePreview({ keyword: debouncedKeyword, limit: 10 }));
+  const fetchData = useCallback(
+    _.debounce((searchTerm: string) => {
+      if (searchTerm.trim()) {
+        dispatch(fetchDataMoviePreview({ keyword: searchTerm, limit: 10 }));
+      }
+    }, 500),
+    [dispatch]
+  );
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value);
+    fetchData(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      router.push(`/search?keyword=${encodeURIComponent(keyword)}`);
+      dispatch(setIsOpenModalSearch(false));
     }
-  }, [debouncedKeyword, dispatch]);
+  };
 
   return (
     <DialogRoot scrollBehavior="inside" open={isOpen} onOpenChange={onClose}>
@@ -41,17 +58,19 @@ const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
           <DialogTitle>
             <InputGroup startElement={<SearchIcon />} className="w-full">
               <Input
+                onKeyDown={(e) => handleKeyDown(e)}
                 value={keyword}
-                css={{ "--error-color": "#fff" }}
-                onChange={(e) => setKeyword(e.target.value)}
-                className="font-normal text-gray-50 "
+                onChange={(e) => handleSearch(e)}
+                className="font-normal text-gray-50 bg-transparent border-0 focus:border focus:border-gray-50"
                 placeholder="Nhập tên phim cần tìm..."
               />
             </InputGroup>
           </DialogTitle>
         </DialogHeader>
-        <DialogBody>
-          <SearchPreview keyword={keyword} />
+        <DialogBody p={1}>
+          <Box className="mt-4">
+            <SearchPreview keyword={keyword} />
+          </Box>
         </DialogBody>
       </DialogContent>
     </DialogRoot>

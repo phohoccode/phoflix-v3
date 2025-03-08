@@ -3,7 +3,10 @@ import {
   fetchDataSlideShow,
   fetchDataMovie,
   fetchDataMoviePreview,
+  fetchDataMovieDetail,
+  fetchDataMovieSearch,
 } from "../asyncThunks/movieAsyncThunk";
+import { error } from "console";
 
 const data = {
   items: [],
@@ -24,7 +27,31 @@ const initialState: MovieSlice = {
     historicalDramaMovies: data,
     scienceFictionMovies: data,
   },
-  searchPreview: data,
+  searchMoviePreview: {
+    items: [],
+    totalItems: 0,
+    loading: false,
+    error: false,
+  },
+  movieDetail: {
+    items: null,
+    titlePage: "",
+    pagination: null,
+    loading: false,
+    error: false,
+  },
+  searchMovie: {
+    items: [],
+    loading: false,
+    error: false,
+    titlePage: "",
+    pagination: {
+      totalItems: 0,
+      totalItemsPerPage: 0,
+      currentPage: 0,
+      totalPages: 0,
+    },
+  },
 };
 
 const movieSlice = createSlice({
@@ -153,17 +180,52 @@ const movieSlice = createSlice({
     });
 
     builder.addCase(fetchDataMoviePreview.pending, (state, action) => {
-      state.searchPreview.loading = true;
-      state.searchPreview.error = false;
+      state.searchMoviePreview.loading = true;
+      state.searchMoviePreview.error = false;
     });
     builder.addCase(fetchDataMoviePreview.fulfilled, (state, action) => {
-      state.searchPreview.loading = false;
-      state.searchPreview.items = action.payload?.data?.items ?? [];
-      state.searchPreview.error = false;
+      state.searchMoviePreview.loading = false;
+      state.searchMoviePreview.items = action.payload?.data?.items ?? [];
+      state.searchMoviePreview.totalItems =
+        action.payload?.data?.params?.pagination?.totalItems ?? 0;
+      state.searchMoviePreview.error = false;
     });
     builder.addCase(fetchDataMoviePreview.rejected, (state, action) => {
-      state.searchPreview.loading = false;
-      state.searchPreview.error = true;
+      state.searchMoviePreview.loading = false;
+      state.searchMoviePreview.error = true;
+    });
+
+    builder.addCase(fetchDataMovieDetail.pending, (state, action) => {
+      state.movieDetail.loading = true;
+      state.movieDetail.error = false;
+    });
+    builder.addCase(fetchDataMovieDetail.fulfilled, (state, action) => {
+      console.log(action.payload);
+      state.movieDetail.loading = false;
+      state.movieDetail.titlePage = action.payload?.data?.titlePage;
+      state.movieDetail.items = action.payload?.data?.items;
+      state.movieDetail.pagination = action.payload?.data?.params?.pagination;
+      state.movieDetail.error = false;
+    });
+    builder.addCase(fetchDataMovieDetail.rejected, (state, action) => {
+      state.movieDetail.loading = false;
+      state.movieDetail.error = true;
+    });
+
+    builder.addCase(fetchDataMovieSearch.pending, (state, action) => {
+      state.searchMovie.loading = true;
+      state.searchMovie.error = false;
+    });
+    builder.addCase(fetchDataMovieSearch.fulfilled, (state, action) => {
+      state.searchMovie.loading = false;
+      state.searchMovie.items = action.payload?.data?.items ?? [];
+      state.searchMovie.titlePage = action.payload?.data?.titlePage;
+      state.searchMovie.pagination = action.payload?.data?.params?.pagination;
+      state.searchMovie.error = false;
+    });
+    builder.addCase(fetchDataMovieSearch.rejected, (state, action) => {
+      state.searchMovie.loading = false;
+      state.searchMovie.error = true;
     });
   },
 });

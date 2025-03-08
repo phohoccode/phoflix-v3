@@ -11,10 +11,10 @@ import {
   DrawerHeader,
   DrawerRoot,
   DrawerTitle,
-  DrawerTrigger,
 } from "@/components/ui/drawer";
 import Title from "./Title";
 import Body from "./Body";
+import "@/assets/css/movie.css";
 
 interface DrawerCustomProps {
   isOpen: boolean;

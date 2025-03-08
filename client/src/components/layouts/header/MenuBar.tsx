@@ -12,23 +12,28 @@ const MenuBar = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const { windowWidth } = useSelector((state: RootState) => state.system);
 
-  if (windowWidth <= 1024) return null;
+  if (windowWidth <= 1280) return null;
 
   return (
     <ul className="flex items-center gap-2 text-gray-50">
       <li className="text-sm relative transition-all hover:text-[#f1c40f]">
-        <Link href="#" className="p-2">
+        <Link href="/detail/danh-sach/phim-le" className="p-2">
           Phim lẻ
         </Link>
       </li>
       <li className="text-sm relative transition-all hover:text-[#f1c40f]">
-        <Link href="#" className="p-2">
+        <Link href="/detail/danh-sach/phim-bo" className="p-2">
           Phim bộ
         </Link>
       </li>
       <li className="text-sm relative transition-all hover:text-[#f1c40f]">
-        <Link href="#" className="p-2">
-          Phim hoạt hình
+        <Link href="/detail/danh-sach/hoat-hinh" className="p-2">
+          Hoạt hình
+        </Link>
+      </li>
+      <li className="text-sm relative transition-all hover:text-[#f1c40f]">
+        <Link href="/advance-filter" className="p-2">
+          Lọc nâng cao
         </Link>
       </li>
       <li
@@ -39,7 +44,7 @@ const MenuBar = () => {
         <span>Quốc gia</span>
         <ChevronDownIcon />
         {openDropdown === "country" && (
-          <CategoryAndCountryList data={countries} type="country" />
+          <CategoryAndCountryList data={countries} type="quoc-gia" />
         )}
       </li>
       <li
@@ -50,7 +55,7 @@ const MenuBar = () => {
         <span>Thể loại</span>
         <ChevronDownIcon />
         {openDropdown === "category" && (
-          <CategoryAndCountryList data={categories} type="category" />
+          <CategoryAndCountryList data={categories} type="the-loai" />
         )}
       </li>
     </ul>

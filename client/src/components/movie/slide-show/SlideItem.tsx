@@ -30,7 +30,7 @@ const SlideItem = ({ item }: any) => {
       </Link>
 
       <Box className="absolute bottom-2 left-2 right-2 lg:pl-6 lg:pr-6 lg:pb-20 p-4 slide-in z-10">
-        <h4 className="font-bold slide-title-text lg:text-4xl md:text-2xl lg:inline-block block text-xl truncate lg:text-left text-center ">
+        <h4 className="font-bold title-text lg:text-4xl md:text-2xl lg:inline-block block text-xl truncate lg:text-left text-center ">
           {item?.name ?? "Không xác định"}
         </h4>
         <Box className="flex gap-2 items-center flex-wrap lg:justify-start justify-center mt-3">

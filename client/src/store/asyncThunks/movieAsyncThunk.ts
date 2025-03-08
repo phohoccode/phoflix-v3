@@ -67,6 +67,40 @@ export const fetchDataMovie = createAsyncThunk(
 );
 
 // ==================== Fetch data movie detail ==================== //
+interface FetchDataMovieDetail {
+  describe: "danh-sach" | Categories | Countries;
+  slug: string;
+  page: number;
+  limit?: number;
+}
+
+export const fetchDataMovieDetail = createAsyncThunk(
+  "movie/fetchDataMovieDetail",
+  async (
+    { describe, slug, page = 1, limit = 24 }: FetchDataMovieDetail,
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/${describe}/${slug}?page=${page}&limit=${limit}`,
+        { next: { revalidate: 60 } }
+      );
+
+      if (!response.ok) {
+        throw new Error("Fetch failed");
+      }
+
+      const data = await response.json();
+
+      return data;
+    } catch (error: any) {
+      return rejectWithValue({
+        error: error.message,
+      });
+    }
+  }
+);
+
 // ==================== Fetch data movie preview ==================== //
 interface FetchDataMoviePreview {
   keyword: string;
@@ -83,3 +117,36 @@ export const fetchDataMoviePreview = createAsyncThunk(
   }
 );
 // ==================== Fetch data movie search ==================== //
+interface FetchDataMovieSearch {
+  keyword: string;
+  page: number;
+  limit: number;
+  sort_lang?: "long-tieng" | "thuyet-minh" | "vietsub" | "";
+  category?: Categories | "";
+  country?: Countries | "";
+  year?: number | "";
+  sort_type?: "asc" | "desc";
+}
+
+export const fetchDataMovieSearch = createAsyncThunk(
+  "movie/fetchDataMovieSearch",
+  async ({
+    keyword,
+    page = 1,
+    limit = 24,
+    sort_lang = "",
+    category = "",
+    country = "",
+    year = "",
+    sort_type = "desc",
+  }: FetchDataMovieSearch) => {
+    const query = `keyword=${keyword}&page=${page}&limit=${limit}&sort_lang=${sort_lang}&category=${category}&country=${country}&year=${year}&sort_type=${sort_type}
+    `;
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/v1/api/tim-kiem?${query}`
+    );
+
+    return response.json();
+  }
+);

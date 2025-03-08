@@ -4,8 +4,8 @@ import EmojiDizzyIcon from "@/components/icons/EmojiDizzyIcon";
 import { EmptyState, VStack } from "@chakra-ui/react";
 
 interface EmptyDataProps {
-  title: string;
-  description: string;
+  title: string | React.ReactNode;
+  description: string | React.ReactNode;
 }
 
 const EmptyData = ({ title, description }: EmptyDataProps) => {

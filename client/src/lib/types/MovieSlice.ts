@@ -34,11 +34,36 @@ type MovieSlice = {
     historicalDramaMovies: Movies;
     scienceFictionMovies: Movies;
   };
-  searchPreview: {
+  searchMoviePreview: {
     items: any;
     loading: boolean;
     error: boolean;
-  }
+    totalItems: number;
+  };
+  movieDetail: {
+    items: any;
+    titlePage: string;
+    pagination: {
+      totalItems: number;
+      totalItemsPerPage: number;
+      currentPage: number;
+      totalPages: number;
+    } | null;
+    loading: boolean;
+    error: boolean;
+  };
+  searchMovie: {
+    items: any;
+    loading: boolean;
+    error: boolean;
+    titlePage: string;
+    pagination: {
+      totalItems: number;
+      totalItemsPerPage: number;
+      currentPage: number;
+      totalPages: number;
+    };
+  };
 };
 
 type Categories =

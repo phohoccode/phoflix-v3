@@ -18,3 +18,17 @@ export const getPositionElement = (element: HTMLElement) => {
     height: rect.height,
   };
 };
+
+export const updateSearchParams = (params: Record<string, string>) => {
+  const searchParams = new URLSearchParams(window.location.search);
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) {
+      searchParams.set(key, value);
+    } else {
+      searchParams.delete(key); // Xóa nếu rỗng
+    }
+  });
+
+  return searchParams.toString(); // Trả về chuỗi query mới
+};

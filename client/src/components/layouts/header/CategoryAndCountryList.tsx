@@ -4,7 +4,7 @@ import Link from "next/link";
 
 interface CategoryAndCountryListProps {
   data: { _id: string; name: string; slug: string }[];
-  type: "category" | "country";
+  type: "the-loai" | "quoc-gia";
 }
 
 const CategoryAndCountryList = ({
@@ -23,7 +23,7 @@ const CategoryAndCountryList = ({
             key={item._id}
             className="px-4 py-2 text-sm transition hover:text-[#f1c40f] rounded-sm"
           >
-            <Link href={`/${type}/${item.slug}`}>{item.name}</Link>
+            <Link href={`/detail/${type}/${item.slug}`}>{item.name}</Link>
           </li>
         ))}
       </ul>
