@@ -6,7 +6,7 @@ import { Box, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import MovieCard from "@/components/movie/movie-thumb/MovieCard";
-import SkeletonMovieList from "@/components/skeletons/SkeletonMovieList";
+import SkeletonMovieList from "@/components/skeletons/SkeletonMovieGrid";
 import EmptyData from "@/components/EmptyData";
 import { useEffect } from "react";
 import { fetchDataMovieSearch } from "@/store/asyncThunks/movieAsyncThunk";
@@ -43,13 +43,13 @@ const AdvanceFilter = () => {
 
   return (
     <RootLayout>
-      <Box className="flex flex-col gap-6">
-        <h3 className="xl:text-5xl lg:text-4xl md:text-3xl text-2xl title-text font-bold">
+      <Box className="flex flex-col gap-6 lg:pt-28 pt-24">
+        <h3 className="xl:text-4xl lg:text-3xl md:text-2xl text-xl title-text font-bold">
           Lọc nâng cao
         </h3>
         <FilterBox />
 
-        <Box className="mt-6">
+        <Box className="mt-12">
           {!loading ? (
             <>
               {items?.length > 0 ? (

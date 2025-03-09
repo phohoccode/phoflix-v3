@@ -1,10 +1,10 @@
-import MainPage from "@/components/csr/movie-detail/MainPage";
+import MoviePage from "@/components/csr/movie-info/MainPage";
 import { Suspense } from "react";
 
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <MainPage />
+      <MoviePage />
     </Suspense>
   );
 };

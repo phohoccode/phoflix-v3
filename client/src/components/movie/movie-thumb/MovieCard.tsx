@@ -62,7 +62,7 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <Link href="#" className="flex flex-col gap-2 group">
+      <Link href={`/info/${data?.slug}`} className="flex flex-col gap-2 group">
         <Box
           className={`h-0 relative ${
             orientation === "horizontal" ? "pb-[62%]" : "pb-[150%]"

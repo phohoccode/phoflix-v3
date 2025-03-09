@@ -40,6 +40,12 @@ type MovieSlice = {
     error: boolean;
     totalItems: number;
   };
+  movieInfo: {
+    movie: any;
+    loading: boolean;
+    error: boolean;
+    episodes: any;
+  },
   movieDetail: {
     items: any;
     titlePage: string;

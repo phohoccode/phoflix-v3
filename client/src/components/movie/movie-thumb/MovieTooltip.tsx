@@ -26,7 +26,8 @@ const MovieTooltip = ({ data, position }: MovieTooltipProps) => {
       style={{
         top: position.top,
         left: position.left,
-        width: position.width,
+        // width: position.width,
+        width: "420px",
         minHeight: position.height,
       }}
       className="absolute tooltip-animation bg-[#2f3346] text-white rounded-lg overflow-hidden shadow-lg z-50"
@@ -45,12 +46,12 @@ const MovieTooltip = ({ data, position }: MovieTooltipProps) => {
       </div>
 
       <Box className="p-4 bg-[#2f3346] h-full">
-        <h4 className="text-lg truncate">{data?.name ?? "Không xác định"}</h4>
-        <span className="text-sm text-[#f1c40f] truncate">
+        <h4 className="text-lg">{data?.name ?? "Không xác định"}</h4>
+        <p className="text-sm text-[#f1c40f]">
           {data?.origin_name ?? "Không xác định"}
-        </span>
+        </p>
         <Box className="flex items-center gap-2 mt-2 mb-4">
-          <MovieActionsButton />
+          <MovieActionsButton item={data} />
         </Box>
         <Box className="flex items-center gap-2 flex-wrap">
           <TagClassic text={data?.quality ?? "Không xác định"} />

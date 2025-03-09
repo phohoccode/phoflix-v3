@@ -3,14 +3,15 @@
 import { TagClassic } from "@/components/movie/TagClassic";
 import SkeletonSearchPreview from "@/components/skeletons/SkeletonSearchPreview";
 import { generateUrlImage } from "@/lib/utils";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { Box, Button, Image } from "@chakra-ui/react";
 import Link from "next/link";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import EmptyData from "../../EmptyData";
 import SearchIcon from "@/components/icons/SearchIcon";
 import ChavronRightIcon from "@/components/icons/ChavronRightIcon";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
+import { setIsOpenModalSearch } from "@/store/slices/systemSlice";
 
 interface SearchPreviewProps {
   keyword: string;
@@ -20,6 +21,7 @@ const SearchPreview = ({ keyword }: SearchPreviewProps) => {
   const { items, loading, error, totalItems } = useSelector(
     (state: RootState) => state.movie.searchMoviePreview
   );
+  const dispatch: AppDispatch = useDispatch();
 
   if (keyword?.trim() === "") return null;
   if (loading) return <SkeletonSearchPreview />;
@@ -76,6 +78,7 @@ const SearchPreview = ({ keyword }: SearchPreviewProps) => {
         className="w-full flex items-center gap-2 mt-3 "
       >
         <Button
+          onClick={() => dispatch(setIsOpenModalSearch(false))}
           size="sm"
           className="w-full bg-[#2f3241] text-gray-50 hover:text-[#f0c14b] transition-all"
         >

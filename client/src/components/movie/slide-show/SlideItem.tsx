@@ -53,7 +53,7 @@ const SlideItem = ({ item }: any) => {
               ))}
             </Box>
             <Box className="flex gap-2 items-center mt-6">
-              <MovieActionsButton />
+              <MovieActionsButton item={item}/>
             </Box>
           </>
         )}

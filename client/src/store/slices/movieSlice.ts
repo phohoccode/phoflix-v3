@@ -5,6 +5,7 @@ import {
   fetchDataMoviePreview,
   fetchDataMovieDetail,
   fetchDataMovieSearch,
+  fetchDataMovieInfo,
 } from "../asyncThunks/movieAsyncThunk";
 import { error } from "console";
 
@@ -30,6 +31,12 @@ const initialState: MovieSlice = {
   searchMoviePreview: {
     items: [],
     totalItems: 0,
+    loading: false,
+    error: false,
+  },
+  movieInfo: {
+    movie: null,
+    episodes: null,
     loading: false,
     error: false,
   },
@@ -200,7 +207,6 @@ const movieSlice = createSlice({
       state.movieDetail.error = false;
     });
     builder.addCase(fetchDataMovieDetail.fulfilled, (state, action) => {
-      console.log(action.payload);
       state.movieDetail.loading = false;
       state.movieDetail.titlePage = action.payload?.data?.titlePage;
       state.movieDetail.items = action.payload?.data?.items;
@@ -226,6 +232,22 @@ const movieSlice = createSlice({
     builder.addCase(fetchDataMovieSearch.rejected, (state, action) => {
       state.searchMovie.loading = false;
       state.searchMovie.error = true;
+    });
+
+    builder.addCase(fetchDataMovieInfo.pending, (state, action) => {
+      state.movieInfo.loading = true;
+      state.movieInfo.error = false;
+    });
+    builder.addCase(fetchDataMovieInfo.fulfilled, (state, action) => {
+      console.log(action.payload);
+      state.movieInfo.loading = false;
+      state.movieInfo.movie = action.payload?.movie;
+      state.movieInfo.episodes = action.payload?.episodes;
+      state.movieInfo.error = false;
+    });
+    builder.addCase(fetchDataMovieInfo.rejected, (state, action) => {
+      state.movieInfo.loading = false;
+      state.movieInfo.error = true;
     });
   },
 });

@@ -1,10 +1,10 @@
-import Search from "@/components/csr/search/Search";
+import MainPage from "@/components/csr/search/MainPage";
 import { Suspense } from "react";
 
 const Page = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <Search />
+      <MainPage />
     </Suspense>
   );
 };

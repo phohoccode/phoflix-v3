@@ -13,11 +13,12 @@ import { useDispatch, useSelector } from "react-redux";
 import "@/assets/css/movie.css";
 import MovieCard from "@/components/movie/movie-thumb/MovieCard";
 import Pagination from "@/components/Pagination";
-import SkeletonMovieList from "@/components/skeletons/SkeletonMovieList";
+import SkeletonMovieList from "@/components/skeletons/SkeletonMovieGrid";
 import EmptyData from "@/components/EmptyData";
 import SearchIcon from "@/components/icons/SearchIcon";
+import MovieGrid from "@/components/movie/movie-thumb/MovieGrid";
 
-const Search = () => {
+const MainPage = () => {
   const searchParams = useSearchParams();
   const dispatch: AppDispatch = useDispatch();
   const { items, loading, error, pagination, titlePage } = useSelector(
@@ -40,7 +41,7 @@ const Search = () => {
   if (loading) {
     return (
       <RootLayout>
-        <Box className="flex flex-col gap-4 px-4">
+        <Box className="flex flex-col gap-4 px-4 lg:pt-28 pt-24">
           <Skeleton className="w-1/3 h-10" />
           <Box className="mt-3">
             <SkeletonMovieList limit={limit} />
@@ -63,20 +64,13 @@ const Search = () => {
 
   return (
     <RootLayout>
-      <Box className="flex flex-col gap-4 px-4">
-        <h3 className="inline-block xl:text-5xl lg:text-4xl md:text-3xl text-2xl title-text font-bold">
+      <Box className="flex flex-col gap-4 px-4 lg:pt-28 pt-24">
+        <h3 className="inline-block xl:text-4xl lg:text-3xl md:text-2xl text-xl title-text font-bold">
           Tìm thấy {pagination?.totalItems} kết quả cho từ khóa "{keyword}"
         </h3>
 
         <Box className="mt-6">
-          <SimpleGrid
-            columns={{ base: 2, md: 4, lg: 6, xl: 8, xlTo2xl: 8 }}
-            gap={4}
-          >
-            {items?.map((item: any, index: number) => (
-              <MovieCard key={index} data={item} orientation="vertical" />
-            ))}
-          </SimpleGrid>
+          <MovieGrid items={items} />
         </Box>
 
         {!loading && items?.length >= limit && (
@@ -93,4 +87,4 @@ const Search = () => {
   );
 };
 
-export default Search;
+export default MainPage;

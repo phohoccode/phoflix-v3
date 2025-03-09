@@ -41,9 +41,7 @@ const Pagination = ({ pagination, currentPage }: PaginationProps) => {
         onPageChange={(details) => handleChangePage(details.page)}
       >
         <HStack>
-          <PaginationPrevTrigger className="bg-[#282b3a] border border-[#1e2939] text-gray-50 hover:bg-transparent" />
-          <PaginationItems className="bg-[#282b3a] border border-[#1e2939] text-gray-50 hover:bg-transparent" />
-          <PaginationNextTrigger className="bg-[#282b3a] border border-[#1e2939] text-gray-50 hover:bg-transparent" />
+          <PaginationItems  className="bg-[#282b3a] border border-[#1e2939] text-gray-50 hover:bg-transparent" />
         </HStack>
       </PaginationRoot>
     </Box>

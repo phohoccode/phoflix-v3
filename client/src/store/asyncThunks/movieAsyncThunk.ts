@@ -110,10 +110,21 @@ interface FetchDataMoviePreview {
 export const fetchDataMoviePreview = createAsyncThunk(
   "movie/fetchDataMoviePreview",
   async ({ keyword, limit }: FetchDataMoviePreview, { rejectWithValue }) => {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/v1/api/tim-kiem?keyword=${keyword}&limit=${limit}`
-    );
-    return response.json();
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/tim-kiem?keyword=${keyword}&limit=${limit}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Fetch failed");
+      }
+
+      return response.json();
+    } catch (error: any) {
+      return rejectWithValue({
+        error: error.message,
+      });
+    }
   }
 );
 // ==================== Fetch data movie search ==================== //
@@ -130,23 +141,64 @@ interface FetchDataMovieSearch {
 
 export const fetchDataMovieSearch = createAsyncThunk(
   "movie/fetchDataMovieSearch",
-  async ({
-    keyword,
-    page = 1,
-    limit = 24,
-    sort_lang = "",
-    category = "",
-    country = "",
-    year = "",
-    sort_type = "desc",
-  }: FetchDataMovieSearch) => {
-    const query = `keyword=${keyword}&page=${page}&limit=${limit}&sort_lang=${sort_lang}&category=${category}&country=${country}&year=${year}&sort_type=${sort_type}
+  async (
+    {
+      keyword,
+      page = 1,
+      limit = 24,
+      sort_lang = "",
+      category = "",
+      country = "",
+      year = "",
+      sort_type = "desc",
+    }: FetchDataMovieSearch,
+    { rejectWithValue }
+  ) => {
+    try {
+      const query = `keyword=${keyword}&page=${page}&limit=${limit}&sort_lang=${sort_lang}&category=${category}&country=${country}&year=${year}&sort_type=${sort_type}
     `;
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/v1/api/tim-kiem?${query}`
-    );
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/tim-kiem?${query}`
+      );
 
-    return response.json();
+      if (!response.ok) {
+        throw new Error("Fetch failed");
+      }
+
+      return response.json();
+    } catch (error: any) {
+      return rejectWithValue({
+        error: error.message,
+      });
+    }
+  }
+);
+
+// ==================== Fetch data movie info ==================== //
+interface FetchMovieInfo {
+  slug: string;
+  page: "watching" | "info";
+}
+
+export const fetchDataMovieInfo = createAsyncThunk(
+  "movie/fetchMovieInfo",
+  async ({ slug, page }: FetchMovieInfo, { rejectWithValue }) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/phim/${slug}`
+      );
+
+      if (!response.ok) {
+        throw new Error("Fetch failed");
+      }
+
+      return response.json();
+    } catch (error: any) {
+      rejectWithValue({
+        error: error.message,
+        page,
+      });
+    }
   }
 );

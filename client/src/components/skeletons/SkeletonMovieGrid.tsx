@@ -6,9 +6,18 @@ interface SkeletonMovieListProps {
   limit?: number;
 }
 
-const SkeletonMovieList = ({ limit }: SkeletonMovieListProps) => {
+const SkeletonMovieList = ({ limit = 24 }: SkeletonMovieListProps) => {
   return (
-    <SimpleGrid columns={{ base: 2, md: 4, lg: 6, xl: 8, xlTo2xl: 8 }} gap={4}>
+    <SimpleGrid
+      columns={{
+        base: 2,
+        md: 4,
+        lg: 5,
+        xl: 6,
+        "2xl": 8,
+      }}
+      gap={4}
+    >
       {[...Array(limit)].map((_, index) => (
         <GridItem key={index}>
           <Box className="pb-[150%] h-0 relative">

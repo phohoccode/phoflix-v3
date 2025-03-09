@@ -5,16 +5,20 @@ import PlayIcon from "@/components/icons/PlayIcon";
 import { Button } from "@chakra-ui/react";
 import Link from "next/link";
 
-const MovieActionsButton = () => {
+interface MovieActionsButtonProps {
+  item: any;
+}
+
+const MovieActionsButton = ({ item }: MovieActionsButtonProps) => {
   return (
     <>
-      <Link href="#">
-        <Button size="sm" colorPalette="purple" variant="solid">
+      <Link href={`/watching/${item?.slug}`}>
+        <Button size="sm" colorPalette="yellow"  variant="solid">
           <PlayIcon />
           Xem ngay
         </Button>
       </Link>
-      <Link href="#">
+      <Link href={`/info/${item?.slug}`}>
         <Button
           size="sm"
           colorPalette="gray"

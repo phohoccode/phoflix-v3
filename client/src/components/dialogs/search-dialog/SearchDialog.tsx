@@ -46,6 +46,11 @@ const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+
+      if (keyword.trim() === "") {
+        return;
+      }
+
       router.push(`/search?keyword=${encodeURIComponent(keyword)}`);
       dispatch(setIsOpenModalSearch(false));
     }
