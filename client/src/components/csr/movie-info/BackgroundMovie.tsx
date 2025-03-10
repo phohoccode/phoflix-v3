@@ -13,7 +13,7 @@ const BackgroundMovie = ({ url }: BackgroundMovieProps) => {
         style={{
           backgroundImage: `url(${url})`,
         }}
-        className="absolute rounded-b-3xl inset-0 w-full h-full bg-cover bg-center opacity-50"
+        className="absolute inset-0 w-full h-full bg-cover bg-center opacity-50"
       />
     </Box>
   );

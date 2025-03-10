@@ -3,7 +3,7 @@
 import { TagClassic } from "@/components/movie/TagClassic";
 import ShowMoreText from "@/components/ShowMoreText";
 import { generateUrlImage } from "@/lib/utils";
-import { Box, DataList, Image, SimpleGrid } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 import Link from "next/link";
 
 interface MovieDetailProps {

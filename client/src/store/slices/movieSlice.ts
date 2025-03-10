@@ -239,7 +239,6 @@ const movieSlice = createSlice({
       state.movieInfo.error = false;
     });
     builder.addCase(fetchDataMovieInfo.fulfilled, (state, action) => {
-      console.log(action.payload);
       state.movieInfo.loading = false;
       state.movieInfo.movie = action.payload?.movie;
       state.movieInfo.episodes = action.payload?.episodes;

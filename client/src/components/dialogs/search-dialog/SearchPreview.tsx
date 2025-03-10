@@ -37,8 +37,8 @@ const SearchPreview = ({ keyword }: SearchPreviewProps) => {
     <Box className="flex flex-col gap-4">
       <ul className="flex flex-col gap-2">
         {items?.map((item: any, index: number) => (
-          <li key={index}>
-            <Link href="#" className="block">
+          <li key={index} onClick={() => dispatch(setIsOpenModalSearch(false))}>
+            <Link href={`/info/${item?.slug}`} className="block">
               <Box className="flex gap-4 p-2 rounded-lg hover:bg-[#2f3241] transition-all">
                 <Box className="w-20 h-28 flex-shrink-0">
                   <Image

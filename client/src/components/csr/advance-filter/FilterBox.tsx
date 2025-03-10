@@ -1,12 +1,10 @@
 "use client";
 
-import Refreshicon from "@/components/icons/RefresIcon";
-import { categories, charactors, countries, filterOptions } from "@/lib/defind";
+import { filterOptions } from "@/lib/defines/data";
 import { updateSearchParams } from "@/lib/utils";
 import { fetchDataMovieSearch } from "@/store/asyncThunks/movieAsyncThunk";
 import { AppDispatch } from "@/store/store";
-import { Box, Button, IconButton } from "@chakra-ui/react";
-import { Tooltip } from "@/components/ui/tooltip";
+import { Box } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch } from "react-redux";

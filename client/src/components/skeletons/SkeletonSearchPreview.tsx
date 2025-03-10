@@ -5,27 +5,26 @@ import { SkeletonText } from "../ui/skeleton";
 
 const SkeletonSearchPreview = () => {
   return (
-    <div className="flex flex-col gap-4">
-      <SkeletonText noOfLines={1} className="text-sm text-gray-50" />
-      <ul className="flex flex-col gap-4">
-        {[...Array(3)]?.map((item: any, index: number) => (
-          <li key={index}>
-            <Box className="flex gap-4">
-              <Box className="w-20 h-28 flex-shrink-0">
-                <Skeleton className="w-full h-full" />
-              </Box>
-              <Box className="flex flex-col gap-2 w-full">
-                <SkeletonText
-                  noOfLines={1}
-                  className="text-md text-gray-50 font-semibold truncate"
-                />
-                <SkeletonText noOfLines={1} className="text-sm text-primary" />
+    <ul className="flex flex-col gap-4">
+      {[...Array(3)].map((_, index: number) => (
+        <li key={index}>
+          <Box className="flex gap-4">
+            <Box className="w-20 h-28 flex-shrink-0">
+              <Skeleton className="w-full h-full" />
+            </Box>
+            <Box className="flex flex-col gap-2 w-full">
+              <Skeleton width="80%" height="4" />
+              <Skeleton width="60%" height="3" />
+              <Box className="flex gap-2 flex-wrap">
+                {[...Array(3)].map((_, index: number) => (
+                  <Skeleton key={index} width="12%" height="5" />
+                ))}
               </Box>
             </Box>
-          </li>
-        ))}
-      </ul>
-    </div>
+          </Box>
+        </li>
+      ))}
+    </ul>
   );
 };
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import Link from "next/link";
 import CategoryAndCountryList from "./CategoryAndCountryList";
-import { categories, countries } from "@/lib/defind";
+import { categories, countries } from "@/lib/defines/data";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 
@@ -12,7 +12,7 @@ const MenuBar = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const { windowWidth } = useSelector((state: RootState) => state.system);
 
-  if (windowWidth <= 1280) return null;
+  if (windowWidth <= 1320) return null;
 
   return (
     <ul className="flex items-center gap-2 text-gray-50">

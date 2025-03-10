@@ -67,8 +67,9 @@ export const fetchDataMovie = createAsyncThunk(
 );
 
 // ==================== Fetch data movie detail ==================== //
+export type Describe = "danh-sach" | "the-loai" | "quoc-gia";
 interface FetchDataMovieDetail {
-  describe: "danh-sach" | Categories | Countries;
+  describe: Describe;
   slug: string;
   page: number;
   limit?: number;
@@ -193,9 +194,17 @@ export const fetchDataMovieInfo = createAsyncThunk(
         throw new Error("Fetch failed");
       }
 
-      return response.json();
+      const data = await response.json();
+
+      if (!data?.status) {
+        console.log("error");
+        throw new Error("Fetch failed");
+      }
+
+      return data;
     } catch (error: any) {
-      rejectWithValue({
+      console.log(error);
+      return rejectWithValue({
         error: error.message,
         page,
       });

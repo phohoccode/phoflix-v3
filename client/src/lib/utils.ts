@@ -32,3 +32,18 @@ export const updateSearchParams = (params: Record<string, string>) => {
 
   return searchParams.toString(); // Trả về chuỗi query mới
 };
+
+// Hàm này sẽ trả về một phần tử ngẫu nhiên từ mảng đầu vào
+// Ví dụ: getRandomItem([1, 2, 3, 4, 5]) => 3
+export function getRandomItem<T>(arr: T[]): T {
+  if (arr.length === 0) {
+    throw new Error("Mảng không được rỗng.");
+  }
+
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  return arr[randomIndex];
+}
+
+export const formatStringForURL = (str: string, result: string) => {
+  return str.replace(/\s+/g, result);
+};

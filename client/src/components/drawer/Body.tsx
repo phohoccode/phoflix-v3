@@ -7,7 +7,7 @@ import {
   AccordionItemTrigger,
   AccordionRoot,
 } from "../ui/accordion";
-import { categories, countries } from "@/lib/defind";
+import { categories, countries } from "@/lib/defines/data";
 import { Button } from "@chakra-ui/react";
 import { AppDispatch } from "@/store/store";
 import { useDispatch } from "react-redux";

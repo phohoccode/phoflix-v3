@@ -1,6 +1,10 @@
 "use client";
 
-import { generateUrlImage, getPositionElement } from "@/lib/utils";
+import {
+  formatStringForURL,
+  generateUrlImage,
+  getPositionElement,
+} from "@/lib/utils";
 import { Badge, Box, Image } from "@chakra-ui/react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -62,7 +66,10 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <Link href={`/info/${data?.slug}`} className="flex flex-col gap-2 group">
+      <Link
+        href={`/info/${data?.slug}?name=${formatStringForURL(data?.name, "-")}`}
+        className="flex flex-col gap-2 group"
+      >
         <Box
           className={`h-0 relative ${
             orientation === "horizontal" ? "pb-[62%]" : "pb-[150%]"
@@ -83,12 +90,20 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
             loading="lazy"
           />
         </Box>
-        <span className="lg:text-sm text-xs text-gray-50 truncate group-hover:text-[#f1c40f] transition-all">
+        <span
+          style={{
+            WebkitLineClamp: 2,
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+          className="lg:text-sm text-xs text-gray-50 group-hover:text-[#f1c40f] transition-all"
+        >
           {data?.name}
         </span>
       </Link>
       <Box className="absolute top-2 right-2 lg:flex hidden flex-wrap gap-2">
-        <Badge variant={"subtle"} colorPalette="purple">
+        <Badge className="bg-[#f1c40f] text-gray-50">
           {data?.lang ?? "Không xác định"}
         </Badge>
       </Box>

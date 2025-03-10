@@ -291,17 +291,7 @@ export const countries = [
     _id: "638f494a6d33cf5760f6e95c8beb612a",
     name: "Na Uy",
     slug: "na-uy",
-  },
-  {
-    _id: "5c35522c5074ad8e4c229a91f68eb464",
-    name: "Namh",
-    slug: "namh",
-  },
-  {
-    _id: "268385d0de78827ff7bb25c35036ee2a",
-    name: "Kinh Điển",
-    slug: "kinh-dien",
-  },
+  }
 ];
 
 export const charactors = [
@@ -345,7 +335,8 @@ export const charactors = [
 
 // Trang lọc phim nâng cao
 const currentYear = new Date().getFullYear();
-const recentYears = Array.from({ length: 10 }, (_, i) => {
+const numberOfYear = 22; 
+const recentYears = Array.from({ length: numberOfYear }, (_, i) => {
   return {
     id: currentYear - i,
     name: currentYear - i,

@@ -6,14 +6,15 @@ import { EmptyState, VStack } from "@chakra-ui/react";
 interface EmptyDataProps {
   title: string | React.ReactNode;
   description: string | React.ReactNode;
+  icon?: React.ReactNode;
 }
 
-const EmptyData = ({ title, description }: EmptyDataProps) => {
+const EmptyData = ({ title, description, icon }: EmptyDataProps) => {
   return (
     <EmptyState.Root>
       <EmptyState.Content>
         <EmptyState.Indicator>
-          <EmojiDizzyIcon />
+          {icon || <EmojiDizzyIcon />}
         </EmptyState.Indicator>
         <VStack textAlign="center">
           <EmptyState.Title className="text-gray-50">{title}</EmptyState.Title>

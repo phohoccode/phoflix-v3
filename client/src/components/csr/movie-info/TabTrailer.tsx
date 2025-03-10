@@ -17,9 +17,9 @@ const TabTrailer = () => {
     );
 
   return (
-    <Box className="w-full h-64 rounded-2xl overflow-hidden">
+    <Box className="w-full h-0 relative lg:pt-[35%] md:pt-[42%] pt-[50%] rounded-2xl overflow-hidden">
       <iframe
-        className="w-full h-full border border-[#282b3a]"
+        className="w-full h-full absolute inset-0 border border-[#282b3a]"
         frameBorder="0"
         allowFullScreen
         allow="accelerometer"

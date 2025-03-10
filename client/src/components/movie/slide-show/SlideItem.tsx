@@ -48,7 +48,7 @@ const SlideItem = ({ item }: any) => {
                   key={index}
                   text={caterogy?.name ?? "Không xác định"}
                   isRedirect
-                  href="#"
+                  href={`/detail/the-loai/${caterogy?.slug}`}
                 />
               ))}
             </Box>

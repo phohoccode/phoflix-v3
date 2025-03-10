@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import TabTrailer from "../csr/movie-info/TabTrailer";
 import TabEpisodes from "../csr/movie-info/TabEpisodes";
+import MovieSuggesstions from "./MovieSuggestions";
 
 const MovieBar = () => {
   const params = useParams();
@@ -17,9 +18,12 @@ const MovieBar = () => {
   return (
     <Box className="flex flex-col gap-8">
       <Box className="flex gap-6 lg:flex-row lg:items-start items-center flex-col">
-        <Link href={`/watching/${slug}`}>
+        <Link
+          href={`/watching/${slug}`}
+          className="xl:w-60 lg:w-72 md:w-[70%] w-[80%]"
+        >
           <Button
-            className="lg:w-40 w-full h-14 text-lg shadow-lg hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
+            className="w-full h-14 text-lg shadow-lg hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
             rounded="full"
             colorPalette="yellow"
             variant="solid"
@@ -111,7 +115,9 @@ const MovieBar = () => {
               animationDuration: "120ms",
             }}
           >
-            Manage your tasks for freelancers
+            <Box className="mt-3">
+              <MovieSuggesstions title="Có thể bạn sẽ thích" />
+            </Box>
           </Tabs.Content>
         </Tabs.Root>
       </Box>

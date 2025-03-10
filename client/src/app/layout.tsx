@@ -1,24 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Provider } from "@/components/ui/provider";
 import { StoreProvider } from "@/store/StoreProvider";
 import NextTopLoader from "nextjs-toploader";
 import App from "@/components/App";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const inter = Inter({
+  subsets: ["latin", "vietnamese"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "PHOFLIX-V3",
+  title: "PHOFLIX-V3 | Xem Phim Online Miễn Phí",
   description: "WEBSITE XEM PHIM MIỄN PHÍ",
+  icons: {
+    icon: "/icon/logo.ico",
+  },
 };
 
 export default function RootLayout({
@@ -28,9 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning lang="vi">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`${inter.className} antialiased`}>
         <NextTopLoader color="#f1c40f" showSpinner={false} height={2} />
 
         <StoreProvider>

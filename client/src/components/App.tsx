@@ -17,6 +17,7 @@ import {
 import NotifyDialog from "./dialogs/notification-dialog/NotificationDialog";
 import { useEffect } from "react";
 import DrawerCustom from "./drawer/DrawerCustom";
+import { Toaster } from "./ui/toaster";
 
 const App = ({ children }: { children: React.ReactNode }) => {
   const {
@@ -80,6 +81,8 @@ const App = ({ children }: { children: React.ReactNode }) => {
         isOpen={isOpenModalNotification}
         onClose={() => dispatch(setIsOpenModalNotification(false))}
       />
+
+      <Toaster />
     </Box>
   );
 };

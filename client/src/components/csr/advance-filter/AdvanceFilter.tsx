@@ -62,7 +62,7 @@ const AdvanceFilter = () => {
                   ))}
                 </SimpleGrid>
               ) : (
-                <Box className="min-h-screen flex items-center justify-center">
+                <Box className="h-96 flex items-center justify-center">
                   <EmptyData
                     title="Chưa có dữ liệu"
                     description="Dữ liệu sẽ được cập nhật sớm nhất"
@@ -76,7 +76,13 @@ const AdvanceFilter = () => {
         </Box>
 
         {items?.length >= 24 && (
-          <Pagination pagination={pagination} currentPage={currentPage} />
+          <Pagination
+            pagination={{
+              totalItems: pagination?.totalItems,
+              totalItemsPerPage: pagination?.totalItemsPerPage,
+            }}
+            currentPage={currentPage}
+          />
         )}
       </Box>
     </RootLayout>
