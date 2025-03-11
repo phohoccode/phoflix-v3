@@ -66,7 +66,7 @@ const MovieTooltip = ({ data, position }: MovieTooltipProps) => {
               key={index}
               text={category?.name ?? "Không xác định"}
               isRedirect
-              href="#"
+              href={`/detail/the-loai/${category?.slug}`}
             />
           ))}
         </Box>

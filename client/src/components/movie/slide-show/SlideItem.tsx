@@ -15,7 +15,7 @@ const SlideItem = ({ item }: any) => {
 
   return (
     <Box className="relative lg:before:absolute lg:before:inset-0 lg:before:bg-[url('/images/dotted.png')] lg:before:bg-repeat lg:before:opacity-20 lg:before:z-[1]">
-      <Link href={"#"}>
+      <Link href={`/info/${item?.slug}`} className="relative z-10">
         <Image
           onError={({ currentTarget }) => {
             currentTarget.onerror = null;
@@ -53,7 +53,7 @@ const SlideItem = ({ item }: any) => {
               ))}
             </Box>
             <Box className="flex gap-2 items-center mt-6">
-              <MovieActionsButton item={item}/>
+              <MovieActionsButton item={item} />
             </Box>
           </>
         )}

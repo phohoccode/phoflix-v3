@@ -2,7 +2,7 @@
 
 import EpisodesList from "@/components/movie/EpisodeList";
 import { RootState } from "@/store/store";
-import { Box, Button } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 
 const TabEpisodes = () => {
@@ -13,6 +13,7 @@ const TabEpisodes = () => {
       {episodes?.map((episode: any, index: number) => (
         <EpisodesList
           key={index}
+          redirect
           server_name={episode?.server_name}
           server_data={episode?.server_data}
         />

@@ -45,6 +45,7 @@ type MovieSlice = {
     loading: boolean;
     error: boolean;
     episodes: any;
+    currentEpisode: any
   },
   movieDetail: {
     items: any;

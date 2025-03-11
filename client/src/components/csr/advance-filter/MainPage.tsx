@@ -13,7 +13,7 @@ import { fetchDataMovieSearch } from "@/store/asyncThunks/movieAsyncThunk";
 import Pagination from "@/components/Pagination";
 import { useSearchParams } from "next/navigation";
 
-const AdvanceFilter = () => {
+const MainPage = () => {
   const { items, loading, error, pagination, titlePage } = useSelector(
     (state: RootState) => state.movie.searchMovie
   );
@@ -43,7 +43,7 @@ const AdvanceFilter = () => {
 
   return (
     <RootLayout>
-      <Box className="flex flex-col gap-6 lg:pt-28 pt-24">
+      <Box className="flex flex-col gap-6 lg:pt-28 pt-24 px-4">
         <h3 className="xl:text-4xl lg:text-3xl md:text-2xl text-xl title-text font-bold">
           Lọc nâng cao
         </h3>
@@ -89,4 +89,4 @@ const AdvanceFilter = () => {
   );
 };
 
-export default AdvanceFilter;
+export default MainPage;

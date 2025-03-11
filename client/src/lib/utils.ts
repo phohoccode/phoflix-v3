@@ -45,5 +45,23 @@ export function getRandomItem<T>(arr: T[]): T {
 }
 
 export const formatStringForURL = (str: string, result: string) => {
-  return str.replace(/\s+/g, result);
+  return str?.replace(/\s+/g, result);
+};
+
+export const formatTypeMovie = (type: string) => {
+  return type?.includes("Vietsub") ? "vietsub" : "long-tieng";
+};
+
+export const getIdFromLinkEmbed = (link: string, position: number) => {
+  return link?.split("/")[position];
+};
+
+export const changeQuery = <T>(arr: T[]) => {
+  const params = new URLSearchParams(window.location.search);
+
+  arr.forEach((item: any) => {
+    params.set(item?.key, item?.value);
+  });
+
+  window.history.replaceState({}, "", `?${params.toString()}`);
 };

@@ -17,9 +17,21 @@ const data = [...categories, ...countries];
 
 interface MovieSuggesstionsProps {
   title: string;
+  colums?: {
+    base: number;
+    md: number;
+    lg: number;
+    xl: number;
+    "2xl": number;
+  };
+  limit?: number;
 }
 
-const MovieSuggesstions = ({ title }: MovieSuggesstionsProps) => {
+const MovieSuggesstions = ({
+  title,
+  colums,
+  limit = 15,
+}: MovieSuggesstionsProps) => {
   const dispatch: AppDispatch = useDispatch();
   const { items, loading } = useSelector(
     (state: RootState) => state.movie.movieDetail
@@ -34,14 +46,16 @@ const MovieSuggesstions = ({ title }: MovieSuggesstionsProps) => {
         describe: describe as Describe,
         slug: itemRandom?.slug as string,
         page: 1,
-        limit: 15,
+        limit,
       })
     );
   }, []);
 
   if (loading)
     return (
-      <SkeletonMovieList columns={{ base: 2, md: 3, lg: 5, xl: 4, "2xl": 5 }} />
+      <SkeletonMovieList
+        columns={colums || { base: 2, md: 3, lg: 5, xl: 4, "2xl": 5 }}
+      />
     );
 
   return (
@@ -49,7 +63,7 @@ const MovieSuggesstions = ({ title }: MovieSuggesstionsProps) => {
       <h4 className="text-xl text-gray-50">{title}</h4>
       <MovieGrid
         items={items}
-        colums={{ base: 2, md: 3, lg: 5, xl: 4, "2xl": 5 }}
+        colums={colums || { base: 2, md: 3, lg: 5, xl: 4, "2xl": 5 }}
       />
     </Box>
   );

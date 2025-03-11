@@ -15,7 +15,7 @@ const ShowMoreText = ({
 
   return (
     <div className="flex flex-col gap-1">
-      <p style={{ wordBreak: "break-word" }} className="text-gray-400">
+      <p style={{ wordBreak: "break-word" }} className="text-gray-400 text-sm">
         {displayText}
         {text?.length > maxLength && !isExpanded && "..."}
       </p>

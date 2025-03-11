@@ -37,6 +37,7 @@ const initialState: MovieSlice = {
   movieInfo: {
     movie: null,
     episodes: null,
+    currentEpisode: null,
     loading: false,
     error: false,
   },
@@ -64,7 +65,11 @@ const initialState: MovieSlice = {
 const movieSlice = createSlice({
   name: "movie",
   initialState,
-  reducers: {},
+  reducers: {
+    setCurrentEpisode: (state, action) => {
+      state.movieInfo.currentEpisode = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchDataSlideShow.pending, (state, action) => {
       state.slideShows.loading = true;
@@ -251,5 +256,5 @@ const movieSlice = createSlice({
   },
 });
 
-export const {} = movieSlice.actions;
+export const { setCurrentEpisode } = movieSlice.actions;
 export default movieSlice.reducer;

@@ -1,3 +1,4 @@
+import Spinner from "@/app/loading";
 import MainPage from "@/components/csr/search/MainPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -9,7 +10,9 @@ interface MoviePageProps {
 export async function generateMetadata({
   searchParams,
 }: MoviePageProps): Promise<Metadata> {
-  const keyword = searchParams.keyword ?? "hihihi";
+  const params = await searchParams ?? {};
+  const keyword = params.keyword ?? "hihihi";
+
   return {
     title: `Xem phim ${keyword} - Thuyết minh, Vietsub mới nhất - PHOFLIX-V3`,
     description: "Xem phim chất lượng cao, miễn phí và cập nhật nhanh nhất.",
@@ -18,7 +21,7 @@ export async function generateMetadata({
 
 const Page = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <MainPage />
     </Suspense>
   );

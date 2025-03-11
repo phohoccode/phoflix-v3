@@ -1,3 +1,4 @@
+import Spinner from "@/app/loading";
 import MoviePage from "@/components/csr/movie-info/MainPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -9,7 +10,8 @@ interface MoviePageProps {
 export async function generateMetadata({
   searchParams,
 }: MoviePageProps): Promise<Metadata> {
-  const name = searchParams.name?.replace(/-/g, " ") ?? "hihihi";
+  const params = await searchParams ?? {};
+  const name = params.name?.replace(/-/g, " ") ?? "hihihi";
 
   return {
     title: `${name} - PHOFLIX-V3`,
@@ -19,7 +21,7 @@ export async function generateMetadata({
 
 const Page = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Spinner />}>
       <MoviePage />
     </Suspense>
   );

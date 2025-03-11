@@ -1,4 +1,5 @@
-import AdvanceFilter from "@/components/csr/advance-filter/AdvanceFilter";
+import Spinner from "@/app/loading";
+import MainPage from "@/components/csr/advance-filter/MainPage";
 import { Suspense } from "react";
 
 export async function generateMetadata() {
@@ -10,8 +11,8 @@ export async function generateMetadata() {
 
 const Page = () => {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <AdvanceFilter />
+    <Suspense fallback={<Spinner />}>
+      <MainPage />
     </Suspense>
   );
 };
