@@ -2,15 +2,64 @@
 
 import { Box } from "@chakra-ui/react";
 import { Skeleton } from "../ui/skeleton";
-import RootLayout from "../layouts/RootLayout";
 
 const SkeletonWachingPage = () => {
   return (
-    <Box className="flex flex-col gap-12">
-      <Box className="lg:mt-32 mt-24 flex flex-col gap-6 lg:px-4">
-        <Skeleton width="50%" height="5" />
-        <Box className="relative h-0 lg:pt-[42%] md:pt-[46%] pt-[56%]">
-          <Skeleton className="absolute inset-0" width="100%" height="100%" />
+    <Box className="flex flex-col gap-12 max-w-[1620px] mx-auto lg:px-14">
+      <Box className="lg:mt-32 mt-24 flex flex-col gap-6">
+        <Box className="px-4">
+          <Skeleton width="50%" height="6" />
+        </Box>
+        <Box className="flex flex-col lg:px-4">
+          <Box className="relative h-0 lg:pt-[20%] md:pt-[40%] pt-[56%]">
+            <Skeleton
+              className="absolute inset-0 rounded-none"
+              width="100%"
+              height="100%"
+            />
+          </Box>
+          <Box className="p-4 bg-[#08080a] flex gap-4">
+            <Skeleton width="5%" height="5" />
+            <Skeleton width="5%" height="5" />
+            <Skeleton width="5%" height="5" />
+          </Box>
+        </Box>
+
+        <Box className="flex gap-6 lg:flex-row flex-col pb-12 px-6">
+          <Box className="flex-1">
+            <Box className="flex gap-4 w-full">
+              <Box className="w-28 flex-shrink-0">
+                <Box className="relative h-0 pt-[150%]">
+                  <Skeleton
+                    className="absolute inset-0 rounded-xl"
+                    width="100%"
+                    height="100%"
+                  />
+                </Box>
+              </Box>
+              <Box className="flex flex-col gap-2 w-full">
+                <Skeleton width="80%" height="5" />
+                <Skeleton width="50%" height="3" />
+                <Box className="flex gap-2 mt-2 flex-wrap">
+                  {[...Array(6)].map((_, index) => (
+                    <Skeleton key={index} width="64px" height="5" />
+                  ))}
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+          <Box className="xl:flex-2 flex-1">
+            <Box className="flex gap-2 mt-2 flex-wrap w-full">
+              {[...Array(16)].map((_, index) => (
+                <Skeleton
+                  key={index}
+                  height="32px"
+                  width="120px"
+                  className="flex-auto"
+                />
+              ))}
+            </Box>
+          </Box>
         </Box>
       </Box>
     </Box>

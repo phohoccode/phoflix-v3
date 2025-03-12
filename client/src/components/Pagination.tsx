@@ -17,9 +17,10 @@ interface PaginationProps {
     totalItemsPerPage: number | string;
   };
   currentPage: string | number;
+  ref?: any;
 }
 
-const Pagination = ({ pagination, currentPage }: PaginationProps) => {
+const Pagination = ({ pagination, currentPage, ref }: PaginationProps) => {
   const { totalItems, totalItemsPerPage } = pagination;
   const { windowWidth } = useSelector((state: RootState) => state.system);
 
@@ -29,6 +30,10 @@ const Pagination = ({ pagination, currentPage }: PaginationProps) => {
     params.set("page", page.toString());
     window.history.replaceState({}, "", `?${params.toString()}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (ref?.current) {
+      ref.current.scrollIntoView({ behavior: "smooth" });
+    }
 
     // Show toast
     toaster.create({
@@ -40,12 +45,12 @@ const Pagination = ({ pagination, currentPage }: PaginationProps) => {
   };
 
   return (
-    <Box className="flex mx-auto my-12">
+    <Box className="flex mx-auto mt-12">
       <PaginationRoot
         size={windowWidth < 768 ? "xs" : "md"}
         count={Number(totalItems)}
         pageSize={Number(totalItemsPerPage)}
-        page={currentPage as number}
+        page={Number(currentPage)}
         siblingCount={1}
         variant="solid"
         onPageChange={(details) => handleChangePage(details.page)}

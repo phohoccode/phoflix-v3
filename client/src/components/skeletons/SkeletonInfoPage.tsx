@@ -13,7 +13,7 @@ const SkeletonInfoPage = () => {
         <Box className="mt-[-100px]">
           <SimpleGrid columns={12} gap={0}>
             <GridItem colSpan={{ base: 12, md: 12, lg: 12, xl: 4 }}>
-              <Box className="flex flex-col gap-2 p-6 rounded-4xl lg:items-start items-center lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
+              <Box className="flex flex-col gap-2 p-6 lg:rounded-tl-4xl h-full lg:rounded-tr-4xl lg:rounded-bl-4xl lg:items-start items-center lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
                 <Box className="w-40 mb-2">
                   <Box className="h-0 relative pt-[150%]">
                     <Skeleton
@@ -42,12 +42,12 @@ const SkeletonInfoPage = () => {
               </Box>
             </GridItem>
             <GridItem colSpan={{ base: 12, md: 12, lg: 12, xl: 8 }}>
-              <Box className="relative z-[10] flex flex-col gap-4 p-8 rounded-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
+              <Box className="relative z-[10] flex flex-col gap-4 p-8 h-full lg:rounded-tl-4xl lg:rounded-tr-4xl lg:rounded-br-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
                 <Box className="flex gap-6 lg:flex-row lg:items-start items-center flex-col w-full">
                   <Skeleton
                     width={{
-                      base: "80%",
-                      md: "70%",
+                      base: "70%",
+                      md: "40%",
                       lg: "288px",
                       xl: "240px",
                     }}
@@ -74,12 +74,8 @@ const SkeletonInfoPage = () => {
                       <Skeleton
                         key={index}
                         height="32px"
-                        width={{
-                          base: "calc(25% - 20px)",
-                          md: "calc(25% - 20px)",
-                          lg: "calc(16.66667 - 20px)",
-                          xl: "calc(12.5% - 20px)",
-                        }}
+                        width="120px"
+                        className="flex-auto"
                       />
                     ))}
                   </Box>

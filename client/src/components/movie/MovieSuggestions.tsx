@@ -7,7 +7,7 @@ import {
   fetchDataMovieDetail,
 } from "@/store/asyncThunks/movieAsyncThunk";
 import { AppDispatch, RootState } from "@/store/store";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SkeletonMovieList from "../skeletons/SkeletonMovieGrid";
 import MovieGrid from "./movie-thumb/MovieGrid";
@@ -16,8 +16,8 @@ import { Box } from "@chakra-ui/react";
 const data = [...categories, ...countries];
 
 interface MovieSuggesstionsProps {
-  title: string;
-  colums?: {
+  title: string | React.ReactNode;
+  columns?: {
     base: number;
     md: number;
     lg: number;
@@ -29,7 +29,7 @@ interface MovieSuggesstionsProps {
 
 const MovieSuggesstions = ({
   title,
-  colums,
+  columns,
   limit = 15,
 }: MovieSuggesstionsProps) => {
   const dispatch: AppDispatch = useDispatch();
@@ -54,7 +54,7 @@ const MovieSuggesstions = ({
   if (loading)
     return (
       <SkeletonMovieList
-        columns={colums || { base: 2, md: 3, lg: 5, xl: 4, "2xl": 5 }}
+        columns={columns || { base: 3, md: 3, lg: 5, xl: 4, "2xl": 5 }}
       />
     );
 
@@ -63,7 +63,7 @@ const MovieSuggesstions = ({
       <h4 className="text-xl text-gray-50">{title}</h4>
       <MovieGrid
         items={items}
-        colums={colums || { base: 2, md: 3, lg: 5, xl: 4, "2xl": 5 }}
+        columns={columns || { base: 2, md: 3, lg: 5, xl: 4, "2xl": 5 }}
       />
     </Box>
   );

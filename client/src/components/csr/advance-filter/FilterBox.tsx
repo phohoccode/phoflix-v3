@@ -45,7 +45,7 @@ const FilterBox = () => {
     );
 
     const newQuery = updateSearchParams(filter);
-    
+
     router.push(`?${newQuery}`);
   };
 

@@ -65,3 +65,8 @@ export const changeQuery = <T>(arr: T[]) => {
 
   window.history.replaceState({}, "", `?${params.toString()}`);
 };
+
+export const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};

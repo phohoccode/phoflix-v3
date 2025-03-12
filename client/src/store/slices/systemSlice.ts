@@ -3,6 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState: SystemSlice = {
   isOpenModalSearch: false,
   isOpenModalNotification: false,
+  isShowAuthDialog: false,
+  typeAuth: "signin",
   isOpenDrawer: false,
   windowWidth: 0,
   loaded: false,
@@ -35,16 +37,24 @@ const systemSlice = createSlice({
     setIsVisiable: (state, action) => {
       state.isVisiable = action.payload;
     },
+    setIsShowAuthDialog: (state, action) => {
+      state.isShowAuthDialog = action.payload;
+    },
+    setTypeAuth: (state, action) => {
+      state.typeAuth = action.payload;
+    },
   },
 });
 
 export const {
   setIsOpenModalSearch,
   setIsOpenModalNotification,
+  setIsShowAuthDialog,
   setWidth,
   setIsVisiable,
   setLastScrollY,
   setIsOpenDrawer,
   setLoaded,
+  setTypeAuth,
 } = systemSlice.actions;
 export default systemSlice.reducer;

@@ -6,7 +6,6 @@ import ShowMoreText from "@/components/ShowMoreText";
 import { formatStringForURL, generateUrlImage } from "@/lib/utils";
 import { Box, Image } from "@chakra-ui/react";
 import Link from "next/link";
-import { format } from "path";
 
 interface SectionInfoProps {
   data: any;

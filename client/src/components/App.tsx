@@ -9,6 +9,7 @@ import {
   setIsOpenDrawer,
   setIsOpenModalNotification,
   setIsOpenModalSearch,
+  setIsShowAuthDialog,
   setIsVisiable,
   setLastScrollY,
   setLoaded,
@@ -18,6 +19,9 @@ import NotifyDialog from "./dialogs/notification-dialog/NotificationDialog";
 import { useEffect } from "react";
 import DrawerCustom from "./drawer/DrawerCustom";
 import { Toaster } from "./ui/toaster";
+import Footer from "./layouts/Footer";
+import AuthDialog from "./dialogs/auth-dialog/AuthDialog";
+import ScrollToTopButton from "./ScrollToTopButton";
 
 const App = ({ children }: { children: React.ReactNode }) => {
   const {
@@ -25,6 +29,8 @@ const App = ({ children }: { children: React.ReactNode }) => {
     lastScrollY,
     isOpenModalSearch,
     isOpenDrawer,
+    isShowAuthDialog,
+    typeAuth,
   } = useSelector((state: RootState) => state.system);
   const dispatch: AppDispatch = useDispatch();
 
@@ -66,6 +72,7 @@ const App = ({ children }: { children: React.ReactNode }) => {
     <Box>
       <NavBar />
       {children}
+      <Footer />
 
       <DrawerCustom
         isOpen={isOpenDrawer}
@@ -82,7 +89,15 @@ const App = ({ children }: { children: React.ReactNode }) => {
         onClose={() => dispatch(setIsOpenModalNotification(false))}
       />
 
+      <AuthDialog
+        isOpen={isShowAuthDialog}
+        type={typeAuth}
+        onClose={() => dispatch(setIsShowAuthDialog(false))}
+      />
+
       <Toaster />
+
+      <ScrollToTopButton />
     </Box>
   );
 };

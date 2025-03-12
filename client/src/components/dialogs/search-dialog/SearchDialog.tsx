@@ -58,7 +58,7 @@ const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
 
   return (
     <DialogRoot scrollBehavior="inside" open={isOpen} onOpenChange={onClose}>
-      <DialogContent padding={1} className="bg-[rgba(40,43,58,0.8)] backdrop-blur">
+      <DialogContent padding={1} className="bg-[rgba(40,43,58,0.8)] backdrop-blur mx-4">
         <DialogHeader p={1}>
           <DialogTitle>
             <InputGroup startElement={<SearchIcon />} className="w-full">

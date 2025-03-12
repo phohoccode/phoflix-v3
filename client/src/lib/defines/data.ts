@@ -5,11 +5,6 @@ export const categories = [
     slug: "hanh-dong",
   },
   {
-    _id: "f8ec3e9b77c509fdf64f0c387119b916",
-    name: "Lịch Sử",
-    slug: "lich-su",
-  },
-  {
     _id: "3a17c7283b71fa84e5a8d76fb790ed3e",
     name: "Cổ Trang",
     slug: "co-trang",
@@ -291,7 +286,7 @@ export const countries = [
     _id: "638f494a6d33cf5760f6e95c8beb612a",
     name: "Na Uy",
     slug: "na-uy",
-  }
+  },
 ];
 
 export const charactors = [
@@ -335,7 +330,7 @@ export const charactors = [
 
 // Trang lọc phim nâng cao
 const currentYear = new Date().getFullYear();
-const numberOfYear = 22; 
+const numberOfYear = 22;
 const recentYears = Array.from({ length: numberOfYear }, (_, i) => {
   return {
     id: currentYear - i,

@@ -25,8 +25,9 @@ const SearchButton = () => {
         </Button>
       ) : (
         <IconButton
+          rounded="full"
           onClick={() => dispatch(setIsOpenModalSearch(true))}
-          size={"xs"}
+          size={"sm"}
           className="bg-[#ffffff5e]"
           variant={"solid"}
         >

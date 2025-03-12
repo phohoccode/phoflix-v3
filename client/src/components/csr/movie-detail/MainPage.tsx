@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "@/assets/css/movie.css";
 import Pagination from "@/components/Pagination";
-import SkeletonMovieList from "@/components/skeletons/SkeletonMovieGrid";
+import SkeletonMovieGrid from "@/components/skeletons/SkeletonMovieGrid";
 import EmptyData from "@/components/EmptyData";
 import MovieGrid from "@/components/movie/movie-thumb/MovieGrid";
 
@@ -43,7 +43,10 @@ const MainPage = () => {
         <Box className="flex flex-col gap-4 px-4 lg:pt-28 pt-24">
           <Skeleton width="25%" height="5" />
           <Box className="mt-3">
-            <SkeletonMovieList limit={limit} />
+            <SkeletonMovieGrid
+              limit={limit}
+              columns={{ base: 3, md: 3, lg: 5, xl: 6, "2xl": 8 }}
+            />
           </Box>
         </Box>
       </RootLayout>
@@ -68,7 +71,10 @@ const MainPage = () => {
           {titlePage}
         </h3>
         <Box className="mt-6">
-          <MovieGrid items={items} />
+          <MovieGrid
+            items={items}
+            columns={{ base: 3, md: 3, lg: 5, xl: 6, "2xl": 8 }}
+          />
         </Box>
 
         {!loading && (pagination?.totalItems as number) >= limit && (

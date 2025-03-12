@@ -15,8 +15,8 @@ const BarButton = () => {
   return (
     <IconButton
       onClick={() => dispatch(setIsOpenDrawer(true))}
-      size={"xs"}
-      variant={"solid"}
+      size="sm"
+      variant="solid"
       className="bg-[#ffffff5e]"
     >
       <BarIcon />

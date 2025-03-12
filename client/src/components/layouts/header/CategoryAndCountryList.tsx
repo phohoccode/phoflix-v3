@@ -17,7 +17,7 @@ const CategoryAndCountryList = ({
       opacity-0 translate-y-2 transition-all duration-300 ease-in-out"
       style={{ opacity: 1, transform: "translateY(0)" }}
     >
-      <ul className="flex gap-2 p-2 flex-wrap text-gray-50">
+      <ul className="flex gap-1 p-2 flex-wrap text-gray-50">
         {data.map((item) => (
           <li key={item._id} className="">
             <Link

@@ -13,7 +13,7 @@ interface MovieDetailProps {
 
 const MovieDetail = ({ data }: MovieDetailProps) => {
   return (
-    <Box className="relative z-[10] flex flex-col gap-2 p-6 lg:items-start items-center lg:rounded-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
+    <Box className="relative z-[10] h-full flex flex-col gap-2 p-6 lg:items-start items-center lg:rounded-tl-4xl lg:rounded-tr-4xl lg:rounded-bl-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
       <Box className="w-40 mb-2">
         <Box className="h-0 relative pt-[150%]">
           <Image

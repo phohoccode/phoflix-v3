@@ -14,12 +14,12 @@ const MovieMain = () => {
   const slug = params.slug;
 
   return (
-    <Box className="relative z-[10] flex flex-col gap-4 p-8 lg:rounded-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
+    <Box className="relative h-full z-[10] flex flex-col gap-4 p-8 lg:rounded-tl-4xl lg:rounded-tr-4xl lg:rounded-br-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
       <Box className="flex flex-col gap-8">
         <Box className="flex gap-6 lg:flex-row lg:items-start items-center flex-col">
           <Link
             href={`/watching/${slug}`}
-            className="xl:w-60 lg:w-72 md:w-[70%] w-[80%]"
+            className="xl:w-60 lg:w-72 md:w-[40%] w-[70%]"
           >
             <Button
               className="w-full h-14 text-lg shadow-lg hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
@@ -61,7 +61,7 @@ const MovieMain = () => {
                 className="text-gray-50"
                 value="suggest"
               >
-                Gợi ý
+                Đề xuất
               </Tabs.Trigger>
             </Tabs.List>
             <Tabs.Content

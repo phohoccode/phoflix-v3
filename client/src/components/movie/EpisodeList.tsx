@@ -2,7 +2,7 @@
 
 import { Box, Button, HStack } from "@chakra-ui/react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PaginationItems, PaginationRoot } from "../ui/pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
@@ -45,6 +45,7 @@ const EpisodesList = ({
   const { windowWidth } = useSelector((state: RootState) => state.system);
   const [page, setPage] = useState(1);
   const title = server_name.includes("Vietsub") ? "Vietsub" : "Lồng tiếng";
+
   const { currentEpisode } = useSelector(
     (state: RootState) => state.movie.movieInfo
   );
@@ -58,7 +59,6 @@ const EpisodesList = ({
 
   const handleSetCurrentEpisode = (item: Episode) => {
     if (!redirect) {
-
       if (currentEpisode?.link_embed === item.link_embed) return;
 
       const id = getIdFromLinkEmbed(item.link_embed, 8);
