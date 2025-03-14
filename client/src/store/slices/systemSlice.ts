@@ -5,6 +5,7 @@ const initialState: SystemSlice = {
   isOpenModalNotification: false,
   isShowAuthDialog: false,
   typeAuth: "signin",
+  isOpenPopoverUser: false,
   isOpenDrawer: false,
   windowWidth: 0,
   loaded: false,
@@ -43,11 +44,15 @@ const systemSlice = createSlice({
     setTypeAuth: (state, action) => {
       state.typeAuth = action.payload;
     },
+    setIsOpenPopoverUser: (state, action) => {
+      state.isOpenPopoverUser = action.payload;
+    },
   },
 });
 
 export const {
   setIsOpenModalSearch,
+  setIsOpenPopoverUser,
   setIsOpenModalNotification,
   setIsShowAuthDialog,
   setWidth,

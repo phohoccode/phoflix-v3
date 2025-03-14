@@ -1,8 +1,9 @@
 type SystemSlice = {
   isOpenModalSearch: boolean;
   isOpenModalNotification: boolean;
-  isShowAuthDialog: boolean;  
-  typeAuth: "signin" | "signup" | "forgot-password";
+  isShowAuthDialog: boolean;
+  isOpenPopoverUser: boolean;
+  typeAuth: "signin" | "signup" | "forgot-password" | "reset-password";
   isOpenDrawer: boolean;
   windowWidth: number;
   loaded: boolean;

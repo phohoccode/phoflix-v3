@@ -13,7 +13,7 @@ const CategoryAndCountryList = ({
 }: CategoryAndCountryListProps) => {
   return (
     <Box
-      className="absolute left-0 top-[calc(100%-16px)] mt-2 min-w-2xl overflow-hidden bg-[#191b2482] border border-[#282b3a] backdrop-blur shadow-lg rounded-lg 
+      className="absolute left-0 top-[calc(100%-16px)] mt-2 min-w-2xl overflow-hidden bg-[#0f111af2] text-gray-50 border border-[#ffffff10] shadow-lg rounded-lg 
       opacity-0 translate-y-2 transition-all duration-300 ease-in-out"
       style={{ opacity: 1, transform: "translateY(0)" }}
     >

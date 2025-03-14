@@ -2,11 +2,13 @@
 
 import { PasswordInput } from "@/components/ui/password-input";
 import { PinInput } from "@/components/ui/pin-input";
+import { toaster } from "@/components/ui/toaster";
+import { forgotPassword } from "@/lib/actions/authAction";
 import { isValidEmail } from "@/lib/utils";
-import { setTypeAuth } from "@/store/slices/systemSlice";
+import { setIsShowAuthDialog, setTypeAuth } from "@/store/slices/systemSlice";
 import { AppDispatch } from "@/store/store";
 import { Box, Button, Field, Input } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useDispatch } from "react-redux";
 
 const ForgotPassword = () => {
@@ -14,6 +16,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [invalid, setInvalid] = useState(false);
   const [error, setError] = useState("");
+  const [isPending, startTransition] = useTransition();
 
   const handleResetPassword = () => {
     if (!email.trim()) {
@@ -27,6 +30,26 @@ const ForgotPassword = () => {
       setError("Email không hợp lệ");
       return;
     }
+
+    startTransition(async () => {
+      const response = await forgotPassword(email);
+
+      if (!response.status) {
+        toaster.error({
+          description: response.message,
+          type: "error",
+          duration: 3000,
+        });
+      } else {
+        toaster.success({
+          description: response.message,
+          type: "success",
+          duration: 3000,
+        });
+
+        dispatch(setIsShowAuthDialog(false));
+      }
+    });
   };
 
   return (
@@ -41,7 +64,15 @@ const ForgotPassword = () => {
           đăng nhập
         </span>
       </p>
-      <form className="flex flex-col gap-4 mt-4">
+      <form
+        className="flex flex-col gap-4 mt-4"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleResetPassword();
+          }
+        }}
+      >
         <Field.Root invalid={invalid}>
           <Input
             autoFocus
@@ -68,6 +99,7 @@ const ForgotPassword = () => {
           size="sm"
           colorPalette="yellow"
           variant="solid"
+          loading={isPending}
           className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
         >
           Gửi yêu cầu

@@ -5,7 +5,7 @@ import { Box, CloseButton } from "@chakra-ui/react";
 import ForgotPassword from "./ForgotPassword";
 import SignUp from "./SignUp";
 import SignIn from "./SignIn";
-
+import ResetPassword from "./ResetPassword";
 
 interface AuthDialogProps {
   isOpen: boolean;
@@ -30,7 +30,10 @@ const AuthDialog = ({ isOpen, type, onClose }: AuthDialogProps) => {
               </Box>
             </Box>
 
-            <CloseButton className="absolute top-2 right-2 text-gray-300 hover:bg-transparent" onClick={onClose} />
+            <CloseButton
+              className="absolute top-2 right-2 text-gray-300 hover:bg-transparent"
+              onClick={onClose}
+            />
 
             <Box className="flex-1 lg:p-8 p-4">
               <Box>
@@ -38,8 +41,10 @@ const AuthDialog = ({ isOpen, type, onClose }: AuthDialogProps) => {
                   <SignIn />
                 ) : type === "signup" ? (
                   <SignUp />
-                ) : (
+                ) : type === "forgot-password" ? (
                   <ForgotPassword />
+                ) : (
+                  <ResetPassword />
                 )}
               </Box>
             </Box>

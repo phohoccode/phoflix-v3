@@ -17,8 +17,8 @@ const SkeletonInfoPage = () => {
                 <Box className="w-40 mb-2">
                   <Box className="h-0 relative pt-[150%]">
                     <Skeleton
-                      className="absolute inset-0 w-full h-full"
-                      rounded="xl"
+                      className="absolute inset-0 w-full h-full rounded-none"
+                      rounded={0}
                     />
                   </Box>
                 </Box>

@@ -8,7 +8,6 @@ import {
   AccordionRoot,
 } from "../ui/accordion";
 import { categories, countries } from "@/lib/defines/data";
-import { Button } from "@chakra-ui/react";
 import { AppDispatch } from "@/store/store";
 import { useDispatch } from "react-redux";
 import { setIsOpenDrawer } from "@/store/slices/systemSlice";
@@ -21,7 +20,7 @@ const Body = () => {
       <li onClick={() => dispatch(setIsOpenDrawer(false))}>
         <Link
           href="/"
-          className="text-sm p-2 rounded-sm transition-all hover:bg-gray-100 block"
+          className="text-sm p-2 rounded-sm transition-all hover:bg-[#ffffff05] block"
         >
           Trang chủ
         </Link>
@@ -29,7 +28,7 @@ const Body = () => {
       <li onClick={() => dispatch(setIsOpenDrawer(false))}>
         <Link
           href="/detail/danh-sach/phim-le"
-          className="text-sm p-2 rounded-sm transition-all hover:bg-gray-100 block"
+          className="text-sm p-2 rounded-sm transition-all hover:bg-[#ffffff05] block"
         >
           Phim lẻ
         </Link>
@@ -37,7 +36,7 @@ const Body = () => {
       <li onClick={() => dispatch(setIsOpenDrawer(false))}>
         <Link
           href="/detail/danh-sach/phim-bo"
-          className="text-sm p-2 rounded-sm transition-all hover:bg-gray-100 block"
+          className="text-sm p-2 rounded-sm transition-all hover:bg-[#ffffff05] block"
         >
           Phim bộ
         </Link>
@@ -45,7 +44,7 @@ const Body = () => {
       <li onClick={() => dispatch(setIsOpenDrawer(false))}>
         <Link
           href="/detail/danh-sach/hoat-hinh"
-          className="text-sm p-2 rounded-sm transition-all hover:bg-gray-100 block"
+          className="text-sm p-2 rounded-sm transition-all hover:bg-[#ffffff05] block"
         >
           Hoạt hình
         </Link>
@@ -53,7 +52,7 @@ const Body = () => {
       <li onClick={() => dispatch(setIsOpenDrawer(false))}>
         <Link
           href="/advance-filter"
-          className="text-sm p-2 rounded-sm transition-all hover:bg-gray-100 block"
+          className="text-sm p-2 rounded-sm transition-all hover:bg-[#ffffff05] block"
         >
           Lọc nâng cao
         </Link>
@@ -73,7 +72,7 @@ const Body = () => {
                   >
                     <Link
                       href={`/detail/the-loai/${category.slug}`}
-                      className="flex text-sm w-full p-2 flex-1 rounded-sm transition-all hover:bg-gray-100"
+                      className="flex text-sm w-full p-2 flex-1 rounded-sm transition-all hover:bg-[#ffffff05]"
                     >
                       {category.name}
                     </Link>
@@ -109,17 +108,6 @@ const Body = () => {
             </AccordionItemContent>
           </AccordionItem>
         </AccordionRoot>
-      </li>
-
-      <li className="mt-auto">
-        <Button
-          size="xs"
-          className="w-full mb-2"
-          variant="solid"
-          colorPalette="red"
-        >
-          Đăng xuất
-        </Button>
       </li>
     </ul>
   );

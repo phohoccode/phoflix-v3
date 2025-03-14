@@ -2,12 +2,13 @@ CREATE TABLE
   `users` (
     `id` CHAR(36) PRIMARY KEY NOT NULL,
     `username` VARCHAR(50) NOT NULL,
-    `email` VARCHAR(100) NOT NULL UNIQUE,
+    `email` VARCHAR(100) NOT NULL,
     `avatar` VARCHAR(100) NOT NULL,
     `password` VARCHAR(255) NOT NULL,
-    `gender` ENUM ('male', 'female', 'other') NOT NULL,
+    `gender` ENUM ('male', 'female', 'other') DEFAULT 'other',
     `role` ENUM ('member', 'admin') DEFAULT 'member',
     `status` ENUM ('active', 'banned') DEFAULT 'active',
+    `type_account` ENUM ('credentials', 'google') DEFAULT 'credentials',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   );
@@ -22,6 +23,16 @@ CREATE TABLE
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+  );
+
+CREATE TABLE
+  `password_resets` (
+    `id` CHAR(36) PRIMARY KEY NOT NULL,
+    `user_id` CHAR(36) NOT NULL,
+    `email` VARCHAR(100) NOT NULL,
+    `token` VARCHAR(255) NOT NULL,
+    `expires_at` DATETIME NOT NULL,
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
   );
 
 CREATE TABLE

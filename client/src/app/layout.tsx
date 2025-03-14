@@ -5,6 +5,7 @@ import { Provider } from "@/components/ui/provider";
 import { StoreProvider } from "@/store/StoreProvider";
 import NextTopLoader from "nextjs-toploader";
 import App from "@/components/App";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
@@ -32,7 +33,9 @@ export default function RootLayout({
 
         <StoreProvider>
           <Provider>
-            <App>{children}</App>
+            <SessionProvider>
+              <App>{children}</App>
+            </SessionProvider>
           </Provider>
         </StoreProvider>
       </body>

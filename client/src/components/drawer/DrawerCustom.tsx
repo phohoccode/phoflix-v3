@@ -1,20 +1,17 @@
 "use client";
 
-import { Button } from "@chakra-ui/react";
 import {
-  DrawerActionTrigger,
   DrawerBackdrop,
   DrawerBody,
   DrawerCloseTrigger,
   DrawerContent,
-  DrawerFooter,
   DrawerHeader,
   DrawerRoot,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import Title from "./Title";
-import Body from "./Body";
+import BodyDrawer from "./BodyDrawer";
 import "@/assets/css/movie.css";
+import ProfileHeader from "../ProfileHeader";
 
 interface DrawerCustomProps {
   isOpen: boolean;
@@ -26,17 +23,17 @@ const DrawerCustom = ({ isOpen, onClose }: DrawerCustomProps) => {
     <DrawerRoot placement="start" open={isOpen} onOpenChange={onClose}>
       <DrawerBackdrop />
 
-      <DrawerContent offset={3} rounded="md">
-        <DrawerHeader>
+      <DrawerContent p={1} className="bg-[#0f111af2] text-gray-50">
+        <DrawerHeader p={3}>
           <DrawerTitle>
-            <Title />
+            <ProfileHeader />
           </DrawerTitle>
         </DrawerHeader>
-        <DrawerBody>
-          <Body />
+        <DrawerBody p={3}>
+          <BodyDrawer />
         </DrawerBody>
 
-        <DrawerCloseTrigger />
+        <DrawerCloseTrigger className="text-gray-50" />
       </DrawerContent>
     </DrawerRoot>
   );

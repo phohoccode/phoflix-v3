@@ -1,22 +1,28 @@
 "use client";
 
-import { Box } from "@chakra-ui/react";
+import { Box, Popover, Skeleton } from "@chakra-ui/react";
 import Link from "next/link";
 import SearchButton from "./SearchButton";
 import AuthButton from "./AuthButton";
 import NotificationButton from "./NotificationButton";
-import AvartarUser from "./AvatarUser";
+import AvatarUser from "./AvatarUser";
 import MenuBar from "./MenuBar";
 import BarButton from "./BarButton";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { useSession } from "next-auth/react";
 
 import "../../../assets/css/navbar.css";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { useEffect } from "react";
+import { SkeletonCircle } from "@/components/ui/skeleton";
+import PopoverUser from "./PopoverUser";
+import { setIsOpenPopoverUser } from "@/store/slices/systemSlice";
 
 const NavBar = () => {
-  const { loaded, windowWidth, isVisiable, lastScrollY } = useSelector(
-    (state: RootState) => state.system
-  );
+  const { loaded, windowWidth, isVisiable, lastScrollY, isOpenPopoverUser } =
+    useSelector((state: RootState) => state.system);
+  const { status } = useSession();
+  const dispatch: AppDispatch = useDispatch();
 
   return (
     <header
@@ -28,10 +34,7 @@ const NavBar = () => {
       <Box className="flex items-center gap-6">
         {loaded && <BarButton />}
         {windowWidth > 456 && (
-          <Link
-            href="/"
-            className="text-primary font-bold lg:text-lg text-sm"
-          >
+          <Link href="/" className="text-primary font-bold lg:text-lg text-sm">
             PHOFLIX-V3
           </Link>
         )}
@@ -40,8 +43,9 @@ const NavBar = () => {
       <Box className="flex items-center gap-4">
         <SearchButton />
         <NotificationButton />
-        <AuthButton />
-        {windowWidth > 1024 && <AvartarUser />}
+        {status === "loading" && <SkeletonCircle size="9" />}
+        {status === "unauthenticated" && <AuthButton />}
+        {status === "authenticated" && <PopoverUser />}
       </Box>
     </header>
   );

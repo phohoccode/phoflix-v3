@@ -5,13 +5,14 @@ import { Avatar } from "@chakra-ui/react";
 interface AvatarProps {
   name?: string;
   src?: string;
+  onClick?: () => void;
 }
 
-const AvatarUser = ({ name, src }: AvatarProps) => {
+const AvatarUser = ({ name, src, onClick }: AvatarProps) => {
   return (
-    <Avatar.Root size={"sm"}>
-      <Avatar.Fallback name="Segun Adebayo" />
-      <Avatar.Image src="https://bit.ly/sage-adebayo" />
+    <Avatar.Root size="sm" onClick={onClick}>
+      <Avatar.Fallback name={name} />
+      <Avatar.Image src={src} />
     </Avatar.Root>
   );
 };

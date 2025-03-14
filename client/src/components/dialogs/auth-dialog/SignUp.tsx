@@ -1,11 +1,13 @@
 "use client";
 
 import { PasswordInput } from "@/components/ui/password-input";
+import { toaster } from "@/components/ui/toaster";
+import { register } from "@/lib/actions/authAction";
 import { isValidEmail } from "@/lib/utils";
 import { setTypeAuth } from "@/store/slices/systemSlice";
 import { AppDispatch } from "@/store/store";
 import { Box, Button, Field, Input } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { useDispatch } from "react-redux";
 
 const SignUp = () => {
@@ -28,6 +30,7 @@ const SignUp = () => {
     nameDisplay: false,
   });
   const dispatch: AppDispatch = useDispatch();
+  const [isPending, startTransition] = useTransition();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,17 +40,15 @@ const SignUp = () => {
       [name]: value,
     }));
 
-    handleCheckValid(
-      name,
-      value,
-      name === "email"
-        ? "email"
-        : name === "password"
-        ? "password"
-        : name === "nameDisplay"
-        ? "nameDisplay"
-        : "confirmPassword"
-    );
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+
+    setInvalid((prev) => ({
+      ...prev,
+      [name]: false,
+    }));
   };
 
   const handleCheckValid = (
@@ -139,7 +140,31 @@ const SignUp = () => {
     )
       return;
 
-    console.log("Sign up", email, password);
+    startTransition(async () => {
+      const response = await register({
+        email,
+        password,
+        name: nameDisplay,
+        typeAccount: "credentials",
+        avatar: "/images/avatar.jpg",
+      });
+
+      if (response?.status) {
+        toaster.create({
+          description: response?.message,
+          type: "success",
+          duration: 1000,
+        });
+
+        dispatch(setTypeAuth("signin"));
+      } else {
+        toaster.create({
+          description: response?.message,
+          type: "error",
+          duration: 1000,
+        });
+      }
+    });
   };
 
   return (
@@ -154,7 +179,10 @@ const SignUp = () => {
           đăng nhập
         </span>
       </p>
-      <form className="flex flex-col gap-4 mt-4">
+      <form
+        className="flex flex-col gap-4 mt-4"
+        onKeyDown={(e) => e.key === "Enter" && handleSignUp()}
+      >
         <Field.Root invalid={invalid.nameDisplay}>
           <Input
             autoFocus
@@ -219,6 +247,7 @@ const SignUp = () => {
           size="sm"
           colorPalette="yellow"
           variant="solid"
+          loading={isPending}
           className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
         >
           Đăng ký

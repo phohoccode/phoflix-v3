@@ -2,30 +2,32 @@
 
 import { PasswordInput } from "@/components/ui/password-input";
 import { toaster } from "@/components/ui/toaster";
-import { authenticate } from "@/lib/actions/authAction";
+import { forgotPassword, resetPassword } from "@/lib/actions/authAction";
 import { isValidEmail } from "@/lib/utils";
-import { setTypeAuth } from "@/store/slices/systemSlice";
+import { setIsShowAuthDialog, setTypeAuth } from "@/store/slices/systemSlice";
 import { AppDispatch } from "@/store/store";
 import { Box, Button, Field, Input } from "@chakra-ui/react";
-import { signIn } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
-import { FaGoogle } from "react-icons/fa6";
 import { useDispatch } from "react-redux";
 
-const SignIn = () => {
+const ResetPassword = () => {
+  const dispatch: AppDispatch = useDispatch();
+  const searchParams = useSearchParams();
+  const email = searchParams.get("email");
+  const token = searchParams.get("token");
   const [values, setValues] = useState({
-    email: "",
     password: "",
-  });
-  const [errors, setErrors] = useState({
-    email: "",
-    password: "",
+    confirmPassword: "",
   });
   const [invalid, setInvalid] = useState({
-    email: false,
     password: false,
+    confirmPassword: false,
   });
-  const dispatch: AppDispatch = useDispatch();
+  const [errors, setErrors] = useState({
+    password: "",
+    confirmPassword: "",
+  });
   const [isPending, startTransition] = useTransition();
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,14 +52,16 @@ const SignIn = () => {
   const handleCheckValid = (
     name: string,
     value: string,
-    type: "email" | "password"
+    type: "password" | "confirmPassword"
   ) => {
     if (!value.trim()) {
       setErrors((prev) => ({
         ...prev,
         [name]: `${
-          type === "email" ? "Email" : "Mật khẩu"
-        } không được để trống`,
+          type === "password"
+            ? "Mật khẩu không được để trống"
+            : "Mật khẩu nhập lại không được để trống"
+        }`,
       }));
 
       setInvalid((prev) => ({
@@ -68,24 +72,24 @@ const SignIn = () => {
       return true;
     }
 
-    if (!isValidEmail(value) && type === "email") {
+    if (type === "confirmPassword" && value !== values.password) {
       setErrors((prev) => ({
         ...prev,
-        email: "Email không hợp lệ",
+        [name]: "Mật khẩu không khớp",
       }));
       setInvalid((prev) => ({
         ...prev,
-        email: true,
+        [name]: true,
       }));
 
       return true;
     }
 
-    // Reset error
     setErrors((prev) => ({
       ...prev,
       [name]: "",
     }));
+
     setInvalid((prev) => ({
       ...prev,
       [name]: false,
@@ -94,67 +98,61 @@ const SignIn = () => {
     return false;
   };
 
-  const handleSignIn = () => {
-    const { email, password } = values;
+  const handleResetPassword = () => {
+    const { password, confirmPassword } = values;
 
-    const emailInvalid = handleCheckValid("email", email, "email");
     const passwordInvalid = handleCheckValid("password", password, "password");
+    const confirmPasswordInvalid = handleCheckValid(
+      "confirmPassword",
+      confirmPassword,
+      "confirmPassword"
+    );
 
-    if (emailInvalid || passwordInvalid) return;
+    if (passwordInvalid || confirmPasswordInvalid) return;
 
     startTransition(async () => {
-      const repsonse = await authenticate(email, password);
+      const repsonse = await resetPassword({
+        email: email as string,
+        token: token as string,
+        password,
+      });
 
-      if (!repsonse.status) {
+      if (repsonse.status) {
+        toaster.success({
+          description: repsonse.message,
+          type: "success",
+          duration: 2000,
+        });
+        
+        dispatch(setTypeAuth("signin"));
+      } else {
         toaster.error({
-          title: "Đăng nhập thất bại!",
           description: repsonse.message,
           type: "error",
-          duration: 1000,
+          duration: 2000,
         });
-      } else {
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 1000);
       }
     });
   };
 
   return (
     <Box className="flex flex-col gap-2">
-      <h3 className="text-lg text-gray-50">Đăng nhập</h3>
+      <h3 className="text-lg text-gray-50">Đặt lại mật khẩu</h3>
       <p className="text-xs text-gray-400">
-        Nếu bạn chưa có tài khoản,{" "}
-        <span
-          onClick={() => dispatch(setTypeAuth("signup"))}
-          className="text-[#f1c40f] hover:underline cursor-pointer"
-        >
-          đăng ký ngay
-        </span>
+        Thực hiện đặt lại mật khẩu mới cho tài khoản của bạn
       </p>
       <form
         className="flex flex-col gap-4 mt-4"
-        onKeyDown={(e) => e.key === "Enter" && handleSignIn()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleResetPassword();
+          }
+        }}
       >
-        <Field.Root invalid={invalid.email}>
-          <Input
-            autoFocus
-            onChange={handleOnChange}
-            value={values.email}
-            type="email"
-            name="email"
-            className={`border text-gray-50 ${
-              !invalid.email
-                ? "focus:border focus:border-gray-50 border-gray-600"
-                : "border-[#ef4444]"
-            }`}
-            placeholder="Email"
-          />
-          <Field.ErrorText>{errors.email}</Field.ErrorText>
-        </Field.Root>
-
         <Field.Root invalid={invalid.password}>
           <PasswordInput
+            autoFocus
             onChange={handleOnChange}
             value={values.password}
             name="password"
@@ -163,44 +161,38 @@ const SignIn = () => {
                 ? "focus:border focus:border-gray-50 border-gray-600"
                 : "border-[#ef4444]"
             }`}
-            placeholder="Mật khẩu"
+            placeholder="Nhập mật khẩu mới"
           />
           <Field.ErrorText>{errors.password}</Field.ErrorText>
         </Field.Root>
+        <Field.Root invalid={invalid.confirmPassword}>
+          <PasswordInput
+            onChange={handleOnChange}
+            value={values.confirmPassword}
+            name="confirmPassword"
+            className={`border text-gray-50 ${
+              !invalid.confirmPassword
+                ? "focus:border focus:border-gray-50 border-gray-600"
+                : "border-[#ef4444]"
+            }`}
+            placeholder="Nhập lại mật khẩu mới"
+          />
+          <Field.ErrorText>{errors.confirmPassword}</Field.ErrorText>
+        </Field.Root>
 
         <Button
-          onClick={handleSignIn}
+          onClick={handleResetPassword}
           size="sm"
           colorPalette="yellow"
           variant="solid"
           loading={isPending}
           className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
         >
-          Đăng nhập
-        </Button>
-        <span
-          onClick={() => dispatch(setTypeAuth("forgot-password"))}
-          className="text-center text-xs text-gray-50 cursor-pointer hover:underline"
-        >
-          Quên mật khẩu
-        </span>
-
-        <Box className="w-full h-[0.5px] bg-[#ffffff10]" />
-
-        <Button
-          size="sm"
-          variant="solid"
-          onClick={() =>
-            signIn("google", { callbackUrl: process.env.NEXTAUTH_URL })
-          }
-          className="bg-gray-50 text-gray-900 hover:shadow-[0_5px_10px_10px_rgba(255,255,255,.15)]"
-        >
-          <FaGoogle />
-          Đăng nhập với Google
+          Đặt lại mật khẩu
         </Button>
       </form>
     </Box>
   );
 };
 
-export default SignIn;
+export default ResetPassword;
