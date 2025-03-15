@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connection from "./database/connect";
 import authRouter from "./routes/authRouter";
 import userRouter from "./routes/userRouter";
+import cors from "cors";
 
 dotenv.config();
 
@@ -12,6 +13,12 @@ const app = express();
 
 // Cổng mặc định
 const port = process.env.PORT || 3000;
+
+// Sử dụng cors
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+}));
 
 // Xử lý dữ liệu dạng json
 app.use(express.json());

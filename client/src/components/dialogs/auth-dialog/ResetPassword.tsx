@@ -15,7 +15,6 @@ const ResetPassword = () => {
   const dispatch: AppDispatch = useDispatch();
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
-  const token = searchParams.get("token");
   const [values, setValues] = useState({
     password: "",
     confirmPassword: "",
@@ -113,7 +112,6 @@ const ResetPassword = () => {
     startTransition(async () => {
       const repsonse = await resetPassword({
         email: email as string,
-        token: token as string,
         password,
       });
 
@@ -123,7 +121,7 @@ const ResetPassword = () => {
           type: "success",
           duration: 2000,
         });
-        
+
         dispatch(setTypeAuth("signin"));
       } else {
         toaster.error({

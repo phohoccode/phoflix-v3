@@ -26,16 +26,6 @@ CREATE TABLE
   );
 
 CREATE TABLE
-  `password_resets` (
-    `id` CHAR(36) PRIMARY KEY NOT NULL,
-    `user_id` CHAR(36) NOT NULL,
-    `email` VARCHAR(100) NOT NULL,
-    `token` VARCHAR(255) NOT NULL,
-    `expires_at` DATETIME NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-  );
-
-CREATE TABLE
   `feedback` (
     `id` CHAR(36) PRIMARY KEY NOT NULL,
     `user_id` CHAR(36) NOT NULL,
@@ -51,7 +41,7 @@ CREATE TABLE
     `id` CHAR(36) PRIMARY KEY NOT NULL,
     `user_id` CHAR(36) NOT NULL,
     `keyword` VARCHAR(255) NOT NULL,
-    `search_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
   );
 

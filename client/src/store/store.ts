@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import systemReducer from "./slices/systemSlice";
 import movieReducer from "./slices/movieSlice";
+import userReducer from "./slices/userSlice";
 
 export const store = configureStore({
   reducer: {
     system: systemReducer,
     movie: movieReducer,
+    user: userReducer,
   },
 });
 

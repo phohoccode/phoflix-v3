@@ -4,9 +4,8 @@ import bcrypt from "bcrypt";
 import validator from "validator";
 import { UserLogin, UserRegister } from "../lib/types/auth";
 import nodemailer from "nodemailer";
-
 import dotenv from "dotenv";
-import { generateToken, getVietnamTime } from "../lib/utils";
+import { decryptData, encryptData, generateHtmlSendMail } from "../lib/utils";
 
 dotenv.config();
 
@@ -72,9 +71,9 @@ export const handleUserLogin = async ({
       message: "Đăng nhập thành công!",
       code: "LOGIN_SUCCESS",
       result: {
-        id: rows[0].id,
-        email: rows[0].email,
-        typeAccount: rows[0].typeAccount,
+        id: rows[0]?.id,
+        email: rows[0]?.email,
+        typeAccount: rows[0]?.typeAccount,
       },
     };
   } catch (error) {
@@ -88,50 +87,20 @@ export const handleUserLogin = async ({
   }
 };
 
-export const handleUserRegister = async ({
+export const handleCompleteRegistration = async ({
   email,
   password,
   typeAccount,
   name,
   avatar,
-}: UserRegister) => {
+}: {
+  email: string;
+  password: string;
+  typeAccount: string;
+  name: string;
+  avatar: string;
+}) => {
   try {
-    // check typeAccount
-    if (typeAccount === "credentials") {
-      // check valid email
-      if (!validator.isEmail(email)) {
-        return {
-          status: false,
-          message: "Email không hợp lệ!",
-          result: null,
-        };
-      }
-
-      // check strong password
-      if (!validator.isStrongPassword(password)) {
-        return {
-          status: false,
-          message:
-            "Mật khẩu có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.",
-          result: null,
-        };
-      }
-    }
-
-    const sqlCheckEmailExist = `select * from users where email = ? and type_account = ?`;
-
-    const [rows]: any = await connection
-      .promise()
-      .query(sqlCheckEmailExist, [email, typeAccount]);
-
-    if ((rows as any)?.length > 0) {
-      return {
-        status: false,
-        message: "Email đã đăng ký bởi tài khoản khác!",
-        result: null,
-      };
-    }
-
     const userId = uuidv4();
 
     const hashPassword = bcrypt.hashSync(password, salt);
@@ -176,7 +145,96 @@ export const handleUserRegister = async ({
   }
 };
 
-export const handleForgotPassword = async (email: string) => {
+export const handleUserRegister = async ({
+  email,
+  password,
+  typeAccount,
+  name,
+  avatar,
+}: UserRegister) => {
+  try {
+    if (typeAccount === "credentials") {
+      if (!validator.isEmail(email)) {
+        return {
+          status: false,
+          message: "Email không hợp lệ!",
+          result: null,
+        };
+      }
+
+      if (!validator.isStrongPassword(password)) {
+        return {
+          status: false,
+          message:
+            "Mật khẩu có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.",
+          result: null,
+        };
+      }
+    }
+
+    const sqlCheckEmailExist = `select * from users where email = ? and type_account = ?`;
+
+    const [rows]: any = await connection
+      .promise()
+      .query(sqlCheckEmailExist, [email, typeAccount]);
+
+    if ((rows as any)?.length > 0) {
+      return {
+        status: false,
+        message: "Email đã đăng ký bởi tài khoản khác!",
+        result: null,
+      };
+    }
+
+    // nếu là tài khoản google thì hoàn tất đăng ký
+    // ngược lại thì gửi email xác nhận đăng ký
+    if (typeAccount === "google") {
+      handleCompleteRegistration({
+        email,
+        password,
+        typeAccount,
+        name,
+        avatar,
+      });
+    } else if (typeAccount === "credentials") {
+      const expiresInSeconds = 60; // 1 minutes
+      const data = { email, password, name, avatar, typeAccount };
+      const token = encryptData(data, expiresInSeconds);
+      const link = `${process.env.CLIENT_URL}/auth/verify-token?action=register&token=${token}`;
+      const html = generateHtmlSendMail({
+        title: "Hoàn tất đăng ký tài khoản",
+        content: `Nhấn vào liên kết dưới đây để hoàn tất đăng ký tài khoản. Lưu ý rằng liên kết này sẽ hết hạn sau ${expiresInSeconds} giây.`,
+        conntentLink: "Hoàn tất đăng ký",
+        link,
+      });
+
+      await transporter.sendMail({
+        from: `phohoccode <${process.env.GOOGLE_APP_EMAIL}>`,
+        to: email,
+        subject: "Hoàn tất đăng ký tài khoản",
+        html,
+      });
+
+      return {
+        status: true,
+        message: "Vui lòng kiểm tra email hoàn tất đăng ký tài khoản!",
+        result: null,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+export const handleForgotPassword = async (
+  email: string,
+  typeAccount: "credentials"
+) => {
   try {
     if (!validator.isEmail(email)) {
       return {
@@ -186,11 +244,11 @@ export const handleForgotPassword = async (email: string) => {
       };
     }
 
-    const sql_find_user = `select * from users where email = ?`;
+    const sql_find_user = `select * from users where email = ? and type_account = ?`;
 
     const [rows]: any = await connection
       .promise()
-      .query(sql_find_user, [email]);
+      .query(sql_find_user, [email, typeAccount]);
 
     if ((rows as any)?.length === 0) {
       return {
@@ -200,39 +258,22 @@ export const handleForgotPassword = async (email: string) => {
       };
     }
 
-    const token = generateToken();
-    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
-    const resetLink = `${process.env.CORS_ORIGIN}/auth/verify-token?token=${token}`;
+    const expiresInSeconds = 60; // 1 minutes
+    const token = encryptData({ email }, expiresInSeconds);
+    const link = `${process.env.CLIENT_URL}/auth/verify-token?action=reset-password&token=${token}`;
+    const html = generateHtmlSendMail({
+      title: "Đặt lại mật khẩu",
+      content: `Nhấn vào liên kết dưới đây để đặt lại mật khẩu. Lưu ý rằng liên kết này sẽ hết hạn sau ${expiresInSeconds} giây.`,
+      conntentLink: "Đặt lại mật khẩu",
+      link,
+    });
 
     await transporter.sendMail({
       from: `phohoccode <${process.env.GOOGLE_APP_EMAIL}>`,
       to: email,
       subject: "Đặt lại mật khẩu",
-      html: `
-      <div style="font-family: Arial, sans-serif; text-align: center;">
-        <h2>Đặt lại mật khẩu của bạn</h2>
-        <p>Nhấn vào liên kết dưới đây để đặt lại mật khẩu:</p>
-        <a href="${resetLink}" style="display: inline-block; padding: 10px 20px; background-color: #13c2c2; color: white; text-decoration: none; border-radius: 5px;">Đặt lại mật khẩu</a>
-        <p>Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.</p>
-      </div>
-    `,
+      html,
     });
-
-    const userId = rows[0]?.id;
-    const id = uuidv4();
-
-    const sql_insert_token = `insert into password_resets (id, user_id, email, token, expires_at) values (?, ?, ?, ?, ?)`;
-    const [rowsInsert]: any = await connection
-      .promise()
-      .query(sql_insert_token, [id, userId, email, token, expiresAt]);
-
-    if (rowsInsert.affectedRows === 0) {
-      return {
-        status: false,
-        message: "Lỗi server! Vui lòng thử lại sau.",
-        result: null,
-      };
-    }
 
     return {
       status: true,
@@ -251,14 +292,9 @@ export const handleForgotPassword = async (email: string) => {
 
 export const handleVerifyToken = async (token: string) => {
   try {
-    const sql_find_token = `select * from password_resets where token = ? and expires_at > ?`;
-    const currentDate = getVietnamTime();
+    const decoded = decryptData(token);
 
-    const [rows]: any = await connection
-      .promise()
-      .query(sql_find_token, [token, currentDate]);
-
-    if ((rows as any)?.length === 0) {
+    if (!decoded) {
       return {
         status: false,
         message: "Token không hợp lệ hoặc đã hết hạn!",
@@ -266,12 +302,15 @@ export const handleVerifyToken = async (token: string) => {
       };
     }
 
+    const { email, action } = decoded;
+
     return {
       status: true,
       message: "Xác thực token thành công!",
       result: {
-        email: rows[0]?.email ?? "",
-        token: rows[0]?.token ?? token,
+        email,
+        token,
+        action,
       },
     };
   } catch (error) {
@@ -287,11 +326,9 @@ export const handleVerifyToken = async (token: string) => {
 export const handleResetPassword = async ({
   email,
   password,
-  token,
 }: {
   email: string;
   password: string;
-  token: string;
 }) => {
   try {
     if (!validator.isStrongPassword(password)) {
@@ -304,6 +341,7 @@ export const handleResetPassword = async ({
     }
 
     const sql_find_user = `select * from users where email = ?`;
+
     const [rowsSelect]: any = await connection
       .promise()
       .query(sql_find_user, [email]);
@@ -316,22 +354,7 @@ export const handleResetPassword = async ({
       };
     }
 
-    const sql_delete_token = `delete from password_resets where token = ?`;
-    const [rowsDelete]: any = await connection
-      .promise()
-      .query(sql_delete_token, [token]);
-
-    if (rowsDelete.affectedRows === 0) {
-      return {
-        status: false,
-        message: "Token không hợp lệ hoặc đã hết hạn!",
-        result: null,
-      };
-    }
-
     const hashPassword = bcrypt.hashSync(password, salt);
-
-    console.log(">>> email", email);
 
     const sql_update_password = `update users set password = ? where email = ?`;
 
@@ -342,7 +365,7 @@ export const handleResetPassword = async ({
     if (rowsUpdate.affectedRows === 0) {
       return {
         status: false,
-        message: "Lỗi server! Vui lòng thử lại sau.",
+        message: "Đặt lại mật khẩu thất bại!",
         result: null,
       };
     }

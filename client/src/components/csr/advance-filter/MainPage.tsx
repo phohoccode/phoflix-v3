@@ -54,10 +54,7 @@ const MainPage = () => {
           {!loading ? (
             <>
               {items?.length > 0 ? (
-                <SimpleGrid
-                  columns={{ base: 2, md: 4, lg: 6, xl: 8, xlTo2xl: 8 }}
-                  gap={4}
-                >
+                <SimpleGrid columns={{ base: 3, md: 4, lg: 5, xl: 8 }} gap={4}>
                   {items?.map((item: any, index: number) => (
                     <MovieCard key={index} data={item} orientation="vertical" />
                   ))}
@@ -72,7 +69,10 @@ const MainPage = () => {
               )}
             </>
           ) : (
-            <SkeletonMovieGrid limit={24} />
+            <SkeletonMovieGrid
+              limit={24}
+              columns={{ base: 3, md: 4, lg: 5, xl: 8 }}
+            />
           )}
         </Box>
 

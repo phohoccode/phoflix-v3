@@ -32,17 +32,17 @@ const ForgotPassword = () => {
     }
 
     startTransition(async () => {
-      const response = await forgotPassword(email);
+      const response = await forgotPassword(email, "credentials");
 
-      if (!response.status) {
+      if (!response?.status) {
         toaster.error({
-          description: response.message,
+          description: response?.message,
           type: "error",
           duration: 3000,
         });
       } else {
         toaster.success({
-          description: response.message,
+          description: response?.message,
           type: "success",
           duration: 3000,
         });
@@ -56,14 +56,9 @@ const ForgotPassword = () => {
     <Box className="flex flex-col gap-2">
       <h3 className="text-lg text-gray-50">Quên mật khẩu</h3>
       <p className="text-xs text-gray-400">
-        Nếu bạn đã có tài khoản,{" "}
-        <span
-          onClick={() => dispatch(setTypeAuth("signin"))}
-          className="text-[#f1c40f] hover:underline cursor-pointer"
-        >
-          đăng nhập
-        </span>
+        Vui lòng nhập email của bạn để nhận hướng dẫn khôi phục mật khẩu
       </p>
+
       <form
         className="flex flex-col gap-4 mt-4"
         onKeyDown={(e) => {
@@ -105,6 +100,15 @@ const ForgotPassword = () => {
           Gửi yêu cầu
         </Button>
       </form>
+      <p className="text-xs text-gray-400 text-right mt-3">
+        Quay lại{" "}
+        <span
+          onClick={() => dispatch(setTypeAuth("signin"))}
+          className="text-[#f1c40f] hover:underline cursor-pointer"
+        >
+          đăng nhập
+        </span>
+      </p>
     </Box>
   );
 };

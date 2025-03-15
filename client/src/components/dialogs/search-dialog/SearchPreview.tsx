@@ -39,7 +39,7 @@ const SearchPreview = ({ keyword }: SearchPreviewProps) => {
         {items?.map((item: any, index: number) => (
           <li key={index} onClick={() => dispatch(setIsOpenModalSearch(false))}>
             <Link href={`/info/${item?.slug}`} className="block">
-              <Box className="flex gap-4 p-2 rounded-lg hover:bg-[#2f3241] transition-all">
+              <Box className="flex gap-4 p-2 rounded-lg hover:bg-[#ffffff05] transition-all">
                 <Box className="w-20 h-28 flex-shrink-0">
                   <Image
                     onError={({ currentTarget }) => {
@@ -48,7 +48,7 @@ const SearchPreview = ({ keyword }: SearchPreviewProps) => {
                     }}
                     src={generateUrlImage(item?.poster_url)}
                     objectFit="cover"
-                    className="w-full h-full rounded-md border border-gray-800"
+                    className="w-full h-full rounded-md border border-[#ffffff10]"
                     loading="lazy"
                   />
                 </Box>

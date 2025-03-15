@@ -16,7 +16,7 @@ export const TagClassic = ({
   return (
     <>
       {!isRedirect ? (
-        <span className="p-1 h-6 rounded-md bg-[rgba(255,255,255,0.06)] text-gray-50 inline-flex items-center text-xs border border-gray-50">
+        <span className="p-1 h-6 rounded-md bg-[rgba(255,255,255,0.06)] text-gray-50 inline-flex items-center text-xs border border-[#ffffff10]">
           {text}
         </span>
       ) : (

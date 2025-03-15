@@ -4,7 +4,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { toaster } from "@/components/ui/toaster";
 import { register } from "@/lib/actions/authAction";
 import { isValidEmail } from "@/lib/utils";
-import { setTypeAuth } from "@/store/slices/systemSlice";
+import { setIsShowAuthDialog, setTypeAuth } from "@/store/slices/systemSlice";
 import { AppDispatch } from "@/store/store";
 import { Box, Button, Field, Input } from "@chakra-ui/react";
 import { useState, useTransition } from "react";
@@ -153,15 +153,15 @@ const SignUp = () => {
         toaster.create({
           description: response?.message,
           type: "success",
-          duration: 1000,
+          duration: 3000,
         });
 
-        dispatch(setTypeAuth("signin"));
+        dispatch(setIsShowAuthDialog(false));
       } else {
         toaster.create({
           description: response?.message,
           type: "error",
-          duration: 1000,
+          duration: 3000,
         });
       }
     });

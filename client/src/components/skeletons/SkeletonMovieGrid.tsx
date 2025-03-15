@@ -9,7 +9,7 @@ interface SkeletonMovieGridProps {
     md: number;
     lg: number;
     xl: number;
-    "2xl": number;
+    "2xl"?: number;
   };
 }
 

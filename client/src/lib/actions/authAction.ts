@@ -76,7 +76,10 @@ export async function register({
   }
 }
 
-export async function forgotPassword(email: string): Promise<any> {
+export async function forgotPassword(
+  email: string,
+  typeAccount: "credentials"
+): Promise<any> {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/forgot-password`,
@@ -87,6 +90,7 @@ export async function forgotPassword(email: string): Promise<any> {
         },
         body: JSON.stringify({
           email,
+          typeAccount,
         }),
       }
     );
@@ -119,14 +123,29 @@ export async function verifyToken(token: string): Promise<any> {
   }
 }
 
+export async function completeRegistration(token: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/complete-registration?token=${token}`
+    );
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    return {
+      status: false,
+      message: "Đã có lỗi xảy ra, vui lòng thử lại!",
+    };
+  }
+}
+
 export async function resetPassword({
   email,
   password,
-  token,
 }: {
   email: string;
   password: string;
-  token: string;
 }): Promise<any> {
   try {
     const response = await fetch(
@@ -138,7 +157,6 @@ export async function resetPassword({
         },
         body: JSON.stringify({
           email,
-          token,
           password,
         }),
       }

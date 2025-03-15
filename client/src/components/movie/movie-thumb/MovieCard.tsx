@@ -102,11 +102,6 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
           {data?.name}
         </span>
       </Link>
-      <Box className="absolute top-2 right-2 lg:flex hidden flex-wrap gap-2">
-        <Badge className="bg-[#f1c40f] text-gray-50">
-          {data?.lang ?? "Không xác định"}
-        </Badge>
-      </Box>
 
       {tooltip?.visible && <MovieTooltip data={data} position={tooltip} />}
     </Box>

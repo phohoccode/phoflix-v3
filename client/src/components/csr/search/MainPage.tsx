@@ -12,6 +12,8 @@ import Pagination from "@/components/Pagination";
 import SkeletonMovieList from "@/components/skeletons/SkeletonMovieGrid";
 import EmptyData from "@/components/EmptyData";
 import MovieGrid from "@/components/movie/movie-thumb/MovieGrid";
+import { useSession } from "next-auth/react";
+import { createUserSearchHistory } from "@/store/asyncThunks/userAsyncThunk";
 
 const MainPage = () => {
   const searchParams = useSearchParams();
@@ -22,6 +24,7 @@ const MainPage = () => {
   const currentPage = Number(searchParams.get("page")) || 1;
   const keyword = searchParams.get("keyword");
   const limit = 24;
+  const { data: sesstion } = useSession();
 
   useEffect(() => {
     dispatch(
