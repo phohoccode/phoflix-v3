@@ -16,6 +16,8 @@ import { BsXLg } from "react-icons/bs";
 import Spinner from "@/app/loading";
 import AlertDialog from "../AlertDialog";
 import { toaster } from "@/components/ui/toaster";
+import Link from "next/link";
+import { setIsOpenModalSearch } from "@/store/slices/systemSlice";
 
 interface SearchHistoryProps {
   keyword: string;
@@ -94,13 +96,19 @@ const SearchHistory = ({ keyword }: SearchHistoryProps) => {
       <ul className="flex flex-col gap-2">
         {items?.map((item: any, index: number) => (
           <li
-            className="p-2 flex justify-between rounded-lg hover:bg-[#ffffff05] text-gray-50 text-sm"
+            className="flex h-12 justify-between items-center p-2 rounded-lg hover:bg-[#ffffff05] text-gray-50 text-sm"
             key={index}
           >
-            <Box className="flex gap-2 items-center flex-1 max-w-[90%]">
-              <GoClockFill />
-              <span className="truncate w-full">{item?.keyword}</span>
-            </Box>
+            <Link
+              onClick={() => dispatch(setIsOpenModalSearch(false))}
+              className="flex-1 h-full flex items-center"
+              href={`/search?keyword=${encodeURIComponent(item?.keyword)}`}
+            >
+              <Box className="flex gap-2 items-center flex-1 max-w-[90%]">
+                <GoClockFill />
+                <span className="truncate w-full">{item?.keyword}</span>
+              </Box>
+            </Link>
             <IconButton
               onClick={() => handleDeleteSearchHistory(item?.id)}
               className="bg-transparent flex-shrink-0"
@@ -114,20 +122,22 @@ const SearchHistory = ({ keyword }: SearchHistoryProps) => {
         ))}
       </ul>
 
-      <AlertDialog
-        title="Xóa tất cả lịch sử tìm kiếm"
-        content="Bạn có chắc chắn muốn xóa tất cả lịch sử tìm kiếm?"
-        loading={isPending}
-        confirmCallback={handleDeleteAllSearchHistory}
-        trigger={
-          <Button
-            className="bg-transparent text-sm text-gray-50 mx-auto hover:text-[#f1c40f] transition-all"
-            size="xs"
-          >
-            Xóa tất cả
-          </Button>
-        }
-      />
+      {items?.length >= 2 && (
+        <AlertDialog
+          title="Xóa tất cả lịch sử tìm kiếm"
+          content="Bạn có chắc chắn muốn xóa tất cả lịch sử tìm kiếm?"
+          loading={isPending}
+          confirmCallback={handleDeleteAllSearchHistory}
+          trigger={
+            <Button
+              className="bg-transparent text-sm text-gray-50 mx-auto hover:text-[#f1c40f] transition-all"
+              size="xs"
+            >
+              Xóa tất cả
+            </Button>
+          }
+        />
+      )}
     </Box>
   );
 };

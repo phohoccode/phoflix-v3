@@ -9,7 +9,7 @@ import ResetPassword from "./ResetPassword";
 
 interface AuthDialogProps {
   isOpen: boolean;
-  type: "signin" | "signup" | "forgot-password";
+  type: "signin" | "signup" | "forgot-password" | "reset-password";
   onClose: () => void;
 }
 

@@ -7,7 +7,6 @@ import {
   fetchDataMovieSearch,
   fetchDataMovieInfo,
 } from "../asyncThunks/movieAsyncThunk";
-import { error } from "console";
 
 const data = {
   items: [],
@@ -17,17 +16,7 @@ const data = {
 
 const initialState: MovieSlice = {
   slideShows: data,
-  movieData: {
-    vietnameseMovies: data,
-    chineseMovies: data,
-    koreanMovies: data,
-    actionMovies: data,
-    horrorMovies: data,
-    emotionalMovies: data,
-    familyMovies: data,
-    historicalDramaMovies: data,
-    scienceFictionMovies: data,
-  },
+  movieData: {},
   searchMoviePreview: {
     items: [],
     totalItems: 0,
@@ -85,110 +74,23 @@ const movieSlice = createSlice({
       state.slideShows.error = true;
     });
     builder.addCase(fetchDataMovie.pending, (state, action) => {
-      state.movieData.vietnameseMovies.loading = true;
-      state.movieData.chineseMovies.loading = true;
-      state.movieData.koreanMovies.loading = true;
-      state.movieData.actionMovies.loading = true;
-      state.movieData.horrorMovies.loading = true;
-      state.movieData.emotionalMovies.loading = true;
-      state.movieData.familyMovies.loading = true;
-      state.movieData.historicalDramaMovies.loading = true;
-      state.movieData.scienceFictionMovies.loading = true;
+      const { type } = action.meta.arg;
+
+      state.movieData[type] = {
+        loading: true,
+        items: [],
+        error: false,
+      };
     });
     builder.addCase(fetchDataMovie.fulfilled, (state, action) => {
-      switch (action.payload?.type) {
-        case "viet-nam":
-          state.movieData.vietnameseMovies.loading = false;
-          state.movieData.vietnameseMovies.items =
-            action.payload?.res?.data?.items ?? [];
-          break;
-        case "trung-quoc":
-          state.movieData.chineseMovies.loading = false;
-          state.movieData.chineseMovies.items =
-            action.payload?.res?.data?.items ?? [];
-          break;
-        case "han-quoc":
-          state.movieData.koreanMovies.loading = false;
-          state.movieData.koreanMovies.items =
-            action.payload?.res?.data?.items ?? [];
-          break;
-        case "hanh-dong":
-          state.movieData.actionMovies.loading = false;
-          state.movieData.actionMovies.items =
-            action.payload?.res?.data?.items ?? [];
-          break;
-        case "kinh-di":
-          state.movieData.horrorMovies.loading = false;
-          state.movieData.horrorMovies.items =
-            action.payload?.res?.data?.items ?? [];
-          break;
-        case "tinh-cam":
-          state.movieData.emotionalMovies.loading = false;
-          state.movieData.emotionalMovies.items =
-            action.payload?.res?.data?.items ?? [];
-          break;
-        case "gia-dinh":
-          state.movieData.familyMovies.loading = false;
-          state.movieData.familyMovies.items =
-            action.payload?.res?.data?.items ?? [];
-          break;
-        case "co-trang":
-          state.movieData.historicalDramaMovies.loading = false;
-          state.movieData.historicalDramaMovies.items =
-            action.payload?.res?.data?.items ?? [];
-          break;
-        case "vien-tuong":
-          state.movieData.scienceFictionMovies.loading = false;
-          state.movieData.scienceFictionMovies.items =
-            action.payload?.res?.data?.items ?? [];
-          break;
-
-        default:
-          break;
-      }
+      const { type } = action.payload;
+      state.movieData[type].loading = false;
+      state.movieData[type].items = action.payload?.res?.data?.items ?? [];
     });
     builder.addCase(fetchDataMovie.rejected, (state, action: any) => {
-      switch (action.payload?.type) {
-        case "viet-nam":
-          state.movieData.vietnameseMovies.loading = false;
-          state.movieData.vietnameseMovies.error = true;
-          break;
-        case "trung-quoc":
-          state.movieData.chineseMovies.loading = false;
-          state.movieData.chineseMovies.error = true;
-          break;
-        case "han-quoc":
-          state.movieData.koreanMovies.loading = false;
-          state.movieData.koreanMovies.error = true;
-          break;
-        case "hanh-dong":
-          state.movieData.actionMovies.loading = false;
-          state.movieData.actionMovies.error = true;
-          break;
-        case "kinh-di":
-          state.movieData.horrorMovies.loading = false;
-          state.movieData.horrorMovies.error = true;
-          break;
-        case "tinh-cam":
-          state.movieData.emotionalMovies.loading = false;
-          state.movieData.emotionalMovies.error = true;
-          break;
-        case "gia-dinh":
-          state.movieData.familyMovies.loading = false;
-          state.movieData.familyMovies.error = true;
-          break;
-        case "co-trang":
-          state.movieData.historicalDramaMovies.loading = false;
-          state.movieData.historicalDramaMovies.error = true;
-          break;
-        case "vien-tuong":
-          state.movieData.scienceFictionMovies.loading = false;
-          state.movieData.scienceFictionMovies.error = true;
-          break;
-
-        default:
-          break;
-      }
+      const { type } = action.meta.arg;
+      state.movieData[type].loading = false;
+      state.movieData[type].error = true;
     });
 
     builder.addCase(fetchDataMoviePreview.pending, (state, action) => {

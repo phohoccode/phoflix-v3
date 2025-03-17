@@ -14,8 +14,6 @@ export const getUserInfo = async (
   try {
     const { email, typeAccount } = req.query;
 
-    console.log(req.query);
-
     if (!email || !typeAccount) {
       return res.status(400).json({
         status: false,

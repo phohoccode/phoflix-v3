@@ -22,6 +22,7 @@ import { toaster } from "@/components/ui/toaster";
 import SearchHistory from "./SearchHistory";
 import { createUserSearchHistory } from "@/store/asyncThunks/userAsyncThunk";
 import { useSession } from "next-auth/react";
+import { isDataExistsToday } from "@/lib/utils";
 
 interface SearchDialogProps {
   isOpen: boolean;
@@ -29,7 +30,7 @@ interface SearchDialogProps {
 }
 
 const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
-  const { searchMoviePreview } = useSelector((state: RootState) => state.movie);
+  const { items } = useSelector((state: RootState) => state.user.searchHistory);
   const [keyword, setKeyword] = useState("");
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();

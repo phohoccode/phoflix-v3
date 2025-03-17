@@ -1,5 +1,3 @@
-
-
 export const generateUrlImage = (url: string) => {
   if (url?.includes("https://phimimg.com")) {
     return url;
@@ -73,4 +71,19 @@ export const isValidEmail = (email: string): boolean => {
   return emailRegex.test(email);
 };
 
+export const isEmptyObject = (obj: Record<string, any>) => {
+  return Object.keys(obj).length === 0;
+};
 
+export const isDataExistsToday = <T>(
+  item: T,
+  dataList: T[],
+  compareWidth: string
+): boolean => {
+  const today = new Date().toISOString().split("T")[0];
+
+  return dataList.some((data: any) => {
+    const createdAt = data.createdAt?.split("T")[0]; 
+    return createdAt === today && item === data[compareWidth];
+  });
+};

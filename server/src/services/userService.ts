@@ -56,7 +56,7 @@ export const handleGetUserSearchHistory = async (
   try {
     const sqlGetUserSearchHistory = `
       SELECT
-        id, keyword, created_at
+        id, keyword, created_at as createdAt
       FROM search_history
       WHERE user_id = ?
       ORDER BY created_at DESC
@@ -96,29 +96,71 @@ export const handleCreateSearchHistory = async (
 ) => {
   try {
     const id = uuidv4();
+    const today = new Date().toISOString().split("T")[0];
+    let sqlCreateOrUpdateSearchHistory = "";
 
-    const sqlCreateSearchHistory = `
-      INSERT INTO search_history (id, user_id, keyword)
-      VALUES (?, ?, ?)
+    const sqlSelectSearchHistory = `
+      SELECT created_at as createdAt, keyword
+      FROM search_history
+      WHERE user_id = ? AND keyword = ?
     `;
 
-    const [rows]: any = await connection
+    const [rowsSelect]: any = await connection
       .promise()
-      .query(sqlCreateSearchHistory, [id, userId, keyword]);
+      .query(sqlSelectSearchHistory, [userId, keyword]);
 
-    if (rows.affectedRows === 0) {
+    const searchCreatedAt = rowsSelect?.[0]?.createdAt
+      ?.toISOString()
+      ?.split("T")[0];
+
+    if (searchCreatedAt === today) {
+      sqlCreateOrUpdateSearchHistory = `
+        UPDATE search_history
+        SET created_at = CURRENT_TIMESTAMP
+        WHERE user_id = ? AND keyword = ?
+      `;
+
+      const [rowsUpdate]: any = await connection
+        .promise()
+        .query(sqlCreateOrUpdateSearchHistory, [userId, keyword]);
+
+      if (rowsUpdate.affectedRows === 0) {
+        return {
+          status: false,
+          message: "Cập nhật lịch sử tìm kiếm thất bại!",
+          result: null,
+        };
+      }
+
       return {
-        status: false,
-        message: "Tạo lịch sử tìm kiếm thất bại!",
+        status: true,
+        message: "Cập nhật lịch sử tìm kiếm thành công!",
+        result: null,
+      };
+    } else {
+      sqlCreateOrUpdateSearchHistory = `
+        INSERT INTO search_history (id, user_id, keyword)
+        VALUES (?, ?, ?)
+      `;
+
+      const [rows]: any = await connection
+        .promise()
+        .query(sqlCreateOrUpdateSearchHistory, [id, userId, keyword]);
+
+      if (rows.affectedRows === 0) {
+        return {
+          status: false,
+          message: "Tạo lịch sử tìm kiếm thất bại!",
+          result: null,
+        };
+      }
+
+      return {
+        status: true,
+        message: "Tạo lịch sử tìm kiếm thành công!",
         result: null,
       };
     }
-
-    return {
-      status: true,
-      message: "Tạo lịch sử tìm kiếm thành công!",
-      result: null,
-    };
   } catch (error) {
     console.log(error);
     return {

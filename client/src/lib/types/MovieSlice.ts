@@ -23,17 +23,7 @@ type MovieSlice = {
     loading: boolean;
     error: boolean;
   };
-  movieData: {
-    vietnameseMovies: Movies;
-    chineseMovies: Movies;
-    koreanMovies: Movies;
-    actionMovies: Movies;
-    horrorMovies: Movies;
-    emotionalMovies: Movies;
-    familyMovies: Movies;
-    historicalDramaMovies: Movies;
-    scienceFictionMovies: Movies;
-  };
+  movieData: Record<string, Movies>;
   searchMoviePreview: {
     items: any;
     loading: boolean;
@@ -45,8 +35,8 @@ type MovieSlice = {
     loading: boolean;
     error: boolean;
     episodes: any;
-    currentEpisode: any
-  },
+    currentEpisode: any;
+  };
   movieDetail: {
     items: any;
     titlePage: string;

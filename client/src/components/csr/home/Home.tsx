@@ -4,110 +4,115 @@ import { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@chakra-ui/react";
 import SlideShow from "@/components/movie/slide-show/SlideShow";
-import { useEffect } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import {
-  fetchDataSlideShow,
   fetchDataMovie,
+  fetchDataSlideShow,
 } from "@/store/asyncThunks/movieAsyncThunk";
 import MovieSection from "@/components/movie/MovieSection";
+import {
+  initialMovieConfig,
+  quantitySectionMovie,
+} from "@/configs/movieConfig";
+import { toaster } from "@/components/ui/toaster";
 
 const Home = () => {
   const dispatch: AppDispatch = useDispatch();
-  const {
-    vietnameseMovies,
-    chineseMovies,
-    koreanMovies,
-    actionMovies,
-    emotionalMovies,
-    familyMovies,
-    historicalDramaMovies,
-    scienceFictionMovies,
-    horrorMovies,
-  } = useSelector((state: RootState) => state.movie.movieData);
-
-  const data = [
-    {
-      title: "Phim Việt Nam mới",
-      link: "/detail/quoc-gia/viet-nam",
-      data: vietnameseMovies,
-      orientation: "horizontal",
-    },
-    {
-      title: "Phim Trung Quốc mới",
-      link: "/detail/quoc-gia/trung-quoc",
-      data: chineseMovies,
-      orientation: "horizontal",
-    },
-    {
-      title: "Phim Hàn Quốc mới",
-      link: "/detail/quoc-gia/han-quoc",
-      data: koreanMovies,
-      orientation: "horizontal",
-    },
-    {
-      title: "Hành động đỉnh cao",
-      link: "/detail/the-loai/hanh-dong",
-      data: actionMovies,
-      orientation: "vertical",
-    },
-    {
-      title: "Rùng rợn đến tột cùng",
-      link: "/detail/the-loai/kinh-di",
-      data: horrorMovies,
-      orientation: "horizontal",
-    },
-    {
-      title: "Cảm xúc dâng trào",
-      link: "/detail/the-loai/tinh-cam",
-      data: emotionalMovies,
-      orientation: "vertical",
-    },
-    {
-      title: "Gia đình hạnh phúc",
-      link: "/detail/the-loai/gia-dinh",
-      data: familyMovies,
-      orientation: "horizontal",
-    },
-    {
-      title: "Cổ trang kinh điển",
-      link: "/detail/the-loai/co-trang",
-      data: historicalDramaMovies,
-      orientation: "vertical",
-    },
-    {
-      title: "Khoa học viễn tưởng",
-      link: "/detail/the-loai/vien-tuong",
-      data: scienceFictionMovies,
-      orientation: "horizontal",
-    },
-  ];
+  const movieData = useSelector((state: RootState) => state.movie.movieData);
+  const scrollableDivRef = useRef<HTMLDivElement | null>(null);
+  const hasFetchedMoreData = useRef(false);
+  const quantityFetchedData = useRef(quantitySectionMovie);
+  const [loadingMoreData, setLoadingMoreData] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await Promise.all([
-          dispatch(fetchDataSlideShow()),
-          dispatch(fetchDataMovie({ type: "viet-nam", describe: "quoc-gia" })),
-          dispatch(fetchDataMovie({ type: "han-quoc", describe: "quoc-gia" })),
-          dispatch(
-            fetchDataMovie({ type: "trung-quoc", describe: "quoc-gia" })
-          ),
-          dispatch(fetchDataMovie({ type: "hanh-dong", describe: "the-loai" })),
-          dispatch(fetchDataMovie({ type: "kinh-di", describe: "the-loai" })),
-          dispatch(fetchDataMovie({ type: "gia-dinh", describe: "the-loai" })),
-          dispatch(fetchDataMovie({ type: "co-trang", describe: "the-loai" })),
-          dispatch(fetchDataMovie({ type: "tinh-cam", describe: "the-loai" })),
-          dispatch(
-            fetchDataMovie({ type: "vien-tuong", describe: "the-loai" })
-          ),
-        ]);
-      } catch (error) {
-        console.error("Lỗi khi tải dữ liệu:", error);
+    const handleScroll = () => {
+      // kiểm tra đã fetch dữ liệu chưa
+      if (scrollableDivRef.current && !hasFetchedMoreData.current) {
+        const rect = scrollableDivRef.current.getBoundingClientRect();
+
+        // kiểm tra đã cuộn đến cuối phần scrollableDivRef chưa
+        if (rect.top <= window.innerHeight) {
+          // kiểm tra xem đã fetch hết dữ liệu chưa
+          if (quantityFetchedData.current < initialMovieConfig.length) {
+            fetchMoreData();
+            hasFetchedMoreData.current = true;
+          }
+        }
       }
     };
 
-    fetchData();
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const fetchInitialData = async () => {
+      try {
+        // fetch dữ liệu ban đầu
+        const fetchPromises = initialMovieConfig
+          .slice(0, quantitySectionMovie)
+          .map((configItem) =>
+            dispatch(
+              fetchDataMovie({
+                type: configItem.type,
+                describe: configItem.describe,
+              })
+            )
+          );
+
+        await Promise.all([dispatch(fetchDataSlideShow()), ...fetchPromises]);
+      } catch (error) {
+        toaster.error({
+          description: "Đã có lỗi xảy ra khi lấy dữ liệu.",
+          duration: 5000,
+        });
+      }
+    };
+
+    fetchInitialData();
   }, [dispatch]);
+
+  const fetchMoreData = async () => {
+    try {
+      const start = quantityFetchedData.current;
+      const end = start + quantitySectionMovie;
+
+      const fetchPromises = initialMovieConfig
+        .slice(start, end)
+        .map((configItem) =>
+          dispatch(
+            fetchDataMovie({
+              type: configItem.type,
+              describe: configItem.describe,
+            })
+          )
+        );
+
+      setLoadingMoreData(true);
+      await Promise.all(fetchPromises);
+      setLoadingMoreData(false);
+
+      quantityFetchedData.current = end;
+      hasFetchedMoreData.current = false;
+    } catch (error) {
+      toaster.error({
+        description: "Đã có lỗi xảy ra khi lấy dữ liệu.",
+        duration: 5000,
+      });
+    }
+  };
+
+  // lọc và hiển thị dữ liệu đã hoàn thành
+  const finalData = initialMovieConfig
+    .filter((configItem) => movieData[configItem.type])
+    .map((configItem) => ({
+      title: configItem.title,
+      link: `/detail/${configItem.describe}/${configItem.type}`,
+      data: movieData[configItem.type],
+      orientation: configItem.orientation,
+    }));
+
+  if (finalData.length === 0) return <Box className="min-h-screen" />;
 
   return (
     <Box>
@@ -115,9 +120,15 @@ const Home = () => {
       <Box className="max-w-[1900px] mx-auto mt-12 lg:px-14">
         <Box className="flex flex-col gap-12 overflow-hidden">
           <Box className="bg-gradient-to-b from-[#282b3a] via-transparent via-20% rounded-lg">
-            <MovieSection finalData={data} />
+            <MovieSection finalData={finalData} />
           </Box>
         </Box>
+        <Box className="h-1 mt-10" ref={scrollableDivRef} />
+        {loadingMoreData && (
+          <Box className="mt-12 flex items-center justify-center">
+            <Box className="w-10 h-10 border-[3px] border-b-transparent border-[#f1c40f] rounded-full animate-spin"></Box>
+          </Box>
+        )}
       </Box>
     </Box>
   );

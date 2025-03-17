@@ -115,8 +115,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       token.gender = data?.result?.gender;
       token.createdAt = data?.result?.createdAt;
 
-      console.log(">>> token", token);
-
       return token;
     },
     // nhận token từ jwt callback và trả về session

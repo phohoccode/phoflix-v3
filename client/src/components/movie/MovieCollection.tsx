@@ -26,17 +26,17 @@ const MovieCollection = ({
   return (
     <Box>
       <MovieThumbTitle
-        loading={data.loading}
+        loading={data?.loading}
         href={link}
         title={title}
         gradient={gradient}
-        error={data.error}
+        error={data?.error}
       />
       <Box>
         <MovieThumb
-          items={data.items}
-          loading={data.loading}
-          error={data.error}
+          items={data?.items}
+          loading={data?.loading}
+          error={data?.error}
           orientation={orientation}
         />
       </Box>

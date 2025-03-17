@@ -10,7 +10,7 @@ const BarButton = () => {
   const { windowWidth } = useSelector((state: RootState) => state.system);
   const dispatch: AppDispatch = useDispatch();
 
-  if (windowWidth > 1280) return null;
+  if (windowWidth >= 1320) return null;
 
   return (
     <IconButton

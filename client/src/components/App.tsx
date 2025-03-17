@@ -22,6 +22,7 @@ import { Toaster } from "./ui/toaster";
 import Footer from "./layouts/Footer";
 import AuthDialog from "./dialogs/auth-dialog/AuthDialog";
 import ScrollToTopButton from "./ScrollToTopButton";
+import { isEmptyObject } from "@/lib/utils";
 
 const App = ({ children }: { children: React.ReactNode }) => {
   const {
@@ -32,6 +33,7 @@ const App = ({ children }: { children: React.ReactNode }) => {
     isShowAuthDialog,
     typeAuth,
   } = useSelector((state: RootState) => state.system);
+  const { movieData } = useSelector((state: RootState) => state.movie);
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
@@ -68,7 +70,7 @@ const App = ({ children }: { children: React.ReactNode }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-  return (
+    return (
     <Box>
       <NavBar />
       {children}

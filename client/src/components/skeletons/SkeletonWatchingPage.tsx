@@ -55,7 +55,7 @@ const SkeletonWachingPage = () => {
                   key={index}
                   height="32px"
                   width="120px"
-                  className="flex-auto"
+                  className="flex-auto max-w-32"
                 />
               ))}
             </Box>

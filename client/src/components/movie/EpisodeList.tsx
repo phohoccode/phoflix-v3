@@ -100,7 +100,7 @@ const EpisodesList = ({
                 : "#"
             }
             key={index}
-            className={episodeDisplay?.length > 1 ? "flex-auto" : ""}
+            className={episodeDisplay?.length > 1 ? "flex-auto max-w-32" : ""}
           >
             <Button
               size="md"

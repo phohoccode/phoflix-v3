@@ -12,10 +12,11 @@ import MovieActionsButton from "../movie-thumb/MovieActionsButton";
 
 const SlideItem = ({ item }: any) => {
   const { windowWidth } = useSelector((state: RootState) => state.system);
+  const href = windowWidth > 1024 ? "#" : `/info/${item?.slug}`;
 
   return (
     <Box className="relative lg:before:absolute lg:before:inset-0 lg:before:bg-[url('/images/dotted.png')] lg:before:bg-repeat lg:before:opacity-20 lg:before:z-[1]">
-      <Link href={`/info/${item?.slug}`} className="relative z-10">
+      <Link href={href} className="relative z-10">
         <Image
           onError={({ currentTarget }) => {
             currentTarget.onerror = null;
