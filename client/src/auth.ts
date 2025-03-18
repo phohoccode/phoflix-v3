@@ -67,7 +67,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const query = `email=${profile?.email}&typeAccount=google`;
 
         const response: any = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/info?${query}`
+          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile?${query}`
         );
 
         const data = await response.json();
@@ -89,27 +89,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           });
         }
 
-        token.type_account = "google";
-        token.picture = profile?.picture;
+        token.typeAccount = "google";
       } else if (account?.provider === "credentials") {
-        token.type_account = "credentials";
-        token.picture = "/images/avatar.jpg";
+        token.typeAccount = "credentials";
       }
 
       // Gọi api lấy thông tin user gán cho token
       const query = `email=${token?.email}&typeAccount=${
-        account?.provider ?? token?.type_account
+        account?.provider ?? token?.typeAccount
       }`;
 
+      console.log("query", query);
+
       const response: any = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/info?${query}`
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile?${query}`
       );
 
       const data = await response.json();
 
+      console.log("data", data);
+
       token.id = data?.result?.id;
       token.role = data?.result?.role;
       token.email = data?.result?.email;
+      token.image = data?.result?.avatar;
       token.username = data?.result?.username;
       token.typeAccount = data?.result?.typeAccount;
       token.gender = data?.result?.gender;
@@ -122,11 +125,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.id = token?.id ?? token?.sub;
       session.user.username = token.username;
       session.user.email = token.email;
-      session.user.avatar = token.avatar;
+      session.user.image = token.image;
       session.user.role = token.role;
       session.user.gender = token.gender;
       session.user.typeAccount = token.typeAccount;
       session.user.createdAt = token.createdAt;
+
+      console.log("session", session);
 
       return session;
     },

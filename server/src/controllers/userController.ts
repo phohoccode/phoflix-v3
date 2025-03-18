@@ -1,13 +1,11 @@
 import { Request, Response } from "express";
 import {
-  handleCreateSearchHistory,
-  handleDeleteAllSearchHistory,
-  handleDeleteSearchHistory,
-  handleGetUserInfo,
-  handleGetUserSearchHistory,
+  handleGetUserProfile,
+  handleUpdateUserPassword,
+  handleUpdateUserProfile,
 } from "../services/userService";
 
-export const getUserInfo = async (
+export const getUserProfile = async (
   req: Request,
   res: Response
 ): Promise<any> => {
@@ -22,7 +20,7 @@ export const getUserInfo = async (
       });
     }
 
-    const response = await handleGetUserInfo(
+    const response = await handleGetUserProfile(
       email as string,
       typeAccount as "credentials" | "google"
     );
@@ -38,109 +36,71 @@ export const getUserInfo = async (
   }
 };
 
-export const getUserSearchHistory = async (
+export const updateUserProfile = async (
   req: Request,
   res: Response
 ): Promise<any> => {
   try {
-    const { id } = req.query;
-
-    if (!id) {
-      return res.status(400).json({
-        status: false,
-        message: "User id không được để trống!",
-        result: null,
-      });
-    }
-
-    const response = await handleGetUserSearchHistory(id as string);
-
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Lỗi server! Vui lòng thử lại sau.",
-      result: null,
-    });
-  }
-};
-
-export const createSearchHistory = async (
-  req: Request,
-  res: Response
-): Promise<any> => {
-  try {
-    const { userId, keyword } = req.body;
-
-    if (!userId || !keyword) {
-      return res.status(400).json({
-        status: false,
-        message: "User id và keyword không được để trống!",
-        result: null,
-      });
-    }
-
-    const response = await handleCreateSearchHistory(userId, keyword);
-
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Lỗi server! Vui lòng thử lại sau.",
-      result: null,
-    });
-  }
-};
-
-export const deleteSearchHistory = async (
-  req: Request,
-  res: Response
-): Promise<any> => {
-  try {
-    const { id, userId } = req.query;
-
-    if (!id || !userId) {
-      return res.status(400).json({
-        status: false,
-        message: "Id và user id không được để trống!",
-        result: null,
-      });
-    }
-
-    const response = await handleDeleteSearchHistory(
-      id as string,
-      userId as string
-    );
-
-    return res.status(200).json(response);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: false,
-      message: "Lỗi server! Vui lòng thử lại sau.",
-      result: null,
-    });
-  }
-};
-
-export const deleteAllSearchHistory = async (
-  req: Request,
-  res: Response
-): Promise<any> => {
-  try {
-    const { userId } = req.query;
+    const { userId, username, gender, avatar, typeAccount } = req.body;
 
     if (!userId) {
       return res.status(400).json({
         status: false,
-        message: "User id không được để trống!",
+        message:
+          "User id, username, gender, avatar và typeAccount không được để trống!",
         result: null,
       });
     }
 
-    const response = await handleDeleteAllSearchHistory(userId as string);
+    const response = await handleUpdateUserProfile({
+      userId,
+      username,
+      gender,
+      avatar,
+      typeAccount,
+    });
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    });
+  }
+};
+
+export const resetPassword = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { email, oldPassword, newPassword, typeAccount } = req.body;
+
+    if (!email || !oldPassword || !newPassword || !typeAccount) {
+      return res.status(400).json({
+        status: false,
+        message:
+          "Email, mật khẩu cũ, mật khẩu mới và typeAccount không được để trống!",
+        result: null,
+      });
+    }
+
+    if (typeAccount !== "credentials") {
+      return res.status(400).json({
+        status: false,
+        message: "Chỉ hỗ trợ tài khoản credentials!",
+        result: null,
+      });
+    }
+
+    const response = await handleUpdateUserPassword({
+      email,
+      newPassword,
+      oldPassword,
+      typeAccount,
+    });
 
     return res.status(200).json(response);
   } catch (error) {

@@ -1,7 +1,10 @@
 import connection from "../database/connect";
-import { v4 as uuidv4 } from "uuid";
+import bcrypt from "bcrypt";
+import validator from "validator";
 
-export const handleGetUserInfo = async (
+const salt = bcrypt.genSaltSync(10);
+
+export const handleGetUserProfile = async (
   email: string,
   typeAccount: "credentials" | "google"
 ) => {
@@ -49,150 +52,69 @@ export const handleGetUserInfo = async (
   }
 };
 
-export const handleGetUserSearchHistory = async (
-  id: string,
-  limit: number = 20
-) => {
+// ========================= UPDATE USER PROFILE =========================
+
+interface UpdateUserProfile {
+  userId: string;
+  username: string;
+  gender: "other" | "female" | "male";
+  avatar: string;
+  typeAccount: "credentials" | "google";
+}
+
+export const handleUpdateUserProfile = async ({
+  userId,
+  username,
+  avatar,
+  gender,
+  typeAccount,
+}: UpdateUserProfile) => {
   try {
-    const sqlGetUserSearchHistory = `
-      SELECT
-        id, keyword, created_at as createdAt
-      FROM search_history
-      WHERE user_id = ?
-      ORDER BY created_at DESC
-      LIMIT ?
+    const sqlCheckUser = `
+      SELECT id
+      FROM users
+      WHERE id = ? and type_account = ?
     `;
 
-    const [rows]: any = await connection
+    const [rowsCheckUser]: any = await connection
       .promise()
-      .query(sqlGetUserSearchHistory, [id, limit]);
+      .query(sqlCheckUser, [userId, typeAccount]);
 
-    if ((rows as any)?.length === 0) {
+    if ((rowsCheckUser as any)?.length === 0) {
       return {
         status: false,
-        message: "Lịch sử tìm kiếm trống!",
-        result: [],
-      };
-    }
-
-    return {
-      status: true,
-      message: "Lấy lịch sử tìm kiếm thành công!",
-      result: rows,
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      status: false,
-      message: "Lỗi server! Vui lòng thử lại sau.",
-      result: null,
-    };
-  }
-};
-
-export const handleCreateSearchHistory = async (
-  userId: string,
-  keyword: string
-) => {
-  try {
-    const id = uuidv4();
-    const today = new Date().toISOString().split("T")[0];
-    let sqlCreateOrUpdateSearchHistory = "";
-
-    const sqlSelectSearchHistory = `
-      SELECT created_at as createdAt, keyword
-      FROM search_history
-      WHERE user_id = ? AND keyword = ?
-    `;
-
-    const [rowsSelect]: any = await connection
-      .promise()
-      .query(sqlSelectSearchHistory, [userId, keyword]);
-
-    const searchCreatedAt = rowsSelect?.[0]?.createdAt
-      ?.toISOString()
-      ?.split("T")[0];
-
-    if (searchCreatedAt === today) {
-      sqlCreateOrUpdateSearchHistory = `
-        UPDATE search_history
-        SET created_at = CURRENT_TIMESTAMP
-        WHERE user_id = ? AND keyword = ?
-      `;
-
-      const [rowsUpdate]: any = await connection
-        .promise()
-        .query(sqlCreateOrUpdateSearchHistory, [userId, keyword]);
-
-      if (rowsUpdate.affectedRows === 0) {
-        return {
-          status: false,
-          message: "Cập nhật lịch sử tìm kiếm thất bại!",
-          result: null,
-        };
-      }
-
-      return {
-        status: true,
-        message: "Cập nhật lịch sử tìm kiếm thành công!",
-        result: null,
-      };
-    } else {
-      sqlCreateOrUpdateSearchHistory = `
-        INSERT INTO search_history (id, user_id, keyword)
-        VALUES (?, ?, ?)
-      `;
-
-      const [rows]: any = await connection
-        .promise()
-        .query(sqlCreateOrUpdateSearchHistory, [id, userId, keyword]);
-
-      if (rows.affectedRows === 0) {
-        return {
-          status: false,
-          message: "Tạo lịch sử tìm kiếm thất bại!",
-          result: null,
-        };
-      }
-
-      return {
-        status: true,
-        message: "Tạo lịch sử tìm kiếm thành công!",
+        message: "Người dùng không tồn tại!",
         result: null,
       };
     }
-  } catch (error) {
-    console.log(error);
-    return {
-      status: false,
-      message: "Lỗi server! Vui lòng thử lại sau.",
-      result: null,
-    };
-  }
-};
 
-export const handleDeleteSearchHistory = async (id: string, userId: string) => {
-  try {
-    const sqlDeleteSearchHistory = `
-      DELETE FROM search_history
-      WHERE id = ? AND user_id = ?
+    const sqlUpdateUserProfile = `
+      UPDATE users
+      SET username = ?, gender = ?, avatar = ?
+      WHERE id = ? and type_account = ?
     `;
 
     const [rows]: any = await connection
       .promise()
-      .query(sqlDeleteSearchHistory, [id, userId]);
+      .query(sqlUpdateUserProfile, [
+        username,
+        gender,
+        avatar,
+        userId,
+        typeAccount,
+      ]);
 
     if (rows.affectedRows === 0) {
       return {
         status: false,
-        message: "Xóa lịch sử tìm kiếm thất bại!",
+        message: "Cập nhật thông tin thất bại!",
         result: null,
       };
     }
 
     return {
       status: true,
-      message: "Xóa lịch sử tìm kiếm thành công!",
+      message: "Cập nhật thông tin thành công!",
       result: null,
     };
   } catch (error) {
@@ -205,28 +127,77 @@ export const handleDeleteSearchHistory = async (id: string, userId: string) => {
   }
 };
 
-export const handleDeleteAllSearchHistory = async (userId: string) => {
+// ========================= UPDATE USER PASSWORD =========================
+
+interface UpdateUserPassword {
+  email: string;
+  newPassword: string;
+  oldPassword: string;
+  typeAccount: "credentials";
+}
+
+export const handleUpdateUserPassword = async ({
+  email,
+  oldPassword,
+  newPassword,
+  typeAccount,
+}: UpdateUserPassword) => {
   try {
-    const sqlDeleteAllSearchHistory = `
-      DELETE FROM search_history
-      WHERE user_id = ?
+    if (!validator.isStrongPassword(newPassword)) {
+      return {
+        status: false,
+        message:
+          "Mật khẩu có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.",
+        result: null,
+      };
+    }
+
+    const sqlCheckUser = `
+      SELECT password
+      FROM users
+      WHERE email = ? and type_account = ?
+    `;
+
+    const [rowsUsers]: any = await connection
+      .promise()
+      .query(sqlCheckUser, [email, typeAccount]);
+
+    const isCorrectPassword = bcrypt.compareSync(
+      oldPassword,
+      rowsUsers[0]?.password ?? ""
+    );
+
+    if (!isCorrectPassword) {
+      return {
+        status: false,
+        message: "Mật khẩu cũ không chính xác!",
+        result: null,
+      };
+    }
+
+    const hashPassword = bcrypt.hashSync(newPassword, salt);
+
+    const sqlUpdateUserPassword = `
+      UPDATE users
+      SET password = ?
+      WHERE email = ? and type_account = ?
     `;
 
     const [rows]: any = await connection
       .promise()
-      .query(sqlDeleteAllSearchHistory, [userId]);
+      .query(sqlUpdateUserPassword, [hashPassword, email, typeAccount]);
 
     if (rows.affectedRows === 0) {
       return {
         status: false,
-        message: "Xóa lịch sử tìm kiếm thất bại!",
+        message: "Cập nhật mật khẩu thất bại!",
         result: null,
       };
     }
 
     return {
       status: true,
-      message: "Tất cả lịch sử tìm kiếm đã được xóa!",
+      message: "Cập nhật mật khẩu thành công!",
       result: null,
     };
   } catch (error) {

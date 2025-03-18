@@ -379,3 +379,22 @@ export const filterOptions = [
     title: "Sắp xếp",
   },
 ];
+
+// ====================== CHOOSE AVATAR ======================
+export const avatars = [
+  "/images/avatars/01.jpg",
+  "/images/avatars/02.jpg",
+  "/images/avatars/03.jpg",
+  "/images/avatars/04.jpg",
+  "/images/avatars/05.jpg",
+  "/images/avatars/06.jpg",
+  "/images/avatars/07.jpg",
+  "/images/avatars/08.jpg",
+  "/images/avatars/09.jpg",
+  "/images/avatars/10.jpg",
+  "/images/avatars/11.jpg",
+  "/images/avatars/12.jpg",
+  "/images/avatars/13.jpg",
+  "/images/avatars/14.jpg",
+  "/images/avatars/15.jpg",
+];

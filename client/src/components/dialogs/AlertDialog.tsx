@@ -33,20 +33,20 @@ const AlertDialog = ({
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
                 <Button
-                  size="sm"
+                  size="xs"
                   variant="solid"
-                  className="bg-transparent text-gray-50 border-2 border-[#ffffff10]"
+                  className="bg-gray-50 text-gray-900 min-w-24"
                 >
-                  Hủy
+                  Hủy bỏ
                 </Button>
               </Dialog.ActionTrigger>
               <Button
                 loading={loading}
-                onClick={() => confirmCallback()}
-                size="sm"
+                onClick={confirmCallback}
+                size="xs"
                 colorPalette="yellow"
                 variant="solid"
-                className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
+                className="min-w-24 hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
               >
                 Xác nhận
               </Button>

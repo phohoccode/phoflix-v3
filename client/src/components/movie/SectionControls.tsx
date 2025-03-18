@@ -4,12 +4,16 @@ import { Box } from "@chakra-ui/react";
 import HeartIcon from "../icons/HeartIcon";
 import PlusIcon from "../icons/PlusIcon";
 import SendIcon from "../icons/SendIcon";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 
 interface SectionControlsProps {
   placement?: "vertical" | "horizontal";
 }
 
 const SectionControls = ({ placement = "vertical" }: SectionControlsProps) => {
+  const { movie } = useSelector((state: RootState) => state.movie.movieInfo);
+
   return (
     <Box className="flex gap-4">
       <Box

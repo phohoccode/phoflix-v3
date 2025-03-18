@@ -146,7 +146,7 @@ const SignUp = () => {
         password,
         name: nameDisplay,
         typeAccount: "credentials",
-        avatar: "/images/avatar.jpg",
+        avatar: "/images/avatars/01.jpg",
       });
 
       if (response?.status) {

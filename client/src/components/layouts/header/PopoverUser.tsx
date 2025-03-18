@@ -16,10 +16,7 @@ const PopoverUser = () => {
     <Popover.Root size="xs" autoFocus={false}>
       <Popover.Trigger asChild>
         <Box className="cursor-pointer">
-          <AvatarUser
-            name={session.user?.username}
-            src={session.user?.avatar}
-          />
+          <AvatarUser name={session.user?.username} src={session.user?.image} />
         </Box>
       </Popover.Trigger>
       <Portal>
@@ -39,7 +36,7 @@ const PopoverUser = () => {
               <ul className="py-2 flex flex-col gap-1">
                 <li>
                   <Link
-                    href="#"
+                    href="/user/favorite"
                     className="px-4 py-2 transition-all hover:bg-[#ffffff05] flex gap-2 items-center truncate"
                   >
                     <FaHeart />
@@ -48,7 +45,7 @@ const PopoverUser = () => {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/user/playlist"
                     className="px-4 py-2 transition-all hover:bg-[#ffffff05] flex gap-2 items-center truncate"
                   >
                     <FaPlus />
@@ -57,7 +54,7 @@ const PopoverUser = () => {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/user/history"
                     className="px-4 py-2 transition-all hover:bg-[#ffffff05] flex gap-2 items-center truncate"
                   >
                     <FaHistory />
@@ -66,7 +63,7 @@ const PopoverUser = () => {
                 </li>
                 <li>
                   <Link
-                    href="#"
+                    href="/user/profile"
                     className="px-4 py-2 transition-all hover:bg-[#ffffff05] flex gap-2 items-center truncate"
                   >
                     <FaUser />
