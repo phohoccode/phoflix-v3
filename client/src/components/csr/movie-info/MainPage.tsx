@@ -1,6 +1,5 @@
 "use client";
 
-import RootLayout from "@/components/layouts/RootLayout";
 import { fetchDataMovieInfo } from "@/store/asyncThunks/movieAsyncThunk";
 import { AppDispatch, RootState } from "@/store/store";
 import { Box, Em, GridItem, SimpleGrid } from "@chakra-ui/react";

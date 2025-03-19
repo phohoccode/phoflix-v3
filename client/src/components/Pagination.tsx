@@ -1,15 +1,9 @@
 "use client";
 
-import {
-  PaginationItems,
-  PaginationNextTrigger,
-  PaginationPrevTrigger,
-  PaginationRoot,
-} from "@/components/ui/pagination";
-import { RootState } from "@/store/store";
-import { Box, Group, HStack } from "@chakra-ui/react";
-import { useSelector } from "react-redux";
+import { PaginationItems, PaginationRoot } from "@/components/ui/pagination";
+import { Box, HStack } from "@chakra-ui/react";
 import { toaster } from "./ui/toaster";
+import { useRouter } from "next/navigation";
 
 interface PaginationProps {
   pagination: {
@@ -22,13 +16,13 @@ interface PaginationProps {
 
 const Pagination = ({ pagination, currentPage, ref }: PaginationProps) => {
   const { totalItems, totalItemsPerPage } = pagination;
-  const { windowWidth } = useSelector((state: RootState) => state.system);
+  const router = useRouter();
 
   const handleChangePage = (page: number | string) => {
     const params = new URLSearchParams(window.location.search);
 
     params.set("page", page.toString());
-    window.history.replaceState({}, "", `?${params.toString()}`);
+    router.replace(`?${params.toString()}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (ref?.current) {
@@ -47,7 +41,7 @@ const Pagination = ({ pagination, currentPage, ref }: PaginationProps) => {
   return (
     <Box className="flex mx-auto mt-12">
       <PaginationRoot
-        size={windowWidth < 768 ? "xs" : "md"}
+        size="md"
         count={Number(totalItems)}
         pageSize={Number(totalItemsPerPage)}
         page={Number(currentPage)}

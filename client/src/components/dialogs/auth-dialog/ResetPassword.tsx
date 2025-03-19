@@ -2,7 +2,7 @@
 
 import { PasswordInput } from "@/components/ui/password-input";
 import { toaster } from "@/components/ui/toaster";
-import { forgotPassword, resetPassword } from "@/lib/actions/authAction";
+import { forgotPassword, resetPassword } from "@/lib/actions/authActionServer";
 import { isValidEmail } from "@/lib/utils";
 import { setIsShowAuthDialog, setTypeAuth } from "@/store/slices/systemSlice";
 import { AppDispatch } from "@/store/store";

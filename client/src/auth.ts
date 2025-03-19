@@ -99,15 +99,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         account?.provider ?? token?.typeAccount
       }`;
 
-      console.log("query", query);
-
       const response: any = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile?${query}`
       );
 
       const data = await response.json();
-
-      console.log("data", data);
 
       token.id = data?.result?.id;
       token.role = data?.result?.role;

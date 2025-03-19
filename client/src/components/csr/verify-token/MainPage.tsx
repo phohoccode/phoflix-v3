@@ -1,7 +1,10 @@
 "use client";
 
 import { toaster } from "@/components/ui/toaster";
-import { completeRegistration, verifyToken } from "@/lib/actions/authAction";
+import {
+  completeRegistration,
+  verifyToken,
+} from "@/lib/actions/authActionServer";
 import { setIsShowAuthDialog, setTypeAuth } from "@/store/slices/systemSlice";
 import { AppDispatch } from "@/store/store";
 import { Box } from "@chakra-ui/react";

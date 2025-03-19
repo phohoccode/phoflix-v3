@@ -2,7 +2,7 @@
 
 import { PasswordInput } from "@/components/ui/password-input";
 import { toaster } from "@/components/ui/toaster";
-import { resetPassword } from "@/lib/actions/userAction";
+import { resetPassword } from "@/lib/actions/userActionClient";
 import { Button, Dialog, Portal, Field, Input } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useState, useTransition } from "react";

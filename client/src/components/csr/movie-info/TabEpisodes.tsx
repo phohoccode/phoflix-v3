@@ -14,6 +14,12 @@ const TabEpisodes = () => {
         <EpisodesList
           key={index}
           redirect
+          colums={{
+            base: 3,
+            md: 5,
+            lg: 5,
+            xl: 6,
+          }}
           server_name={episode?.server_name}
           server_data={episode?.server_data}
         />

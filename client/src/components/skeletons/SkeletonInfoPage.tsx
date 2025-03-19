@@ -69,14 +69,9 @@ const SkeletonInfoPage = () => {
                   <Skeleton width="100%" height="1" />
                   <Skeleton width="120px" height="3" className="mt-3" />
 
-                  <Box className="flex gap-2 mt-2 flex-wrap w-full">
+                  <Box className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 w-full">
                     {[...Array(24)].map((_, index) => (
-                      <Skeleton
-                        key={index}
-                        height="32px"
-                        width="120px"
-                        className="flex-auto"
-                      />
+                      <Skeleton key={index} className="w-full h-8" />
                     ))}
                   </Box>
                 </Box>

@@ -12,7 +12,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState, useTransition } from "react";
 import UserAvatar from "./UserAvatar";
 import { toaster } from "@/components/ui/toaster";
-import { updateUserProfile } from "@/lib/actions/userAction";
+import { updateUserProfile } from "@/lib/actions/userActionClient";
 import ResetPassword from "./ResetPassword";
 
 type Values = {
@@ -81,14 +81,14 @@ const UserProfile = () => {
   if (!sesstion) return null;
 
   return (
-    <Box className="flex flex-col gap-2 lg:p-10 lg:max-w-[35vw] md:max-w-[30vw] max-w-[560px] lg:mx-0 mx-auto">
+    <Box className="flex flex-col gap-2 lg:p-10 xl:max-w-[640px] lg:max-w-[560px] md:max-w-[420px] max-w-full lg:mx-0 mx-auto">
       <Box className="flex-1 mb-3">
         <h3 className="text-lg text-gray-50">Tài khoản</h3>
         <span className="text-sm text-gray-300">
           Cập nhật thông tin tài khoản
         </span>
       </Box>
-      <Box className="flex gap-8 md:items-start items-center md:flex-row flex-col">
+      <Box className="flex gap-8 sm:items-start items-center sm:flex-row flex-col">
         <UserAvatar />
         <form
           className="flex w-full flex-col gap-6 mt-3 flex-1"

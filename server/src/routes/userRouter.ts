@@ -10,7 +10,18 @@ import {
   deleteSearchHistory,
   getUserSearchHistory,
 } from "../controllers/searchHistoryController";
-import { createUserMovie, getUserMovies } from "../controllers/userMovieController";
+import {
+  addMovie,
+  checkMovieExists,
+  deleteMovie,
+  getUserMovies,
+} from "../controllers/userMovieController";
+import {
+  createPlaylist,
+  deletePlaylist,
+  getPlaylists,
+  updatePlaylist,
+} from "../controllers/playlistController";
 
 const router = express.Router();
 
@@ -27,7 +38,14 @@ router.delete("/search-history/all", deleteAllSearchHistory);
 
 // user movies
 router.get("/movies", getUserMovies);
-router.post("/movie", createUserMovie);
+router.post("/movie", addMovie);
+router.post("/check-movie", checkMovieExists);
+router.delete("/movie", deleteMovie);
 
+// playlist
+router.get("/playlists", getPlaylists);
+router.post("/playlist", createPlaylist);
+router.delete("/playlist", deletePlaylist);
+router.put("/playlist", updatePlaylist);
 
 export default router;

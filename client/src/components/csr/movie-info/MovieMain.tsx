@@ -6,7 +6,7 @@ import TabTrailer from "./TabTrailer";
 import MovieSuggesstions from "@/components/movie/MovieSuggestions";
 import Link from "next/link";
 import PlayIcon from "@/components/icons/PlayIcon";
-import SectionControls from "@/components/movie/SectionControls";
+import SectionControls from "@/components/movie/controls/SectionControls";
 import { useParams } from "next/navigation";
 
 const MovieMain = () => {

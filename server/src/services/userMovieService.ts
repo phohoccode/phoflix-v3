@@ -16,10 +16,13 @@ export const handleGetUserMovies = async ({
 }: GetUserMovies) => {
   const offset = (page - 1) * limit;
 
+  console.log("type", type);
+
   try {
     const query = `
       SELECT * FROM user_movies
       WHERE user_id = ? AND type = ?
+      ORDER BY created_at DESC
       LIMIT ? OFFSET ?
     `;
 
@@ -27,12 +30,24 @@ export const handleGetUserMovies = async ({
       .promise()
       .query(query, [userId, type, limit, offset]);
 
+    const sqlSelectTotalItems = `
+      SELECT COUNT(*) AS totalItems FROM user_movies
+      WHERE user_id = ? AND type = ?
+    `;
+
+    const [rowsTotalItems]: any = await connection
+      .promise()
+      .query(sqlSelectTotalItems, [userId, type]);
+    
+
+    console.log(">> rows", rows);
+
     return {
       status: true,
       message: "User movies fetched successfully",
       result: {
         movies: rows,
-        totalItems: rows.length,
+        totalItems: rowsTotalItems[0].totalItems,
         totalItemsPerPage: limit,
       },
     };
@@ -40,6 +55,50 @@ export const handleGetUserMovies = async ({
     return {
       status: false,
       message: "Error fetching user movies",
+      result: null,
+    };
+  }
+};
+
+// ====================== CHECK MOVIE EXISTS ======================
+
+interface CheckMovieExists {
+  userId: string;
+  movieSlug: string;
+  type: string;
+}
+
+export const handleCheckMovieExists = async ({
+  userId,
+  movieSlug,
+  type,
+}: CheckMovieExists) => {
+  try {
+    const sqlCheckMovieExists = `
+      SELECT id FROM user_movies WHERE user_id = ? AND type = ? AND movie_slug = ?
+    `;
+
+    const [rowsCheckMovie]: any = await connection
+      .promise()
+      .query(sqlCheckMovieExists, [userId, type, movieSlug]);
+
+    if (rowsCheckMovie.length > 0) {
+      return {
+        status: true,
+        message: "Phim đã có trong danh sách!",
+        result: null,
+      };
+    }
+
+    return {
+      status: false,
+      message: "Phim không tồn tại trong danh sách!",
+      result: null,
+    };
+  } catch (error) {
+    return {
+      status: false,
+      message: "Error checking movie existence",
       result: null,
     };
   }
@@ -59,7 +118,9 @@ interface CreateUserMovie {
   type?: "history" | "favorite" | "playlist";
 }
 
-export const handleCreateUserMovie = async ({
+// ====================== ADD NEW MOVIE ======================
+
+export const handleAddMovie = async ({
   userId,
   movieData,
   type,
@@ -84,17 +145,17 @@ export const handleCreateUserMovie = async ({
 
     switch (type) {
       case "history":
-        return await handleCreateUserMovieHistory({
+        return await addMovieToHistory({
           userId,
           movieData,
         });
       case "favorite":
-        return await handleCreateUserMovieFavorite({
+        return await addMovieToFavorite({
           userId,
           movieData,
         });
       case "playlist":
-        return await handleCreateUserMoviePlaylist({
+        return await addMovieToPlaylist({
           userId,
           movieData,
           playlistId,
@@ -115,10 +176,7 @@ export const handleCreateUserMovie = async ({
   }
 };
 
-const handleCreateUserMovieHistory = async ({
-  userId,
-  movieData,
-}: CreateUserMovie) => {
+const addMovieToHistory = async ({ userId, movieData }: CreateUserMovie) => {
   const { movieName, movieSlug, moviePoster, movieThumbnail } = movieData;
 
   try {
@@ -205,10 +263,7 @@ const handleCreateUserMovieHistory = async ({
   }
 };
 
-const handleCreateUserMovieFavorite = async ({
-  userId,
-  movieData,
-}: CreateUserMovie) => {
+const addMovieToFavorite = async ({ userId, movieData }: CreateUserMovie) => {
   const { movieName, movieSlug, moviePoster, movieThumbnail } = movieData;
 
   try {
@@ -250,15 +305,17 @@ const handleCreateUserMovieFavorite = async ({
     if (rowsInsert.affectedRows === 0) {
       return {
         status: false,
-        message: "Tạo phim yêu thích thất bại!",
+        message: "Có lỗi xảy ra khi thêm phim vào danh sách yêu thích!",
         result: null,
       };
     }
 
     return {
       status: true,
-      message: "Tạo phim yêu thích thành công!",
-      result: null,
+      message: `Đã thêm ${movieName} vào danh sách yêu thích!`,
+      result: {
+        action: "favorite",
+      },
     };
   } catch (error) {
     return {
@@ -269,7 +326,7 @@ const handleCreateUserMovieFavorite = async ({
   }
 };
 
-const handleCreateUserMoviePlaylist = async ({
+const addMovieToPlaylist = async ({
   userId,
   movieData,
   playlistId,
@@ -330,6 +387,68 @@ const handleCreateUserMoviePlaylist = async ({
     return {
       status: false,
       message: "Error creating user movie playlist",
+      result: null,
+    };
+  }
+};
+
+// ====================== DELETE MOVIE ======================
+interface DeleteMovie {
+  userId: string;
+  movieSlug: string;
+  type: string;
+}
+
+export const handleDeleteMovie = async ({
+  userId,
+  movieSlug,
+  type,
+}: DeleteMovie) => {
+  try {
+    const sqlCheckUserExists = `
+      SELECT id FROM users WHERE id = ?
+      `;
+
+    const [rowsCheckUser]: any = await connection
+      .promise()
+      .query(sqlCheckUserExists, [userId]);
+
+    if (rowsCheckUser.length === 0) {
+      return {
+        status: false,
+        message: "Người dùng không tồn tại!",
+        result: null,
+      };
+    }
+
+    const sqlDeleteMovie = `
+      DELETE FROM user_movies WHERE user_id = ? AND type = ? AND movie_slug = ?
+    `;
+
+    const [rowsDelete]: any = await connection
+      .promise()
+      .query(sqlDeleteMovie, [userId, type, movieSlug]);
+
+    if (rowsDelete.affectedRows === 0) {
+      return {
+        status: false,
+        message: "Xóa phim thất bại!",
+        result: null,
+      };
+    }
+
+    return {
+      status: true,
+      message: "Đã xóa phim khỏi danh sách!",
+      result: {
+        action: `un-${type}`,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Error deleting user movie",
       result: null,
     };
   }

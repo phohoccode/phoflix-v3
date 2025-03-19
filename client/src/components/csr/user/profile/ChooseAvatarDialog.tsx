@@ -1,7 +1,7 @@
 "use client";
 
 import { toaster } from "@/components/ui/toaster";
-import { updateUserProfile } from "@/lib/actions/userAction";
+import { updateUserProfile } from "@/lib/actions/userActionClient";
 import { avatars } from "@/lib/defines/data";
 import { Box, Button, Dialog, Image, Portal } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";

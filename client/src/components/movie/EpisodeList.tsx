@@ -27,6 +27,12 @@ type Episode = {
 interface EpisodesListProps {
   server_name: string;
   server_data: Episode[];
+  colums?: {
+    base: number;
+    md: number;
+    lg: number;
+    xl: number;
+  };
   redirect?: boolean;
 }
 
@@ -35,6 +41,12 @@ const limitDisplay = 24;
 const EpisodesList = ({
   server_data: episodes,
   server_name,
+  colums = {
+    base: 2,
+    md: 4,
+    lg: 6,
+    xl: 8,
+  },
   redirect = false,
 }: EpisodesListProps) => {
   const [episodeDisplay, setEpisodeDisplay] = useState(
@@ -87,7 +99,11 @@ const EpisodesList = ({
   return (
     <Box className="flex flex-col gap-4">
       <h3 className="text-sm font-semibold text-gray-50">{title}</h3>
-      <Box className="flex flex-wrap gap-2">
+      <Box
+        className={`grid grid-cols-${colums.base ?? 2} md:grid-cols-${
+          colums.md ?? 4
+        } lg:grid-cols-${colums.lg ?? 6} xl:grid-cols-${colums.xl ?? 8} gap-2`}
+      >
         {episodeDisplay?.map((item: any, index: number) => (
           <Link
             onClick={() => handleSetCurrentEpisode(item)}
@@ -100,7 +116,6 @@ const EpisodesList = ({
                 : "#"
             }
             key={index}
-            className={episodeDisplay?.length > 1 ? "flex-auto max-w-32" : ""}
           >
             <Button
               size="md"

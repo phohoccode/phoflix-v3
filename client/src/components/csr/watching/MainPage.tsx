@@ -8,12 +8,14 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SectionVideo from "./SectionVideo";
 import { setCurrentEpisode } from "@/store/slices/movieSlice";
-import SectionControls from "@/components/movie/SectionControls";
+import SectionControls from "@/components/movie/controls/SectionControls";
 import SectionInfo from "./SectionInfo";
 import MovieSuggesstions from "@/components/movie/MovieSuggestions";
 import EpisodesList from "@/components/movie/EpisodeList";
 import SkeletonWachingPage from "@/components/skeletons/SkeletonWatchingPage";
 import EmptyData from "@/components/EmptyData";
+import { addNewMovie } from "@/lib/actions/userActionClient";
+import { useSession } from "next-auth/react";
 
 const MainPage = () => {
   const searchParams = useSearchParams();
@@ -22,6 +24,7 @@ const MainPage = () => {
   const { movie, episodes, loading, error, currentEpisode } = useSelector(
     (state: RootState) => state.movie.movieInfo
   );
+  const { data: sesstion } = useSession();
   const id = searchParams.get("id");
 
   useEffect(() => {
@@ -32,6 +35,23 @@ const MainPage = () => {
       })
     );
   }, []);
+
+  useEffect(() => {
+    if (sesstion) {
+      if (!loading && movie) {
+        addNewMovie({
+          userId: sesstion?.user?.id as string,
+          movieData: {
+            movieName: movie?.name,
+            movieSlug: movie?.slug,
+            moviePoster: movie?.poster_url,
+            movieThumbnail: movie?.thumb_url,
+          },
+          type: "history",
+        });
+      }
+    }
+  }, [loading, params.slug]);
 
   useEffect(() => {
     if (episodes?.length >= 0) {
@@ -89,6 +109,12 @@ const MainPage = () => {
               {episodes?.map((episode: any, index: number) => (
                 <EpisodesList
                   key={index}
+                  colums={{
+                    base: 3,
+                    md: 5,
+                    lg: 3,
+                    xl: 6,
+                  }}
                   redirect={false}
                   server_name={episode?.server_name}
                   server_data={episode?.server_data}
