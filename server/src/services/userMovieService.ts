@@ -335,7 +335,7 @@ const addMovieToPlaylist = async ({
 
   try {
     const sqlCheckPlaylistExists = `
-    SELECT id FROM playlists WHERE id = ?
+        SELECT id FROM playlists WHERE id = ?
     `;
     const [rowsCheckPlaylist]: any = await connection
       .promise()

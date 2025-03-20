@@ -78,7 +78,7 @@ const SearchHistory = ({ keyword }: SearchHistoryProps) => {
   if (loading)
     return (
       <div className="flex justify-center items-center min-h-36">
-        <div className="w-10 h-10 border-[3px] border-b-transparent border-[#f1c40f] rounded-full animate-spin"></div>
+        <div className="border-[#ffd875] border-[3px] border-b-transparent h-10 rounded-full w-10 animate-spin"></div>
       </div>
     );
 
@@ -96,22 +96,22 @@ const SearchHistory = ({ keyword }: SearchHistoryProps) => {
       <ul className="flex flex-col gap-2">
         {items?.map((item: any, index: number) => (
           <li
-            className="flex h-12 justify-between items-center p-2 rounded-lg hover:bg-[#ffffff05] text-gray-50 text-sm"
+            className="flex h-12 justify-between p-2 rounded-lg text-gray-50 text-sm hover:bg-[#ffffff05] items-center"
             key={index}
           >
             <Link
               onClick={() => dispatch(setIsOpenModalSearch(false))}
-              className="flex-1 h-full flex items-center"
+              className="flex flex-1 h-full items-center"
               href={`/search?keyword=${encodeURIComponent(item?.keyword)}`}
             >
-              <Box className="flex gap-2 items-center flex-1 max-w-[90%]">
+              <Box className="flex flex-1 gap-2 items-center max-w-[90%]">
                 <GoClockFill />
-                <span className="truncate w-full">{item?.keyword}</span>
+                <span className="w-full truncate">{item?.keyword}</span>
               </Box>
             </Link>
             <IconButton
               onClick={() => handleDeleteSearchHistory(item?.id)}
-              className="bg-transparent flex-shrink-0"
+              className="flex-shrink-0 bg-transparent"
               aria-label="delete"
               size="xs"
               loading={isPending}
@@ -130,7 +130,7 @@ const SearchHistory = ({ keyword }: SearchHistoryProps) => {
           confirmCallback={handleDeleteAllSearchHistory}
           trigger={
             <Button
-              className="bg-transparent text-sm text-gray-50 mx-auto hover:text-[#f1c40f] transition-all"
+              className="bg-transparent text-gray-50 text-sm hover:text-[#ffd875] mx-auto transition-all"
               size="xs"
             >
               Xóa tất cả

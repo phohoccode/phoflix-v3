@@ -2,7 +2,7 @@ type SearchHistory = {
   id: string;
   keyword: string;
   createdAt: string;
-}
+};
 
 type UserSlice = {
   searchHistory: {
@@ -10,4 +10,4 @@ type UserSlice = {
     loading: boolean;
     error: boolean;
   };
-}
+};

@@ -117,16 +117,16 @@ const Home = () => {
   return (
     <Box>
       <SlideShow />
-      <Box className="max-w-[1900px] mx-auto mt-12 lg:px-14">
+      <Box className="lg:px-14 max-w-[1900px] mt-12 mx-auto">
         <Box className="flex flex-col gap-12 overflow-hidden">
-          <Box className="bg-gradient-to-b from-[#282b3a] via-transparent via-20% rounded-lg">
+          <Box className="bg-gradient-to-b rounded-lg from-[#282b3a] via-20% via-transparent">
             <MovieSection finalData={finalData} />
           </Box>
         </Box>
         <Box className="h-1 mt-10" ref={scrollableDivRef} />
         {loadingMoreData && (
-          <Box className="mt-12 flex items-center justify-center">
-            <Box className="w-10 h-10 border-[3px] border-b-transparent border-[#f1c40f] rounded-full animate-spin"></Box>
+          <Box className="flex justify-center items-center mt-12">
+            <Box className="border-[#ffd875] border-[3px] border-b-transparent h-10 rounded-full w-10 animate-spin"></Box>
           </Box>
         )}
       </Box>

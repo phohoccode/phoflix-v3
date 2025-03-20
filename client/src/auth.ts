@@ -127,8 +127,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.typeAccount = token.typeAccount;
       session.user.createdAt = token.createdAt;
 
-      console.log("session", session);
-
       return session;
     },
   },

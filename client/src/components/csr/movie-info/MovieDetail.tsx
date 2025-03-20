@@ -13,9 +13,9 @@ interface MovieDetailProps {
 
 const MovieDetail = ({ data }: MovieDetailProps) => {
   return (
-    <Box className="relative z-[10] h-full flex flex-col gap-2 p-6 lg:items-start items-center lg:rounded-tl-4xl lg:rounded-tr-4xl lg:rounded-bl-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
+    <Box className="flex flex-col h-full p-6 gap-2 items-center lg:backdrop-blur-lg lg:bg-[#282b3a8a] lg:items-start lg:rounded-bl-4xl lg:rounded-tl-4xl lg:rounded-tr-4xl relative z-[10]">
       <Box className="w-40 mb-2">
-        <Box className="h-0 relative pt-[150%]">
+        <Box className="h-0 pt-[150%] relative">
           <Image
             onError={({ currentTarget }) => {
               currentTarget.onerror = null;
@@ -24,7 +24,7 @@ const MovieDetail = ({ data }: MovieDetailProps) => {
             src={generateUrlImage(data?.poster_url)}
             alt={data?.name ?? "Không xác định"}
             objectFit="cover"
-            className="absolute inset-0 w-full h-full rounded-xl border border-gray-600"
+            className="border border-gray-600 h-full rounded-xl w-full absolute inset-0"
             loading="lazy"
           />
         </Box>
@@ -33,15 +33,15 @@ const MovieDetail = ({ data }: MovieDetailProps) => {
       <MovieInfo data={data} />
 
       <Box className="flex flex-col gap-4 mt-3">
-        <Box className="flex gap-2 flex-col text-sm">
-          <span className="font-semibold text-gray-50">Giới thiệu:</span>
+        <Box className="flex flex-col text-sm gap-2">
+          <span className="text-gray-50 font-semibold">Giới thiệu:</span>
           <ShowMoreText text={data?.content} maxLength={240} />
         </Box>
-        <Box className="flex gap-2 text-sm">
-          <span className="font-semibold text-gray-50 whitespace-nowrap">
+        <Box className="flex text-sm gap-2">
+          <span className="text-gray-50 font-semibold whitespace-nowrap">
             Đạo diễn:
           </span>
-          <ul className="flex gap-2 flex-wrap">
+          <ul className="flex flex-wrap gap-2">
             {data?.director?.map((director: any, index: number) => (
               <li key={index} className="text-gray-400">
                 {director}
@@ -49,15 +49,15 @@ const MovieDetail = ({ data }: MovieDetailProps) => {
             ))}
           </ul>
         </Box>
-        <Box className="flex gap-2 text-sm">
-          <span className="font-semibold text-gray-50 whitespace-nowrap">
+        <Box className="flex text-sm gap-2">
+          <span className="text-gray-50 font-semibold whitespace-nowrap">
             Quốc gia:
           </span>
           <ul className="flex gap-2">
             {data?.country?.map((country: any, index: number) => (
               <li
                 key={index}
-                className="text-gray-400 hover:text-[#f1c40f] transition-all"
+                className="text-gray-400 hover:text-[#ffd875] transition-all"
               >
                 <Link href={`/detail/quoc-gia/${country?.slug}`}>
                   {country?.name}
@@ -66,11 +66,11 @@ const MovieDetail = ({ data }: MovieDetailProps) => {
             ))}
           </ul>
         </Box>
-        <Box className="flex gap-2 text-sm">
-          <span className="font-semibold text-gray-50 whitespace-nowrap">
+        <Box className="flex text-sm gap-2">
+          <span className="text-gray-50 font-semibold whitespace-nowrap">
             Diễn viên:
           </span>
-          <ul className="flex gap-2 flex-wrap">
+          <ul className="flex flex-wrap gap-2">
             {data?.actor?.map((actor: any, index: number) => (
               <li key={index} className="text-gray-400">
                 {actor}

@@ -122,12 +122,12 @@ const SignIn = () => {
 
   return (
     <Box className="flex flex-col gap-2">
-      <h3 className="text-lg text-gray-50">Đăng nhập</h3>
-      <p className="text-xs text-gray-400">
+      <h3 className="text-gray-50 text-lg">Đăng nhập</h3>
+      <p className="text-gray-400 text-xs">
         Nếu bạn chưa có tài khoản,{" "}
         <span
           onClick={() => dispatch(setTypeAuth("signup"))}
-          className="text-[#f1c40f] hover:underline cursor-pointer"
+          className="text-[#ffd875] cursor-pointer hover:underline"
         >
           đăng ký ngay
         </span>
@@ -180,12 +180,12 @@ const SignIn = () => {
         </Button>
         <span
           onClick={() => dispatch(setTypeAuth("forgot-password"))}
-          className="text-center text-xs text-gray-50 cursor-pointer hover:underline"
+          className="text-center text-gray-50 text-xs cursor-pointer hover:underline"
         >
           Quên mật khẩu
         </span>
 
-        <Box className="w-full h-[0.5px] bg-[#ffffff10]" />
+        <Box className="bg-[#ffffff10] h-[0.5px] w-full" />
 
         <Button
           size="sm"

@@ -15,6 +15,7 @@ const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
   const currentPage = params?.page ? Number(params?.page) : 1;
   const limit = 18;
+  
   const response = await getUserMovies({
     userId: sesstion?.user?.id as string,
     type: "history",

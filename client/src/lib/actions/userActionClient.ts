@@ -238,3 +238,133 @@ export const deleteMovie = async ({
     };
   }
 };
+
+// ===================== GET PLAYLISTS =====================
+export const getPlaylists = async (userId: string): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/playlists?userId=${userId}`
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== CREATE NEW PLAYLIST =====================
+interface CreateNewPlaylist {
+  userId: string;
+  playlistName: string;
+}
+
+export const createNewPlaylist = async ({
+  userId,
+  playlistName,
+}: CreateNewPlaylist): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/playlist`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          playlistName,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== Update PLAYLIST =====================
+interface UpdatePlaylist {
+  userId: string;
+  playlistId: string;
+  playlistName: string;
+}
+
+export const updatePlaylist = async ({
+  userId,
+  playlistId,
+  playlistName,
+}: UpdatePlaylist): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/playlist`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          playlistId,
+          playlistName,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== DELETE PLAYLIST =====================
+
+interface DeletePlaylist {
+  userId: string;
+  playlistId: string;
+}
+
+export const deletePlaylist = async ({
+  userId,
+  playlistId,
+}: DeletePlaylist): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/playlist`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId,
+          playlistId,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};

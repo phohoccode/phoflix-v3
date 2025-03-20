@@ -19,6 +19,7 @@ import {
 import {
   createPlaylist,
   deletePlaylist,
+  getMoviesFromPlaylist,
   getPlaylists,
   updatePlaylist,
 } from "../controllers/playlistController";
@@ -47,5 +48,8 @@ router.get("/playlists", getPlaylists);
 router.post("/playlist", createPlaylist);
 router.delete("/playlist", deletePlaylist);
 router.put("/playlist", updatePlaylist);
+
+router.get("/playlist/movies", getMoviesFromPlaylist);
+// router.post("/playlist/movies", addMovieToPlaylist);
 
 export default router;

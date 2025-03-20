@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   handleCreatePlaylist,
   handleDeletePlaylist,
+  handleGetMovieFromPlaylist,
   handleGetPlaylists,
   handleUpdatePlaylist,
 } from "../services/playlistService";
@@ -113,6 +114,37 @@ export const deletePlaylist = async (
     res.status(500).json({
       status: false,
       message: "Error deleting playlist",
+      result: null,
+    });
+  }
+};
+
+export const getMoviesFromPlaylist = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { userId, playlistId, page, limit } = req.query;
+
+    if (!userId || !playlistId || !page || !limit) {
+      return res.status(400).json({
+        status: false,
+        message: "Missing required parameters",
+        result: null,
+      });
+    }
+    const response = await handleGetMovieFromPlaylist({
+      userId: userId as string,
+      playlistId: playlistId as string,
+      page: page ? parseInt(page as string) : 1,
+      limit: limit ? parseInt(limit as string) : 10,
+    });
+
+    return res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Error getting movie from playlist",
       result: null,
     });
   }

@@ -17,11 +17,11 @@ const CategoryAndCountryList = ({
       opacity-0 translate-y-2 transition-all duration-300 ease-in-out"
       style={{ opacity: 1, transform: "translateY(0)" }}
     >
-      <ul className="flex gap-1 p-2 flex-wrap text-gray-50">
+      <ul className="flex flex-wrap p-2 text-gray-50 gap-1">
         {data.map((item) => (
           <li key={item._id} className="">
             <Link
-              className="block px-4 py-2 text-sm transition hover:text-[#f1c40f] rounded-sm"
+              className="rounded-sm text-sm block hover:text-[#ffd875] px-4 py-2 transition"
               href={`/detail/${type}/${item.slug}`}
             >
               {item.name}

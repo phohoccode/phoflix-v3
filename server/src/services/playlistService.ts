@@ -6,6 +6,22 @@ export const handleCreatePlaylist = async (
   playlistName: string
 ) => {
   try {
+    const sqlCheckPlaylistExists = `
+      SELECT id FROM playlists WHERE user_id = ? AND name = ?
+    `;
+
+    const [checkRows]: any = await connection
+      .promise()
+      .query(sqlCheckPlaylistExists, [userId, playlistName]);
+
+    if (checkRows.length > 0) {
+      return {
+        status: false,
+        message: "Playlist đã tồn tại",
+        result: null,
+      };
+    }
+
     const playlistId = uuidv4();
 
     const sqlInsertPlaylist = `
@@ -46,7 +62,12 @@ export const handleCreatePlaylist = async (
 export const handleGetPlaylists = async (userId: string) => {
   try {
     const sqlGetPlaylist = `
-      SELECT * FROM playlists WHERE user_id = ?
+      SELECT p.*, COUNT(um.playlist_id) as totalMovie
+      FROM playlists p
+      LEFT JOIN user_movies um ON p.id = um.playlist_id
+      WHERE p.user_id = ?
+      GROUP BY p.id
+      ORDER BY p.created_at DESC
     `;
 
     const [rows]: any = await connection
@@ -69,6 +90,7 @@ export const handleGetPlaylists = async (userId: string) => {
       },
     };
   } catch (error) {
+    console.error("Error getting playlists:", error);
     return {
       status: false,
       message: "Error getting playlist",
@@ -175,6 +197,87 @@ export const handleDeletePlaylist = async (
     return {
       status: false,
       message: "Error deleting playlist",
+      result: null,
+    };
+  }
+};
+
+// ======================== Get movies from playlist ========================
+
+interface GetMoviesFromPlaylist {
+  userId: string;
+  playlistId: string;
+  page: number;
+  limit: number;
+}
+
+export const handleGetMovieFromPlaylist = async ({
+  userId,
+  playlistId,
+  page = 1,
+  limit = 10,
+}: GetMoviesFromPlaylist) => {
+  try {
+    const sqlCheckPlaylistExists = `
+      SELECT id FROM playlists WHERE id = ? AND user_id = ?
+    `;
+
+    const [checkRows]: any = await connection
+      .promise()
+      .query(sqlCheckPlaylistExists, [playlistId, userId]);
+
+    if (checkRows.length === 0) {
+      return {
+        status: false,
+        message: "Playlist không tồn tại",
+        result: null,
+      };
+    }
+
+    const offset = (page - 1) * limit;
+
+    const sqlGetMoviesFromPlaylist = `
+      SELECT * 
+      FROM user_movies 
+      WHERE playlist_id = ? AND user_id = ?
+      LIMIT ? OFFSET ?
+    `;
+
+    const sqlTotalMoviesFromPlaylist = `
+      SELECT COUNT(*) as total
+      FROM user_movies 
+      WHERE playlist_id = ? AND user_id = ?
+    `;
+
+    const [rowsMovieFromPlaylist]: any = await connection
+      .promise()
+      .query(sqlGetMoviesFromPlaylist, [playlistId, userId, limit, offset]);
+
+    const [rowsTotalMoviesFromPlaylist]: any = await connection
+      .promise()
+      .query(sqlTotalMoviesFromPlaylist, [playlistId, userId]);
+
+    if (rowsMovieFromPlaylist.length === 0) {
+      return {
+        status: false,
+        message: "Không có phim nào trong playlist",
+        result: null,
+      };
+    }
+
+    return {
+      status: true,
+      message: "Lấy danh sách phim trong playlist thành công",
+      result: {
+        movies: rowsMovieFromPlaylist,
+        totalItems: rowsTotalMoviesFromPlaylist[0].total,
+        totalItemsPerPage: limit,
+      },
+    };
+  } catch (error) {
+    return {
+      status: false,
+      message: "Error getting movies from playlist",
       result: null,
     };
   }

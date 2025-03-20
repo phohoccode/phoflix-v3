@@ -10,16 +10,16 @@ interface MovieInfoProps {
 const MovieInfo = ({ data }: MovieInfoProps) => {
   return (
     <Box className="flex flex-col gap-2">
-      <h4 className="text-2xl font-semibold text-gray-50">
+      <h4 className="text-2xl text-gray-50 font-semibold">
         {data?.name ?? "Không xác định"}
       </h4>
-      <p className="text-sm text-[#f1c40f]">
+      <p className="text-[#ffd875] text-sm">
         {data?.origin_name ?? "Không xác định"}
       </p>
-      <Box className="flex items-center gap-2 flex-wrap">
-        <span className="p-1 h-6 rounded-md inline-flex items-center justify-center bg-transparent border border-[#f1c40f]">
-          <span className="text-[#f1c40f] text-xs">TMDb</span>
-          <span className="ml-1 text-gray-50 text-sm">
+      <Box className="flex flex-wrap gap-2 items-center">
+        <span className="bg-transparent border border-[#ffd875] h-6 justify-center p-1 rounded-md inline-flex items-center">
+          <span className="text-[#ffd875] text-xs">TMDb</span>
+          <span className="text-gray-50 text-sm ml-1">
             {data?.tmdb?.vote_average ?? "Không xác định"}
           </span>
         </span>
@@ -29,7 +29,7 @@ const MovieInfo = ({ data }: MovieInfoProps) => {
         <TagClassic text={data?.time ?? "Không xác định"} />
         <TagClassic text={data?.episode_current ?? "Không xác định"} />
       </Box>
-      <Box className="flex items-center gap-2 flex-wrap mt-1">
+      <Box className="flex flex-wrap gap-2 items-center mt-1">
         {data?.category?.map((category: any, index: number) => (
           <TagClassic
             key={index}

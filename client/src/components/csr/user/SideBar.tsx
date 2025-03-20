@@ -36,19 +36,19 @@ const SideBar = () => {
   const pathname = usePathname();
 
   return (
-    <Box className="lg:w-72 w-full lg:p-10 p-4 rounded-2xl bg-[#25272f] lg:sticky lg:top-20 lg:max-h-[600px]">
+    <Box className="bg-[#25272f] p-4 rounded-2xl w-full lg:max-h-[600px] lg:p-10 lg:sticky lg:top-20 lg:w-72">
       <Box className="flex flex-col gap-6">
-        <h4 className="text-lg text-gray-50 lg:text-left text-center">
+        <h4 className="text-center text-gray-50 text-lg lg:text-left">
           Quản lý tài khoản
         </h4>
-        <ul className="flex lg:flex-col lg:gap-1 md:gap-4 gap-2 flex-row lg:justify-start justify-center lg:mb-32">
+        <ul className="flex flex-row justify-center gap-2 lg:flex-col lg:gap-1 lg:justify-start lg:mb-32 md:gap-4">
           {menu.map((item, index) => (
             <li key={index}>
               <Link
                 href={item.link}
-                className={`flex md:flex-row whitespace-nowrap flex-col gap-2 items-center lg:text-sm text-xs lg:py-4 lg:px-0 p-2 lg:border-b border-[#2e313a] hover:text-[#f1c40f] transition-all
+                className={`flex md:flex-row whitespace-nowrap flex-col gap-2 items-center lg:text-sm text-xs lg:py-4 lg:px-0 p-2 lg:border-b border-[#2e313a] hover:text-[#ffd875] transition-all
                     ${
-                      pathname === item.link ? "text-[#f1c40f]" : "text-gray-50"
+                      pathname === item.link ? "text-[#ffd875]" : "text-gray-50"
                     }
                 `}
               >
@@ -59,11 +59,11 @@ const SideBar = () => {
           ))}
         </ul>
 
-        <Box className="lg:flex hidden flex-col gap-4">
+        <Box className="flex-col gap-4 hidden lg:flex">
           <ProfileHeader />
           <Box
             onClick={() => signOut({ callbackUrl: "/" })}
-            className="flex gap-2 cursor-pointer items-center text-gray-50 text-sm py-4 hover:text-[#f1c40f] transition-all"
+            className="flex text-gray-50 text-sm cursor-pointer gap-2 hover:text-[#ffd875] items-center py-4 transition-all"
           >
             <FiLogOut />
             Đăng xuất

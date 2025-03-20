@@ -16,8 +16,8 @@ const SectionInfo = ({ data }: SectionInfoProps) => {
     <Box className="flex-1">
       <Box className="flex flex-col gap-6">
         <Box className="flex gap-4">
-          <Box className="w-28 flex-shrink-0">
-            <Box className="relative h-0 pt-[150%]">
+          <Box className="flex-shrink-0 w-28">
+            <Box className="h-0 pt-[150%] relative">
               <Image
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null;
@@ -26,7 +26,7 @@ const SectionInfo = ({ data }: SectionInfoProps) => {
                 src={generateUrlImage(data?.poster_url)}
                 alt={data?.name ?? "Không xác định"}
                 objectFit="cover"
-                className="absolute inset-0 w-full h-full rounded-xl border border-gray-800 group-hover:brightness-75 transition-all"
+                className="border border-gray-800 h-full rounded-xl w-full absolute group-hover:brightness-75 inset-0 transition-all"
                 loading="lazy"
               />
             </Box>
@@ -35,9 +35,9 @@ const SectionInfo = ({ data }: SectionInfoProps) => {
         </Box>
 
         <Box className="flex flex-col gap-4">
-          <ShowMoreText text={data?.content} maxLength={260}/>
+          <ShowMoreText text={data?.content} maxLength={260} />
           <Link
-            className="inline-flex items-center gap-1 text-sm text-[#f1c40f] hover:underline"
+            className="text-[#ffd875] text-sm gap-1 hover:underline inline-flex items-center"
             href={`/info/${data?.slug}?name=${formatStringForURL(
               data?.name,
               "-"

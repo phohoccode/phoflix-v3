@@ -70,19 +70,19 @@ const ResetPassword = () => {
       onOpenChange={({ open }) => setOpen(open)}
     >
       <Dialog.Trigger asChild>
-        <span className="text-[#f1c40f] cursor-pointer hover:underline">
+        <span className="text-[#ffd875] cursor-pointer hover:underline">
           đây
         </span>
       </Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
         <Dialog.Positioner>
-          <Dialog.Content className="relative text-gray-50 bg-[rgba(40,43,58,0.8)] rounded-2xl backdrop-blur max-w-[420px] mx-4">
+          <Dialog.Content className="bg-[rgba(40,43,58,0.8)] rounded-2xl text-gray-50 backdrop-blur max-w-[420px] mx-4 relative">
             <Dialog.Header>
               <Dialog.Title>Đổi mật khẩu</Dialog.Title>
             </Dialog.Header>
             <Dialog.Body>
-              <form className="flex w-full flex-col gap-6 mt-3 flex-1">
+              <form className="flex flex-1 flex-col w-full gap-6 mt-3">
                 <Field.Root required className="text-gray-50">
                   <Field.Label>Mật khẩu cũ</Field.Label>
                   <PasswordInput
@@ -131,7 +131,7 @@ const ResetPassword = () => {
                 size="xs"
                 colorPalette="yellow"
                 variant="solid"
-                className="min-w-24 hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
+                className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)] min-w-24"
               >
                 Xác nhận
               </Button>

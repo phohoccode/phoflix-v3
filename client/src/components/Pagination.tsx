@@ -4,6 +4,7 @@ import { PaginationItems, PaginationRoot } from "@/components/ui/pagination";
 import { Box, HStack } from "@chakra-ui/react";
 import { toaster } from "./ui/toaster";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface PaginationProps {
   pagination: {
@@ -23,6 +24,7 @@ const Pagination = ({ pagination, currentPage, ref }: PaginationProps) => {
 
     params.set("page", page.toString());
     router.replace(`?${params.toString()}`);
+
     window.scrollTo({ top: 0, behavior: "smooth" });
 
     if (ref?.current) {

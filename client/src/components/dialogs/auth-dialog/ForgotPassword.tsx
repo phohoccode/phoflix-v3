@@ -54,8 +54,8 @@ const ForgotPassword = () => {
 
   return (
     <Box className="flex flex-col gap-2">
-      <h3 className="text-lg text-gray-50">Quên mật khẩu</h3>
-      <p className="text-xs text-gray-400">
+      <h3 className="text-gray-50 text-lg">Quên mật khẩu</h3>
+      <p className="text-gray-400 text-xs">
         Vui lòng nhập email của bạn để nhận hướng dẫn khôi phục mật khẩu
       </p>
 
@@ -100,11 +100,11 @@ const ForgotPassword = () => {
           Gửi yêu cầu
         </Button>
       </form>
-      <p className="text-xs text-gray-400 text-right mt-3">
+      <p className="text-gray-400 text-right text-xs mt-3">
         Quay lại{" "}
         <span
           onClick={() => dispatch(setTypeAuth("signin"))}
-          className="text-[#f1c40f] hover:underline cursor-pointer"
+          className="text-[#ffd875] cursor-pointer hover:underline"
         >
           đăng nhập
         </span>

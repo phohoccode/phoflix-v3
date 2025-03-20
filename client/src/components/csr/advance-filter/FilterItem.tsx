@@ -13,10 +13,10 @@ const FilterItem = ({ option, filter, handleSetFilter }: FilterItemProps) => {
         <li
           onClick={() => handleSetFilter(option.id, item.slug)}
           key={index}
-          className={`px-1 lg:text-sm text-xs cursor-pointer hover:text-[#f1c40f] transition-all
+          className={`px-1 lg:text-sm text-xs cursor-pointer hover:text-[#ffd875] transition-all
              ${
                filter[option.id] === item.slug
-                 ? "text-[#f1c40f]"
+                 ? "text-[#ffd875]"
                  : "text-gray-50"
              }
           `}

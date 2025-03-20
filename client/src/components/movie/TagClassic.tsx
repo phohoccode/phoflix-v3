@@ -16,13 +16,13 @@ export const TagClassic = ({
   return (
     <>
       {!isRedirect ? (
-        <span className="p-1 h-6 rounded-md bg-[rgba(255,255,255,0.06)] text-gray-50 inline-flex items-center text-xs border border-[#ffffff10]">
+        <span className="bg-[rgba(255,255,255,0.06)] border border-[#ffffff10] h-6 p-1 rounded-md text-gray-50 text-xs inline-flex items-center">
           {text}
         </span>
       ) : (
         <Link
           href={href as string}
-          className="p-1 h-6 rounded-md bg-[rgba(255,255,255,0.1)] text-gray-50 inline-flex items-center text-xs transition-all hover:text-[#f1c40f]"
+          className="bg-[rgba(255,255,255,0.1)] h-6 p-1 rounded-md text-gray-50 text-xs hover:text-[#ffd875] inline-flex items-center transition-all"
         >
           {text}
         </Link>

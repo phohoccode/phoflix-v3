@@ -82,8 +82,8 @@ const MainPage = () => {
   };
 
   return (
-    <Box className="min-h-screen flex items-center justify-center">
-      <h1 className="text-[#f1c40f] text-lg font-semibold">
+    <Box className="flex justify-center items-center min-h-screen">
+      <h1 className="text-[#ffd875] text-lg font-semibold">
         Đang xác thực token, vui lòng chờ trong giây lát...
       </h1>
     </Box>

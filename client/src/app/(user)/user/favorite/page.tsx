@@ -15,6 +15,7 @@ const Page = async ({ searchParams }: PageProps) => {
   const params = await searchParams;
   const currentPage = params?.page ? Number(params?.page) : 1;
   const limit = 18;
+
   const response = await getUserMovies({
     userId: sesstion?.user?.id as string,
     type: "favorite",
@@ -22,7 +23,7 @@ const Page = async ({ searchParams }: PageProps) => {
     limit,
   });
   const { movies, totalItems, totalItemsPerPage } = response?.result || {};
-
+  
   return (
     <Suspense fallback={<Spinner />}>
       <h3 className="text-lg text-gray-50">Yêu thích</h3>
@@ -32,7 +33,7 @@ const Page = async ({ searchParams }: PageProps) => {
         totalItemsPerPage={totalItemsPerPage}
         currentPage={currentPage}
         limit={limit}
-        sesstion={sesstion}
+        sesstion={sesstion} 
         type="favorite"
       />
     </Suspense>

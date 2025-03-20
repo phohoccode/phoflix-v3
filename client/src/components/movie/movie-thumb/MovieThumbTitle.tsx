@@ -24,7 +24,7 @@ const MovieThumbTitle = ({
   if (error) return null;
 
   return (
-    <Box className="flex justify-between items-center gap-2 mb-6">
+    <Box className="flex justify-between gap-2 items-center mb-6">
       <h3
         className={`lg:text-2xl md:text-xl text-lg font-bold inline-block text-gray-50`}
       >
@@ -32,7 +32,7 @@ const MovieThumbTitle = ({
       </h3>
       <Link
         href={href}
-        className="lg:text-md text-sm text-gray-50 flex gap-1 items-center transition-all hover:text-[#f1c40f] hover:translate-x-0.5"
+        className="flex text-gray-50 text-sm gap-1 hover:text-[#ffd875] hover:translate-x-0.5 items-center lg:text-md transition-all"
       >
         Xem tất cả
         <ChavronRightIcon />

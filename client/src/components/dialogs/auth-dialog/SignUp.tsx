@@ -169,12 +169,12 @@ const SignUp = () => {
 
   return (
     <Box className="flex flex-col gap-2">
-      <h3 className="text-lg text-gray-50">Tạo tài khoản mới</h3>
-      <p className="text-xs text-gray-400">
+      <h3 className="text-gray-50 text-lg">Tạo tài khoản mới</h3>
+      <p className="text-gray-400 text-xs">
         Nếu bạn đã có tài khoản,{" "}
         <span
           onClick={() => dispatch(setTypeAuth("signin"))}
-          className="text-[#f1c40f] hover:underline cursor-pointer"
+          className="text-[#ffd875] cursor-pointer hover:underline"
         >
           đăng nhập
         </span>

@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="vi">
       <body className={`${inter.className} antialiased`}>
-        <NextTopLoader color="#f1c40f" showSpinner={false} height={2} />
+        <NextTopLoader color="#ffd875" showSpinner={false} height={2} />
 
         <StoreProvider>
           <Provider>

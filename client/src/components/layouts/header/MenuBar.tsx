@@ -15,29 +15,29 @@ const MenuBar = () => {
   if (windowWidth <= 1320) return null;
 
   return (
-    <ul className="flex items-center gap-2 text-gray-50">
-      <li className="text-sm relative transition-all hover:text-[#f1c40f]">
+    <ul className="flex text-gray-50 gap-2 items-center">
+      <li className="text-sm hover:text-[#ffd875] relative transition-all">
         <Link href="/detail/danh-sach/phim-le" className="p-2">
           Phim lẻ
         </Link>
       </li>
-      <li className="text-sm relative transition-all hover:text-[#f1c40f]">
+      <li className="text-sm hover:text-[#ffd875] relative transition-all">
         <Link href="/detail/danh-sach/phim-bo" className="p-2">
           Phim bộ
         </Link>
       </li>
-      <li className="text-sm relative transition-all hover:text-[#f1c40f]">
+      <li className="text-sm hover:text-[#ffd875] relative transition-all">
         <Link href="/detail/danh-sach/hoat-hinh" className="p-2">
           Hoạt hình
         </Link>
       </li>
-      <li className="text-sm relative transition-all hover:text-[#f1c40f]">
+      <li className="text-sm hover:text-[#ffd875] relative transition-all">
         <Link href="/advance-filter" className="p-2">
           Lọc nâng cao
         </Link>
       </li>
       <li
-        className="text-sm flex gap-1 items-center relative p-2 cursor-pointer"
+        className="flex p-2 text-sm cursor-pointer gap-1 items-center relative"
         onMouseEnter={() => setOpenDropdown("country")}
         onMouseLeave={() => setOpenDropdown(null)}
       >
@@ -48,7 +48,7 @@ const MenuBar = () => {
         )}
       </li>
       <li
-        className="text-sm flex gap-1 cursor-pointer items-center relative p-2"
+        className="flex p-2 text-sm cursor-pointer gap-1 items-center relative"
         onMouseEnter={() => setOpenDropdown("category")}
         onMouseLeave={() => setOpenDropdown(null)}
       >

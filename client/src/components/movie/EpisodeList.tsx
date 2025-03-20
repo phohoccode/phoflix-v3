@@ -98,7 +98,7 @@ const EpisodesList = ({
 
   return (
     <Box className="flex flex-col gap-4">
-      <h3 className="text-sm font-semibold text-gray-50">{title}</h3>
+      <h3 className="text-gray-50 text-sm font-semibold">{title}</h3>
       <Box
         className={`grid grid-cols-${colums.base ?? 2} md:grid-cols-${
           colums.md ?? 4
@@ -121,8 +121,8 @@ const EpisodesList = ({
               size="md"
               className={`w-full shadow transition-all ${
                 currentEpisode?.link_embed === item?.link_embed
-                  ? "bg-[#f1c40f] text-[#282b3a]"
-                  : "text-gray-50 bg-[#282b3a] hover:text-[#f1c40f]"
+                  ? "bg-[#ffd875] text-[#282b3a]"
+                  : "text-gray-50 bg-[#282b3a] hover:text-[#ffd875]"
               }`}
             >
               <svg

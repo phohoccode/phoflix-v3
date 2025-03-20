@@ -66,3 +66,58 @@ export const deleteMovie = async ({
     };
   }
 };
+
+// ===================== GET PLAYLISTS  =====================
+interface GetUserPlaylists {
+  userId: string;
+}
+
+export const getUserPlaylists = async ({
+  userId,
+}: GetUserPlaylists): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/playlists?userId=${userId}`
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== GET USER MOVIES PLAYLIST =====================
+
+interface GetUserMoviesFromPlaylist {
+  userId: string;
+  playlistId: string;
+  page: number;
+  limit: number;
+}
+
+export const getUserMoviesFromPlaylist = async ({
+  userId,
+  playlistId,
+  page,
+  limit,
+}: GetUserMoviesFromPlaylist): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/playlist/movies?userId=${userId}&playlistId=${playlistId}&page=${page}&limit=${limit}`
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};

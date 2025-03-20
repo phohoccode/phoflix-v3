@@ -6,8 +6,8 @@ import { deleteMovie } from "@/lib/actions/userActionClient";
 import { formatStringForURL, generateUrlImage } from "@/lib/utils";
 import { Box, IconButton, Image, SimpleGrid } from "@chakra-ui/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 
 interface MovieGridProps {
@@ -26,6 +26,22 @@ interface MovieGridProps {
 const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
   const [slug, setSlug] = useState<string>("");
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const updatePageAndRefresh = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", newPage.toString());
+    router.replace(`?${params.toString()}`);
+    router.refresh();
+  };
+
+  useEffect(() => {
+    const currentPage = Number(searchParams.get("page")) || 1;
+
+    if ((!items || items.length === 0) && currentPage > 1) {
+      updatePageAndRefresh(currentPage - 1);
+    }
+  }, [items, searchParams]);
 
   const handleDeleteMovie = async (slug: string) => {
     setSlug(slug);
@@ -37,7 +53,6 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
     setSlug("");
 
     if (response?.status) {
-      // Handle success response
       toaster.create({
         title: response?.message,
         type: "info",
@@ -54,9 +69,9 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
     }
   };
 
-  if (items?.length === 0) {
+  if (!items || items?.length === 0) {
     return (
-      <Box className="flex items-center justify-center h-96 w-full">
+      <Box className="flex h-64 justify-center w-full items-center">
         <EmptyData
           title="Danh sách phim đang trống"
           description="Hãy thêm phim vào danh sách của bạn"
@@ -79,7 +94,7 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
             )}`}
             className="flex flex-col gap-2 group"
           >
-            <Box className="h-0 relative pb-[150%] rounded-xl overflow-hidden">
+            <Box className="h-0 rounded-xl overflow-hidden pb-[150%] relative">
               <Image
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null;
@@ -88,7 +103,7 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
                 src={generateUrlImage(item?.movie_poster)}
                 alt={item?.movie_name ?? "Không xác định"}
                 objectFit="cover"
-                className="absolute inset-0 w-full h-full rounded-xl border border-gray-800 group-hover:brightness-75 transition-all"
+                className="border border-gray-800 h-full rounded-xl w-full absolute group-hover:brightness-75 inset-0 transition-all"
                 loading="lazy"
               />
             </Box>
@@ -99,7 +114,7 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
                 WebkitBoxOrient: "vertical",
                 overflow: "hidden",
               }}
-              className="lg:text-sm text-xs text-gray-50 group-hover:text-[#f1c40f] transition-all"
+              className="text-gray-50 text-xs group-hover:text-[#ffd875] lg:text-sm transition-all"
             >
               {item?.movie_name}
             </span>
@@ -110,7 +125,7 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
             onClick={() => handleDeleteMovie(item?.movie_slug)}
             aria-label="Xóa"
             colorPalette="red"
-            className="absolute top-2 right-2 text-gray-50"
+            className="text-gray-50 absolute right-2 top-2"
           >
             <MdDelete />
           </IconButton>

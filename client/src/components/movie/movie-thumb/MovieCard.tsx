@@ -86,7 +86,7 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
             )}
             alt={data?.name ?? "Không xác định"}
             objectFit="cover"
-            className="absolute inset-0 w-full h-full rounded-xl border border-gray-800 group-hover:brightness-75 transition-all"
+            className="border border-gray-800 h-full rounded-xl w-full absolute group-hover:brightness-75 inset-0 transition-all"
             loading="lazy"
           />
         </Box>
@@ -97,7 +97,7 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
             WebkitBoxOrient: "vertical",
             overflow: "hidden",
           }}
-          className="lg:text-sm text-xs text-gray-50 group-hover:text-[#f1c40f] transition-all"
+          className="text-gray-50 text-xs group-hover:text-[#ffd875] lg:text-sm transition-all"
         >
           {data?.name}
         </span>
