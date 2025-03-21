@@ -4,6 +4,7 @@ import {
   handleDeletePlaylist,
   handleGetMovieFromPlaylist,
   handleGetPlaylists,
+  handleGetPlaylistsContainingMovie,
   handleUpdatePlaylist,
 } from "../services/playlistService";
 
@@ -145,6 +146,36 @@ export const getMoviesFromPlaylist = async (
     res.status(500).json({
       status: false,
       message: "Error getting movie from playlist",
+      result: null,
+    });
+  }
+};
+
+export const getPlaylistsContainingMovie = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { userId, movieSlug } = req.query;
+
+    if (!userId || !movieSlug) {
+      return res.status(400).json({
+        status: false,
+        message: "Missing required parameters",
+        result: null,
+      });
+    }
+
+    const response = await handleGetPlaylistsContainingMovie(
+      userId as string,
+      movieSlug as string
+    );
+
+    return res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Error checking movie in playlists",
       result: null,
     });
   }

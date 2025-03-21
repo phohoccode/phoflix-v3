@@ -10,7 +10,7 @@ const SectionVideo = () => {
   );
 
   return (
-    <Box className="relative h-0 lg:pt-[42%] md:pt-[46%] pt-[56%] xl:rounded-tl-2xl xl:rounded-tr-2xl overflow-hidden">
+    <Box className="relative border border-[#ffffff10] h-0 lg:pt-[42%] md:pt-[46%] pt-[56%] xl:rounded-tl-2xl xl:rounded-tr-2xl overflow-hidden">
       <iframe
         src={currentEpisode?.link_embed}
         title={currentEpisode?.name}

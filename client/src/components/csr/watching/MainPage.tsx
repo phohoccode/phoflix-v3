@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SectionVideo from "./SectionVideo";
 import { setCurrentEpisode } from "@/store/slices/movieSlice";
-import SectionControls from "@/components/movie/controls/SectionControls";
 import SectionInfo from "./SectionInfo";
 import MovieSuggesstions from "@/components/movie/MovieSuggestions";
 import EpisodesList from "@/components/movie/EpisodeList";
@@ -16,6 +15,10 @@ import SkeletonWachingPage from "@/components/skeletons/SkeletonWatchingPage";
 import EmptyData from "@/components/EmptyData";
 import { addNewMovie } from "@/lib/actions/userActionClient";
 import { useSession } from "next-auth/react";
+import FavoriteButton from "@/components/movie/controls/FavoriteButton";
+import PlaylistButton from "@/components/movie/controls/PlaylistButton";
+import ShareButton from "@/components/movie/controls/ShareButton";
+import ReportFilmButton from "@/components/movie/controls/ReportFilmButton";
 
 const MainPage = () => {
   const searchParams = useSearchParams();
@@ -94,8 +97,13 @@ const MainPage = () => {
         </h3>
         <Box className="flex flex-col lg:px-4">
           <SectionVideo />
-          <Box className="p-4 bg-[#08080a] xl:rounded-bl-2xl xl:rounded-br-2xl">
-            <SectionControls placement="horizontal" />
+          <Box className="p-4 bg-[#08080a] xl:rounded-bl-2xl xl:rounded-br-2xl flex justify-between">
+            <Box className="flex gap-4">
+              <FavoriteButton placement="horizontal" responsiveText />
+              <PlaylistButton placement="horizontal" responsiveText />
+              <ShareButton placement="horizontal" responsiveText />
+            </Box>
+            <ReportFilmButton placement="horizontal" responsiveText />
           </Box>
         </Box>
       </Box>

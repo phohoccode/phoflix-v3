@@ -46,11 +46,13 @@ CREATE TABLE
   );
 
 CREATE TABLE
-  `ratings` (
+  `reviews` (
     `id` CHAR(36) PRIMARY KEY NOT NULL,
     `user_id` CHAR(36) NOT NULL,
     `movie_slug` VARCHAR(255) NOT NULL,
-    `stars` INT CHECK (`stars` BETWEEN 1 AND 5),
+    `content` TEXT NULL,
+    `is_spam` TINYINT (1) DEFAULT 0,
+    `point` INT CHECK (`point` BETWEEN 1 AND 10),
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE

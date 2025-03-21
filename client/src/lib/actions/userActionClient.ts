@@ -208,15 +208,17 @@ interface DeleteMovie {
   userId: string;
   movieSlug: string;
   type: "history" | "favorite" | "playlist";
+  playlistId?: string | null;
 }
 
 export const deleteMovie = async ({
   userId,
   movieSlug,
   type,
+  playlistId = null,
 }: DeleteMovie): Promise<any> => {
   try {
-    const query = `?userId=${userId}&movieSlug=${movieSlug}&type=${type}`;
+    const query = `?userId=${userId}&movieSlug=${movieSlug}&type=${type}&playlistId=${playlistId}`;
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/movie${query}`,
@@ -354,6 +356,102 @@ export const deletePlaylist = async ({
         body: JSON.stringify({
           userId,
           playlistId,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== GET PLAYLISTS CONTAINING MOVIE =====================
+interface GetPlaylistsContainingMovie {
+  userId: string;
+  movieSlug: string;
+}
+
+export const getPlaylistsContainingMovie = async ({
+  userId,
+  movieSlug,
+}: GetPlaylistsContainingMovie): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/playlists/listByMovie?userId=${userId}&movieSlug=${movieSlug}`
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== GET REVIEWS BY MOVIE =====================
+interface GetReviewsByMovie {
+  movieSlug: string;
+  page: number;
+  limit: number;
+}
+
+export const getReviewsByMovie = async ({
+  movieSlug,
+  page,
+  limit,
+}: GetReviewsByMovie): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/reviewsByMovie?movieSlug=${movieSlug}&page=${page}&limit=${limit}`
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== ADD NEW REVIEW =====================
+interface AddNewReview {
+  movieSlug: string;
+  point: number;
+  userId: string;
+  content?: string;
+}
+
+export const addNewReview = async ({
+  movieSlug,
+  point,
+  userId,
+  content,
+}: AddNewReview): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/review`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          movieSlug,
+          point,
+          userId,
+          content,
         }),
       }
     );

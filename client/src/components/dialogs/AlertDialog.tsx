@@ -22,7 +22,11 @@ const AlertDialog = ({
       <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
-        <Dialog.Positioner>
+        <Dialog.Positioner
+          css={{
+            zIndex: "9999 !important",
+          }}
+        >
           <Dialog.Content className="relative text-gray-50 bg-[rgba(40,43,58,0.8)] rounded-2xl backdrop-blur max-w-[420px] mx-4">
             <Dialog.Header>
               <Dialog.Title>{title}</Dialog.Title>

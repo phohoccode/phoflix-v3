@@ -4,11 +4,13 @@ import EmptyData from "@/components/EmptyData";
 import { toaster } from "@/components/ui/toaster";
 import { deleteMovie } from "@/lib/actions/userActionClient";
 import { formatStringForURL, generateUrlImage } from "@/lib/utils";
+import { RootState } from "@/store/store";
 import { Box, IconButton, Image, SimpleGrid } from "@chakra-ui/react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
+import { useSelector } from "react-redux";
 
 interface MovieGridProps {
   items: any;
@@ -27,6 +29,10 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
   const [slug, setSlug] = useState<string>("");
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { selectedPlaylistId } = useSelector((state: RootState) => state.user);
+  const pathname = usePathname();
+
+  console.log("selectedPlaylistId", selectedPlaylistId);
 
   const updatePageAndRefresh = (newPage: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -49,6 +55,7 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
       userId,
       movieSlug: slug,
       type,
+      playlistId: pathname === "/user/playlist" ? selectedPlaylistId : null,
     });
     setSlug("");
 

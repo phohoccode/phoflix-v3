@@ -1,7 +1,6 @@
 "use client";
 
 import { Box, GridItem, SimpleGrid, Skeleton } from "@chakra-ui/react";
-import { SkeletonText } from "../ui/skeleton";
 
 const SkeletonInfoPage = () => {
   return (
@@ -13,12 +12,12 @@ const SkeletonInfoPage = () => {
         <Box className="mt-[-100px]">
           <SimpleGrid columns={12} gap={0}>
             <GridItem colSpan={{ base: 12, md: 12, lg: 12, xl: 4 }}>
-              <Box className="flex flex-col gap-2 p-6 lg:rounded-tl-4xl h-full lg:rounded-tr-4xl lg:rounded-bl-4xl lg:items-start items-center lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
+              <Box className="flex flex-col gap-2 p-6 h-full xl:items-start xl:rounded-bl-4xl xl:rounded-tl-4xl xl:rounded-tr-4xl lg:rounded-tl-4xl lg:rounded-tr-4xl items-center lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
                 <Box className="w-40 mb-2">
                   <Box className="h-0 relative pt-[150%]">
                     <Skeleton
-                      className="absolute inset-0 w-full h-full rounded-none"
-                      rounded={0}
+                      className="absolute inset-0 w-full h-full"
+                      rounded="2xl"
                     />
                   </Box>
                 </Box>
@@ -42,18 +41,9 @@ const SkeletonInfoPage = () => {
               </Box>
             </GridItem>
             <GridItem colSpan={{ base: 12, md: 12, lg: 12, xl: 8 }}>
-              <Box className="relative z-[10] flex flex-col gap-4 p-8 h-full lg:rounded-tl-4xl lg:rounded-tr-4xl lg:rounded-br-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
-                <Box className="flex gap-6 lg:flex-row lg:items-start items-center flex-col w-full">
-                  <Skeleton
-                    width={{
-                      base: "70%",
-                      md: "40%",
-                      lg: "288px",
-                      xl: "240px",
-                    }}
-                    height="60px"
-                    rounded="full"
-                  />
+              <Box className="relative z-[10] flex flex-col gap-4 p-8 h-full xl:rounded-tl-4xl xl:rounded-tr-4xl xl:rounded-br-4xl xl:rounded-bl-none lg:rounded-bl-4xl lg:rounded-br-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
+                <Box className="flex gap-6 lg:flex-row xl:justify-start justify-center xl:items-start items-center flex-col">
+                  <Skeleton width="176px" height="60px" rounded="full" />
                   <Box className="flex gap-2">
                     <Skeleton width="64px" height="60px" borderRadius="8px" />
                     <Skeleton width="64px" height="60px" borderRadius="8px" />

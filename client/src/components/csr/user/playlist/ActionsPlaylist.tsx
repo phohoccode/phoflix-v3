@@ -24,14 +24,18 @@ import { MdDelete } from "react-icons/md";
 
 interface ActionsPlaylistProps {
   action: "update" | "create";
+  children: React.ReactNode;
   value?: string;
   playlistId?: string;
+  trigger?: () => void;
 }
 
 const ActionsPlaylist = ({
   action,
   value,
+  children,
   playlistId,
+  trigger,
 }: ActionsPlaylistProps) => {
   const [playlistName, setPlaylistName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -40,8 +44,6 @@ const ActionsPlaylist = ({
   const router = useRouter();
 
   useEffect(() => {
-    console.log("action", action);
-
     if (action === "create") {
       setPlaylistName("");
     } else {
@@ -50,16 +52,17 @@ const ActionsPlaylist = ({
   }, [action, value, isOpen]);
 
   const handleActionPlaylist = (action: "update" | "delete" | "create") => {
+    if (playlistName?.trim() === "") {
+      toaster.create({
+        description: "Tên danh sách không được để trống",
+        type: "error",
+        duration: 1500,
+      });
+      return;
+    }
+
     startTransition(async () => {
       let response: any = null;
-
-      if (playlistName?.trim() === "") {
-        toaster.create({
-          description: "Tên danh sách không được để trống",
-          type: "error",
-        });
-        return;
-      }
 
       if (action === "create") {
         response = await createNewPlaylist({
@@ -93,6 +96,11 @@ const ActionsPlaylist = ({
         setPlaylistName("");
         setIsOpen(false);
 
+        // trigger khi thêm mới danh sách
+        if (trigger) {
+          trigger();
+        }
+
         // Update data
         router.refresh();
       }
@@ -105,26 +113,15 @@ const ActionsPlaylist = ({
       open={isOpen}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
-      <Dialog.Trigger asChild>
-        <Button
-          size="xs"
-          rounded="full"
-          className="text-xs text-gray-200 bg-transparent border border-gray-400 hover:bg-[#25272f] transition-all"
-        >
-          {action === "create" ? (
-            <>
-              <FaPlus />
-              Thêm mới
-            </>
-          ) : (
-            "Sửa"
-          )}
-        </Button>
-      </Dialog.Trigger>
+      <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
-        <Dialog.Positioner>
-          <Dialog.Content className="relative text-gray-50 lg:max-w-[320px] max-w-full bg-[rgba(40,43,58,0.8)] rounded-2xl backdrop-blur mx-4 my-auto">
+        <Dialog.Positioner
+          css={{
+            zIndex: "9999 !important",
+          }}
+        >
+          <Dialog.Content className="relative text-gray-50 max-w-[320px] bg-[#2a314e] rounded-2xl backdrop-blur mx-4 my-auto">
             <Dialog.Header>
               <Dialog.Title>
                 {action === "create" ? "Tạo danh sách" : "Sửa danh sách"}
@@ -133,7 +130,14 @@ const ActionsPlaylist = ({
             <Dialog.Body>
               <Input
                 autoFocus={action === "create"}
-                className="border border-[#2e313a] focus:border-gray-50"
+                onFocus={(e) =>
+                  action === "update" &&
+                  e.target.setSelectionRange(
+                    playlistName?.length,
+                    playlistName?.length
+                  )
+                }
+                className="border border-[#ffffff10] focus:border-gray-50"
                 onChange={(e) => setPlaylistName(e.target.value)}
                 value={playlistName}
                 placeholder="Tên danh sách"
@@ -142,7 +146,6 @@ const ActionsPlaylist = ({
             <Dialog.Footer>
               {action === "update" && (
                 <AlertDialog
-                  
                   trigger={
                     <IconButton
                       className="mr-auto"
@@ -169,12 +172,10 @@ const ActionsPlaylist = ({
                 </Button>
               </Dialog.ActionTrigger>
               <Button
-                loading={isPending}
+                loading={action === "create" ? isPending : false}
                 onClick={() => handleActionPlaylist(action)}
                 size="xs"
-                colorPalette="yellow"
-                variant="solid"
-                className="min-w-24 hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
+                className="min-w-24 bg-[#ffd875] text-gray-800 hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
               >
                 {action === "create" ? "Thêm" : "Lưu"}
               </Button>

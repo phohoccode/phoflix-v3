@@ -19,9 +19,9 @@ const SkeletonWachingPage = () => {
             />
           </Box>
           <Box className="p-4 bg-[#08080a] flex gap-4">
-            <Skeleton width="5%" height="5" />
-            <Skeleton width="5%" height="5" />
-            <Skeleton width="5%" height="5" />
+            <Skeleton className="sm:min-w-16 min-w-7" height="5" />
+            <Skeleton className="sm:min-w-16 min-w-7" height="5" />
+            <Skeleton className="sm:min-w-16 min-w-7" height="5" />
           </Box>
         </Box>
 

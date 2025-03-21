@@ -21,8 +21,10 @@ import {
   deletePlaylist,
   getMoviesFromPlaylist,
   getPlaylists,
+  getPlaylistsContainingMovie,
   updatePlaylist,
 } from "../controllers/playlistController";
+import { addNewPreview, getReviewsByMovie } from "../controllers/reviewController";
 
 const router = express.Router();
 
@@ -48,8 +50,11 @@ router.get("/playlists", getPlaylists);
 router.post("/playlist", createPlaylist);
 router.delete("/playlist", deletePlaylist);
 router.put("/playlist", updatePlaylist);
-
 router.get("/playlist/movies", getMoviesFromPlaylist);
-// router.post("/playlist/movies", addMovieToPlaylist);
+router.get("/playlists/listByMovie", getPlaylistsContainingMovie);
+
+// review
+router.get('/reviewsByMovie', getReviewsByMovie);
+router.post("/review", addNewPreview);
 
 export default router;

@@ -12,6 +12,14 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      screens: {
+        xs: "456px",
+        sm: "640px",
+        md: "768px",
+        lg: "1024px",
+        xl: "1280px",
+        "2xl": "1536px",
+      },
       keyframes: {
         "slide-in": {
           "0%": { opacity: 0, transform: "translateX(-50px)" },

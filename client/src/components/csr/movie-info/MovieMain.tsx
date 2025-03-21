@@ -1,111 +1,43 @@
 "use client";
 
-import { Box, Button, Tabs } from "@chakra-ui/react";
-import TabEpisodes from "./TabEpisodes";
-import TabTrailer from "./TabTrailer";
-import MovieSuggesstions from "@/components/movie/MovieSuggestions";
+import { Box, Button } from "@chakra-ui/react";
 import Link from "next/link";
 import PlayIcon from "@/components/icons/PlayIcon";
-import SectionControls from "@/components/movie/controls/SectionControls";
 import { useParams } from "next/navigation";
+import MovieTabs from "./MovieTabs";
+import FavoriteButton from "@/components/movie/controls/FavoriteButton";
+import PlaylistButton from "@/components/movie/controls/PlaylistButton";
+import ShareButton from "@/components/movie/controls/ShareButton";
+import ReviewButton from "@/components/movie/controls/ReviewButton";
 
 const MovieMain = () => {
   const params = useParams();
   const slug = params.slug;
 
   return (
-    <Box className="relative h-full z-[10] flex flex-col gap-4 p-8 lg:rounded-tl-4xl lg:rounded-tr-4xl lg:rounded-br-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
+    <Box className="relative h-full z-[10] flex flex-col gap-4 lg:p-8 p-6 xl:rounded-tl-4xl xl:rounded-tr-4xl xl:rounded-br-4xl xl:rounded-bl-none lg:rounded-bl-4xl lg:rounded-br-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
       <Box className="flex flex-col gap-8">
-        <Box className="flex gap-6 lg:flex-row lg:items-start items-center flex-col">
-          <Link
-            href={`/watching/${slug}`}
-            className="xl:w-60 lg:w-72 md:w-[40%] w-[70%]"
-          >
+        <Box className="flex gap-6 md:flex-row flex-col md:justify-start justify-center md:items-start items-center ">
+          <Link href={`/watching/${slug}`} className="w-44">
             <Button
-              className="w-full h-14 text-lg shadow-lg hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
+              className="w-full h-14 text-lg shadow-lg hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)] bg-[#ffd875] text-gray-800"
               rounded="full"
-              colorPalette="yellow"
-              variant="solid"
             >
               <PlayIcon />
               Xem ngay
             </Button>
           </Link>
-          <SectionControls />
+          <Box className="flex justify-between gap-6 flex-1 items-center">
+            <Box className="flex gap-4">
+              <FavoriteButton placement="vertical" />
+              <PlaylistButton placement="vertical" />
+              <ShareButton placement="vertical" />
+            </Box>
+            <ReviewButton />
+          </Box>
         </Box>
         <Box>
-          <Tabs.Root defaultValue="episodes" colorPalette="yellow">
-            <Tabs.List>
-              <Tabs.Trigger
-                _selected={{
-                  color: "#fde047",
-                }}
-                className="text-gray-50"
-                value="episodes"
-              >
-                Tập phim
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                _selected={{
-                  color: "#fde047",
-                }}
-                className="text-gray-50"
-                value="trailer"
-              >
-                Trailer
-              </Tabs.Trigger>
-              <Tabs.Trigger
-                _selected={{
-                  color: "#fde047",
-                }}
-                className="text-gray-50"
-                value="suggest"
-              >
-                Đề xuất
-              </Tabs.Trigger>
-            </Tabs.List>
-            <Tabs.Content
-              _open={{
-                animationName: "fade-in, scale-in",
-                animationDuration: "160ms",
-              }}
-              _closed={{
-                animationName: "fade-out, scale-out",
-                animationDuration: "120ms",
-              }}
-              value="episodes"
-            >
-              <TabEpisodes />
-            </Tabs.Content>
-            <Tabs.Content
-              value="trailer"
-              _open={{
-                animationName: "fade-in, scale-in",
-                animationDuration: "160ms",
-              }}
-              _closed={{
-                animationName: "fade-out, scale-out",
-                animationDuration: "120ms",
-              }}
-            >
-              <TabTrailer />
-            </Tabs.Content>
-            <Tabs.Content
-              value="suggest"
-              _open={{
-                animationName: "fade-in, scale-in",
-                animationDuration: "160ms",
-              }}
-              _closed={{
-                animationName: "fade-out, scale-out",
-                animationDuration: "120ms",
-              }}
-            >
-              <Box className="mt-3">
-                <MovieSuggesstions title="Có thể bạn sẽ thích" />
-              </Box>
-            </Tabs.Content>
-          </Tabs.Root>
+          <MovieTabs />
         </Box>
       </Box>
     </Box>

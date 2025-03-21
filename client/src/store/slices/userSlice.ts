@@ -7,12 +7,35 @@ const initialState: UserSlice = {
     loading: false,
     error: false,
   },
+  selectedPlaylistId: null,
+  reviews: {
+    items: [],
+    loading: false,
+    error: false,
+    selectedReview: {
+      id: 1,
+      emoji: "/images/reviews/rate-5.webp",
+      text: "Tuyệt vời",
+      value: 10,
+    },
+    reviewContent: "",
+  },
 };
 
 const userSlice = createSlice({
   name: "user",
   initialState,
-  reducers: {},
+  reducers: {
+    setSelectedPlaylistId: (state, action) => {
+      state.selectedPlaylistId = action.payload;
+    },
+    setSelectedReview: (state, action) => {
+      state.reviews.selectedReview = action.payload;
+    },
+    setReviewContent: (state, action) => {
+      state.reviews.reviewContent = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getUserSearchHistory.pending, (state) => {
       state.searchHistory.loading = true;
@@ -31,6 +54,7 @@ const userSlice = createSlice({
   },
 });
 
-export const {} = userSlice.actions;
+export const { setSelectedPlaylistId, setSelectedReview, setReviewContent } =
+  userSlice.actions;
 
 export default userSlice.reducer;

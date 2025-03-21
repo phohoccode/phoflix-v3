@@ -282,3 +282,42 @@ export const handleGetMovieFromPlaylist = async ({
     };
   }
 };
+
+// ======================== Get playlists containing movie ========================
+export const handleGetPlaylistsContainingMovie = async (
+  userId: string,
+  movieSlug: string
+) => {
+  try {
+    const sqlCheckMovieInPlaylists = `
+      SELECT p.id
+      FROM playlists p
+      JOIN user_movies um ON p.id = um.playlist_id
+      WHERE um.user_id = ? AND um.movie_slug = ?
+    `;
+
+    const [rows]: any = await connection
+      .promise()
+      .query(sqlCheckMovieInPlaylists, [userId, movieSlug]);
+
+    let playlistIds: string[] = [];
+
+    if (rows.length > 0) {
+      playlistIds = rows.map((row: any) => row.id);
+    }
+
+    return {
+      status: true,
+      message: "Thành công!",
+      result: {
+        playlistIds,
+      },
+    };
+  } catch (error) {
+    return {
+      status: false,
+      message: "Error checking movie in playlists",
+      result: null,
+    };
+  }
+};

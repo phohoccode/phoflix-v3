@@ -87,3 +87,20 @@ export const isDataExistsToday = <T>(
     return createdAt === today && item === data[compareWidth];
   });
 };
+
+export const handleShare = () => {
+  if (navigator.share) {
+    // Kiểm tra xem trình duyệt có hỗ trợ Web Share API không
+    navigator
+      .share({
+        title: "Chia sẻ phim",
+        text: "Xem phim thú vị này nhé!",
+        url: window.location.href, // Lấy đường dẫn hiện tại
+      })
+      .then(() => console.log("Chia sẻ thành công!"))
+      .catch((error) => console.error("Lỗi khi chia sẻ:", error));
+  } else {
+    console.log("Trình duyệt không hỗ trợ Web Share API");
+  }
+};
+

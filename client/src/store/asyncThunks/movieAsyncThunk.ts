@@ -4,8 +4,7 @@ export const fetchDataSlideShow = createAsyncThunk(
   "movie/fetchDataSlideShow",
   async () => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/danh-sach/phim-moi-cap-nhat-v3?page=1`,
-      { next: { revalidate: 60 } }
+      `${process.env.NEXT_PUBLIC_API_URL}/danh-sach/phim-moi-cap-nhat-v3?page=1`
     );
     return response.json();
   }
@@ -42,8 +41,7 @@ export const fetchDataMovie = createAsyncThunk(
   ) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/${describe}/${type}?page=${params.page}&limit=${params.limit}`,
-        { next: { revalidate: 60 } }
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/${describe}/${type}?page=${params.page}&limit=${params.limit}`
       );
 
       if (!response.ok) {
@@ -83,8 +81,7 @@ export const fetchDataMovieDetail = createAsyncThunk(
   ) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/${describe}/${slug}?page=${page}&limit=${limit}`,
-        { next: { revalidate: 60 } }
+        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/${describe}/${slug}?page=${page}&limit=${limit}`
       );
 
       if (!response.ok) {

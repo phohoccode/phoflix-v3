@@ -7,8 +7,9 @@ import {
   getUserMoviesFromPlaylist,
   getUserPlaylists,
 } from "@/lib/actions/userActionServer";
-import { Box } from "@chakra-ui/react";
+import { Box, Button } from "@chakra-ui/react";
 import { Suspense } from "react";
+import { FaPlus } from "react-icons/fa6";
 
 interface PageProps {
   searchParams: {
@@ -42,7 +43,7 @@ const Page = async ({ searchParams }: PageProps) => {
   // nếu không có playlistId thì lấy playlist đầu tiên trong danh sách
   const playlistId = params?.playlistId
     ? String(params.playlistId)
-    : playlists[0]?.id;
+    : playlists?.[0]?.id;
 
   const response =
     responseMovies ??
@@ -59,7 +60,16 @@ const Page = async ({ searchParams }: PageProps) => {
     <>
       <Box className="flex gap-4 items-center mb-4">
         <h3 className="text-gray-50 text-lg">Danh sách</h3>
-        <ActionsPlaylist action="create" />
+        <ActionsPlaylist action="create">
+          <Button
+            size="xs"
+            rounded="full"
+            className="text-xs text-gray-200 bg-transparent border border-gray-400 hover:bg-[#25272f] transition-all"
+          >
+            <FaPlus />
+            Thêm mới
+          </Button>
+        </ActionsPlaylist>
       </Box>
 
       <Suspense fallback={<Spinner />}>

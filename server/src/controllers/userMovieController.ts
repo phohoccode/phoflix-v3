@@ -140,7 +140,7 @@ export const deleteMovie = async (
   res: Response
 ): Promise<any> => {
   try {
-    const { userId, movieSlug, type } = req.query;
+    const { userId, movieSlug, type, playlistId } = req.query;
 
     if (!userId || !movieSlug || !type) {
       return res.status(400).json({
@@ -162,6 +162,7 @@ export const deleteMovie = async (
       userId: userId as string,
       movieSlug: movieSlug as string,
       type,
+      playlistId: type === "playlist" ? (playlistId as string) : null,
     });
 
     return res.status(200).json(response);

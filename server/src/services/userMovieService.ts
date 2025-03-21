@@ -16,8 +16,6 @@ export const handleGetUserMovies = async ({
 }: GetUserMovies) => {
   const offset = (page - 1) * limit;
 
-  console.log("type", type);
-
   try {
     const query = `
       SELECT * FROM user_movies
@@ -38,9 +36,6 @@ export const handleGetUserMovies = async ({
     const [rowsTotalItems]: any = await connection
       .promise()
       .query(sqlSelectTotalItems, [userId, type]);
-    
-
-    console.log(">> rows", rows);
 
     return {
       status: true,
@@ -372,14 +367,14 @@ const addMovieToPlaylist = async ({
     if (rowsInsert.affectedRows === 0) {
       return {
         status: false,
-        message: "Tạo phim vào playlist thất bại!",
+        message: "Có lỗi xảy ra khi thêm phim vào playlist!",
         result: null,
       };
     }
 
     return {
       status: true,
-      message: "Tạo phim vào playlist thành công!",
+      message: "Đã thêm phim vào danh sách",
       result: null,
     };
   } catch (error) {
@@ -397,12 +392,14 @@ interface DeleteMovie {
   userId: string;
   movieSlug: string;
   type: string;
+  playlistId?: string | null;
 }
 
 export const handleDeleteMovie = async ({
   userId,
   movieSlug,
   type,
+  playlistId,
 }: DeleteMovie) => {
   try {
     const sqlCheckUserExists = `
@@ -422,12 +419,19 @@ export const handleDeleteMovie = async ({
     }
 
     const sqlDeleteMovie = `
-      DELETE FROM user_movies WHERE user_id = ? AND type = ? AND movie_slug = ?
+      DELETE FROM user_movies 
+      WHERE user_id = ? AND type = ? AND movie_slug = ? AND 
+      (${playlistId ? "playlist_id = ?" : "playlist_id IS NULL"})
     `;
 
     const [rowsDelete]: any = await connection
       .promise()
-      .query(sqlDeleteMovie, [userId, type, movieSlug]);
+      .query(
+        sqlDeleteMovie,
+        playlistId
+          ? [userId, type, movieSlug, playlistId]
+          : [userId, type, movieSlug]
+      );
 
     if (rowsDelete.affectedRows === 0) {
       return {
@@ -440,9 +444,7 @@ export const handleDeleteMovie = async ({
     return {
       status: true,
       message: "Đã xóa phim khỏi danh sách!",
-      result: {
-        action: `un-${type}`,
-      },
+      result: null,
     };
   } catch (error) {
     console.log(error);

@@ -15,9 +15,13 @@ import { useSelector } from "react-redux";
 
 interface FavoriteButtonProps {
   placement?: "vertical" | "horizontal";
+  responsiveText?: boolean;
 }
 
-const FavoriteButton = ({ placement }: FavoriteButtonProps) => {
+const FavoriteButton = ({
+  placement = "horizontal",
+  responsiveText = false,
+}: FavoriteButtonProps) => {
   const { movie } = useSelector((state: RootState) => state.movie.movieInfo);
   const [favorite, setFavorite] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -72,8 +76,8 @@ const FavoriteButton = ({ placement }: FavoriteButtonProps) => {
         setFavorite(response?.result?.action === "favorite" ? true : false);
         toaster.create({
           title: response?.message,
-          type: "info",
-          duration: 2000,
+          type: "success",
+          duration: 1000,
         });
 
         handleCheckMovieExists();
@@ -81,18 +85,16 @@ const FavoriteButton = ({ placement }: FavoriteButtonProps) => {
         toaster.create({
           title: response?.message,
           type: "error",
-          duration: 2000,
+          duration: 1000,
         });
       }
     });
   };
 
-  if (isPending) return;
-
   return (
     <Box
       onClick={handleActionsFavorite}
-      className={`p-2 min-w-16 cursor-pointer rounded-lg flex justify-center items-center gap-2 transition-all hover:bg-[#ffffff05] 
+      className={`p-2 sm:min-w-16 cursor-pointer rounded-lg flex justify-center items-center gap-2 transition-all hover:bg-[#ffffff05] 
           ${placement === "vertical" ? "flex-col" : "flex-row"}
           ${isPending ? "opacity-50" : ""}
           ${favorite ? "text-[#ffd875]" : "text-gray-50"}
@@ -105,7 +107,11 @@ const FavoriteButton = ({ placement }: FavoriteButtonProps) => {
       ) : (
         <IoMdHeart />
       )}
-      <span className="text-xs">{favorite ? "Bỏ yêu thích" : "Yêu thích"}</span>
+      <span
+        className={`text-xs whitespace-nowrap ${!responsiveText ? "block" : "hidden xs:block"}`}
+      >
+        {favorite ? "Bỏ yêu thích" : "Yêu thích"}
+      </span>
     </Box>
   );
 };

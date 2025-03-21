@@ -2,9 +2,12 @@
 
 import { Box } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ActionsPlaylist from "./ActionsPlaylist";
-
+import { IoPlayCircleOutline } from "react-icons/io5";
+import { AppDispatch } from "@/store/store";
+import { useDispatch } from "react-redux";
+import { setSelectedPlaylistId } from "@/store/slices/userSlice";
 interface PlaylistsProps {
   playlists: any;
 }
@@ -13,6 +16,7 @@ const Playlists = ({ playlists }: PlaylistsProps) => {
   const router = useRouter();
   const params = useSearchParams();
   const playlistId = params.get("playlistId");
+  const dispatch: AppDispatch = useDispatch();
   const [selectedPlaylist, setSelectedPlaylist] = useState(() => {
     return (
       playlists?.find((playlist: any) => playlist?.id === playlistId) ||
@@ -20,6 +24,17 @@ const Playlists = ({ playlists }: PlaylistsProps) => {
     );
   });
 
+  useEffect(() => {
+    if (playlistId) {
+      const playlist = playlists?.find(
+        (playlist: any) => playlist?.id === playlistId
+      );
+
+      dispatch(setSelectedPlaylistId(playlist?.id));
+    } else {
+      dispatch(setSelectedPlaylistId(playlists?.[0]?.id));
+    }
+  }, [playlists]);
 
   const handleChangePlaylist = async (playlist: any) => {
     const params = new URLSearchParams(window.location.search);
@@ -53,15 +68,18 @@ const Playlists = ({ playlists }: PlaylistsProps) => {
         >
           <span className="text-gray-50 text-sm">{playlist?.name}</span>
           <Box className="flex justify-between items-center">
-            <span className="flex-1 text-gray-200 text-xs">
-              {playlist?.totalMovie} phim
-            </span>
+            <Box className="flex flex-1 gap-1 items-center text-gray-200">
+              <IoPlayCircleOutline />
+              <span className="text-xs">{playlist?.totalMovie} phim</span>
+            </Box>
 
             <ActionsPlaylist
               action="update"
               value={playlist?.name}
               playlistId={playlist?.id}
-            />
+            >
+              <span className="text-gray-200 text-xs underline">Sửa</span>
+            </ActionsPlaylist>
           </Box>
         </Box>
       ))}
