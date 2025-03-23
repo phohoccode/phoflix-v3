@@ -8,10 +8,13 @@ import TabTrailer from "./TabTrailer";
 const MovieTabs = () => {
   return (
     <Tabs.Root defaultValue="episodes" colorPalette="yellow">
-      <Tabs.List>
+      <Tabs.List className="border-[#ffffff10]">
         <Tabs.Trigger
           _selected={{
-            color: "#fde047",
+            color: "#ffd875",
+            "&:before": {
+              height: "1px",
+            },
           }}
           className="text-gray-50"
           value="episodes"
@@ -20,7 +23,10 @@ const MovieTabs = () => {
         </Tabs.Trigger>
         <Tabs.Trigger
           _selected={{
-            color: "#fde047",
+            color: "#ffd875",
+            "&:before": {
+              height: "1px",
+            },
           }}
           className="text-gray-50"
           value="trailer"
@@ -29,7 +35,10 @@ const MovieTabs = () => {
         </Tabs.Trigger>
         <Tabs.Trigger
           _selected={{
-            color: "#fde047",
+            color: "#ffd875",
+            "&:before": {
+              height: "1px",
+            },
           }}
           className="text-gray-50"
           value="suggest"
@@ -80,6 +89,6 @@ const MovieTabs = () => {
       </Tabs.Content>
     </Tabs.Root>
   );
-}
- 
+};
+
 export default MovieTabs;

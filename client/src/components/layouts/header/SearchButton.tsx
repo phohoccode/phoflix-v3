@@ -1,40 +1,27 @@
 "use client";
 
-import SearchIcon from "@/components/icons/SearchIcon";
 import { setIsOpenModalSearch } from "@/store/slices/systemSlice";
-import { AppDispatch, RootState } from "@/store/store";
-import { Button, IconButton } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/store/store";
+import { Button } from "@chakra-ui/react";
+import { IoSearch } from "react-icons/io5";
+import { useDispatch } from "react-redux";
 
 const SearchButton = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { windowWidth } = useSelector((state: RootState) => state.system);
 
   return (
-    <>
-      {windowWidth > 1024 ? (
-        <Button
-          onClick={() => dispatch(setIsOpenModalSearch(true))}
-          className="min-w-64 bg-[#ffffff5e]"
-          size="sm"
-          variant="solid"
-          rounded="full"
-        >
-          <SearchIcon />
-          <span className="flex-1 text-left ml-1 font-semibold">Tìm kiếm...</span>
-        </Button>
-      ) : (
-        <IconButton
-          rounded="full"
-          onClick={() => dispatch(setIsOpenModalSearch(true))}
-          size={"sm"}
-          className="bg-[#ffffff5e]"
-          variant={"solid"}
-        >
-          <SearchIcon />
-        </IconButton>
-      )}
-    </>
+    <Button
+      onClick={() => dispatch(setIsOpenModalSearch(true))}
+      className="lg:min-w-64 lg:bg-[#ffffff5e] bg-transparent"
+      size="sm"
+      variant="solid"
+      rounded="full"
+    >
+      <IoSearch />
+      <span className="flex-1 text-left ml-1 lg:block hidden">
+        Tìm kiếm phim ...
+      </span>
+    </Button>
   );
 };
 

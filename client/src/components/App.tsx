@@ -17,12 +17,12 @@ import {
 } from "@/store/slices/systemSlice";
 import NotifyDialog from "./dialogs/notification-dialog/NotificationDialog";
 import { useEffect } from "react";
-import DrawerCustom from "./drawer/DrawerCustom";
-import { Toaster } from "./ui/toaster";
+import DrawerCustom from "./layouts/drawer/DrawerCustom";
+import { toaster, Toaster } from "./ui/toaster";
 import Footer from "./layouts/Footer";
 import AuthDialog from "./dialogs/auth-dialog/AuthDialog";
 import ScrollToTopButton from "./ScrollToTopButton";
-import { isEmptyObject } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 const App = ({ children }: { children: React.ReactNode }) => {
   const {
@@ -33,8 +33,20 @@ const App = ({ children }: { children: React.ReactNode }) => {
     isShowAuthDialog,
     typeAuth,
   } = useSelector((state: RootState) => state.system);
-  const { movieData } = useSelector((state: RootState) => state.movie);
   const dispatch: AppDispatch = useDispatch();
+  const { data: sesstion, status } = useSession();
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      if (!sesstion.user?.email) {
+        toaster.create({
+          type: "error",
+          description: "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
+          duration: 2000,
+        });
+      }
+    }
+  }, [status]);
 
   useEffect(() => {
     dispatch(setWidth(window.innerWidth));
@@ -70,7 +82,7 @@ const App = ({ children }: { children: React.ReactNode }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
 
-    return (
+  return (
     <Box>
       <NavBar />
       {children}

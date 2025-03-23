@@ -18,7 +18,7 @@ import {
 import { set } from "lodash";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 
@@ -42,6 +42,7 @@ const ActionsPlaylist = ({
   const [isPending, startTransition] = useTransition();
   const { data: session } = useSession();
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (action === "create") {
@@ -111,6 +112,7 @@ const ActionsPlaylist = ({
     <Dialog.Root
       size="xs"
       open={isOpen}
+      initialFocusEl={undefined}
       onOpenChange={({ open }) => setIsOpen(open)}
     >
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>

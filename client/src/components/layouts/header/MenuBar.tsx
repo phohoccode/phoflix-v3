@@ -5,37 +5,34 @@ import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import Link from "next/link";
 import CategoryAndCountryList from "./CategoryAndCountryList";
 import { categories, countries } from "@/lib/defines/data";
-import { RootState } from "@/store/store";
-import { useSelector } from "react-redux";
+import { usePathname } from "next/navigation";
+
+const menu = [
+  { name: "Trang chủ", path: "/" },
+  { name: "Phim lẻ", path: "/detail/danh-sach/phim-le" },
+  { name: "Phim bộ", path: "/detail/danh-sach/phim-bo" },
+  { name: "Hoạt hình", path: "/detail/danh-sach/hoat-hinh" },
+  { name: "Lọc nâng cao", path: "/advance-filter" },
+];
 
 const MenuBar = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const { windowWidth } = useSelector((state: RootState) => state.system);
-
-  if (windowWidth <= 1320) return null;
+  const pathname = usePathname();
 
   return (
-    <ul className="flex text-gray-50 gap-2 items-center">
-      <li className="text-sm hover:text-[#ffd875] relative transition-all">
-        <Link href="/detail/danh-sach/phim-le" className="p-2">
-          Phim lẻ
-        </Link>
-      </li>
-      <li className="text-sm hover:text-[#ffd875] relative transition-all">
-        <Link href="/detail/danh-sach/phim-bo" className="p-2">
-          Phim bộ
-        </Link>
-      </li>
-      <li className="text-sm hover:text-[#ffd875] relative transition-all">
-        <Link href="/detail/danh-sach/hoat-hinh" className="p-2">
-          Hoạt hình
-        </Link>
-      </li>
-      <li className="text-sm hover:text-[#ffd875] relative transition-all">
-        <Link href="/advance-filter" className="p-2">
-          Lọc nâng cao
-        </Link>
-      </li>
+    <ul className="text-gray-50 gap-2 items-center xl:flex hidden">
+      {menu.map((item, index) => (
+        <li key={index}>
+          <Link
+            href={item.path}
+            className={`p-2 text-sm hover:text-[#ffd875] relative transition-all ${
+              pathname === item.path ? "text-[#ffd875]" : ""
+            }`}
+          >
+            {item.name}
+          </Link>
+        </li>
+      ))}
       <li
         className="flex p-2 text-sm cursor-pointer gap-1 items-center relative"
         onMouseEnter={() => setOpenDropdown("country")}

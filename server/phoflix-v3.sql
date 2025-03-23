@@ -51,11 +51,13 @@ CREATE TABLE
     `user_id` CHAR(36) NOT NULL,
     `movie_slug` VARCHAR(255) NOT NULL,
     `content` TEXT NULL,
+    `parent_id` CHAR(36) DEFAULT NULL,
     `is_spam` TINYINT (1) DEFAULT 0,
     `point` INT CHECK (`point` BETWEEN 1 AND 10),
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`parent_id`) REFERENCES `reviews` (`id`) ON DELETE CASCADE
   );
 
 CREATE TABLE

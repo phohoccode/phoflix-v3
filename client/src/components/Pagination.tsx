@@ -4,7 +4,6 @@ import { PaginationItems, PaginationRoot } from "@/components/ui/pagination";
 import { Box, HStack } from "@chakra-ui/react";
 import { toaster } from "./ui/toaster";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 interface PaginationProps {
   pagination: {
@@ -43,7 +42,11 @@ const Pagination = ({ pagination, currentPage, ref }: PaginationProps) => {
   return (
     <Box className="flex mx-auto mt-12">
       <PaginationRoot
-        size="md"
+        size={{
+          base: "xs",
+          md: "sm",
+          lg: "md",
+        }}
         count={Number(totalItems)}
         pageSize={Number(totalItemsPerPage)}
         page={Number(currentPage)}
@@ -52,7 +55,7 @@ const Pagination = ({ pagination, currentPage, ref }: PaginationProps) => {
         onPageChange={(details) => handleChangePage(details.page)}
       >
         <HStack>
-          <PaginationItems className="bg-[#282b3a] border border-[#1e2939] text-gray-50 hover:bg-transparent" />
+          <PaginationItems className="bg-[#2a314e] border-transparent text-gray-50" />
         </HStack>
       </PaginationRoot>
     </Box>

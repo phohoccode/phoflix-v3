@@ -1,9 +1,10 @@
 "use client";
 
-import BellIcon from "@/components/icons/BellIcon";
 import { setIsOpenModalNotification } from "@/store/slices/systemSlice";
 import { AppDispatch } from "@/store/store";
 import { IconButton } from "@chakra-ui/react";
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { IoNotifications } from "react-icons/io5";
 import { useDispatch } from "react-redux";
 
 const NotificationButton = () => {
@@ -12,12 +13,12 @@ const NotificationButton = () => {
   return (
     <IconButton
       onClick={() => dispatch(setIsOpenModalNotification(true))}
-      size={"sm"}
+      size="sm"
       variant="solid"
-      className="bg-[#ffffff5e]"
-      rounded={"full"}
+      className="lg:bg-[#ffffff5e] bg-transparent"
+      rounded="full"
     >
-      <BellIcon />
+      <IoNotifications />
     </IconButton>
   );
 };

@@ -19,6 +19,7 @@ import FavoriteButton from "@/components/movie/controls/FavoriteButton";
 import PlaylistButton from "@/components/movie/controls/PlaylistButton";
 import ShareButton from "@/components/movie/controls/ShareButton";
 import ReportFilmButton from "@/components/movie/controls/ReportFilmButton";
+import CommentSection from "@/components/comment/CommentSection";
 
 const MainPage = () => {
   const searchParams = useSearchParams();
@@ -97,7 +98,7 @@ const MainPage = () => {
         </h3>
         <Box className="flex flex-col lg:px-4">
           <SectionVideo />
-          <Box className="p-4 bg-[#08080a] xl:rounded-bl-2xl xl:rounded-br-2xl flex justify-between">
+          <Box className="p-4 bg-[#08080a] border-l border-r border-b border-[#ffffff10] xl:rounded-bl-2xl xl:rounded-br-2xl flex justify-between">
             <Box className="flex gap-4">
               <FavoriteButton placement="horizontal" responsiveText />
               <PlaylistButton placement="horizontal" responsiveText />
@@ -131,6 +132,11 @@ const MainPage = () => {
             </Box>
           </Box>
         </Box>
+
+        <CommentSection />
+
+        <Box className="w-full h-[0.5px] bg-[#ffffff10]"></Box>
+
         <MovieSuggesstions
           columns={{ base: 3, md: 3, lg: 5, xl: 6, "2xl": 8 }}
           title="Đề xuất cho bạn"

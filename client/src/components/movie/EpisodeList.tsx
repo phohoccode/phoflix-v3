@@ -122,7 +122,7 @@ const EpisodesList = ({
               className={`w-full shadow transition-all ${
                 currentEpisode?.link_embed === item?.link_embed
                   ? "bg-[#ffd875] text-[#282b3a]"
-                  : "text-gray-50 bg-[#282b3a] hover:text-[#ffd875]"
+                  : "text-gray-50 bg-[#2a314e] hover:text-[#ffd875]"
               }`}
             >
               <svg

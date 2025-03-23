@@ -174,7 +174,7 @@ export const PaginationItems = (props: React.HTMLAttributes<HTMLElement>) => {
             <PaginationItem
               _selected={{
                 bg: "transparent",
-                borderColor: "#1e2939",
+                borderColor: "#2a314e",
                 pointerEvents: "none",
                 cursor: "not-allowed",
               }}

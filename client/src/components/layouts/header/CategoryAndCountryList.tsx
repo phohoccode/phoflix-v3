@@ -13,11 +13,11 @@ const CategoryAndCountryList = ({
 }: CategoryAndCountryListProps) => {
   return (
     <Box
-      className="absolute left-0 top-[calc(100%-16px)] mt-2 min-w-2xl overflow-hidden bg-[#0f111af2] text-gray-50 border border-[#ffffff10] shadow-lg rounded-lg 
+      className="absolute left-1/2 top-[calc(100%-16px)] mt-2 min-w-3xl overflow-hidden bg-[#2a314e] text-gray-50 border border-[#ffffff10] shadow-lg rounded-lg
       opacity-0 translate-y-2 transition-all duration-300 ease-in-out"
-      style={{ opacity: 1, transform: "translateY(0)" }}
+      style={{ opacity: 1, transform: "translate(-50%, 0)" }}
     >
-      <ul className="flex flex-wrap p-2 text-gray-50 gap-1">
+      <ul className="grid grid-cols-5 p-2 text-gray-50 gap-1">
         {data.map((item) => (
           <li key={item._id} className="">
             <Link

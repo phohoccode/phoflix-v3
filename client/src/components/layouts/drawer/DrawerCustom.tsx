@@ -1,6 +1,6 @@
 "use client";
 
-import {  
+import {
   DrawerBackdrop,
   DrawerBody,
   DrawerCloseTrigger,
@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/drawer";
 import BodyDrawer from "./BodyDrawer";
 import "@/assets/css/movie.css";
-import ProfileHeader from "../ProfileHeader";
+import ProfileHeader from "@/components/ProfileHeader";
 
 interface DrawerCustomProps {
   isOpen: boolean;
@@ -23,7 +23,10 @@ const DrawerCustom = ({ isOpen, onClose }: DrawerCustomProps) => {
     <DrawerRoot placement="start" open={isOpen} onOpenChange={onClose}>
       <DrawerBackdrop />
 
-      <DrawerContent p={1} className="bg-[#0f111af2] text-gray-50">
+      <DrawerContent
+        p={1}
+        className="bg-[#2a314e] text-gray-50 border-r border-[#ffffff10]"
+      >
         <DrawerHeader p={3}>
           <DrawerTitle>
             <ProfileHeader />
@@ -32,8 +35,6 @@ const DrawerCustom = ({ isOpen, onClose }: DrawerCustomProps) => {
         <DrawerBody p={3}>
           <BodyDrawer />
         </DrawerBody>
-
-        <DrawerCloseTrigger className="text-gray-50" />
       </DrawerContent>
     </DrawerRoot>
   );

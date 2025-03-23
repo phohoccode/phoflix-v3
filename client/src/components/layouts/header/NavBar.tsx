@@ -1,28 +1,24 @@
 "use client";
 
-import { Box, Popover, Skeleton } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import Link from "next/link";
 import SearchButton from "./SearchButton";
 import AuthButton from "./AuthButton";
 import NotificationButton from "./NotificationButton";
-import AvatarUser from "./AvatarUser";
 import MenuBar from "./MenuBar";
 import BarButton from "./BarButton";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store/store";
 import { useSession } from "next-auth/react";
-
-import "../../../assets/css/navbar.css";
-import { useEffect } from "react";
 import { SkeletonCircle } from "@/components/ui/skeleton";
 import PopoverUser from "./PopoverUser";
-import { setIsOpenPopoverUser } from "@/store/slices/systemSlice";
+import "../../../assets/css/navbar.css";
 
 const NavBar = () => {
-  const { loaded, windowWidth, isVisiable, lastScrollY, isOpenPopoverUser } =
-    useSelector((state: RootState) => state.system);
+  const { isVisiable, lastScrollY } = useSelector(
+    (state: RootState) => state.system
+  );
   const { status } = useSession();
-  const dispatch: AppDispatch = useDispatch();
 
   return (
     <header
@@ -32,13 +28,14 @@ const NavBar = () => {
         ${lastScrollY > 0 ? "backdrop-blur" : ""}`}
     >
       <Box className="flex items-center gap-6">
-        {loaded && <BarButton />}
-        {windowWidth > 456 && (
-          <Link href="/" className="text-primary font-bold lg:text-lg text-sm">
-            PHOFLIX-V3
-          </Link>
-        )}
-        {loaded && <MenuBar />}
+        <BarButton />
+        <Link
+          href="/"
+          className="text-primary font-bold lg:text-lg text-sm xs:block hidden"
+        >
+          PHOFLIX-V3
+        </Link>
+        <MenuBar />
       </Box>
       <Box className="flex items-center gap-4">
         <SearchButton />

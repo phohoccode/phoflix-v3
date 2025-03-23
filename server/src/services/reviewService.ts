@@ -22,6 +22,7 @@ export const handleGetReviewsByMovie = async ({
           r.id as reviewId, 
           r.is_spam as isSpam, 
           r.point,
+          r.content,
           u.username, 
           u.avatar, 
           u.id as userId
@@ -45,13 +46,17 @@ export const handleGetReviewsByMovie = async ({
       .promise()
       .query(sqlSelectTotalReviewByMovie, [movieSlug]);
 
+    const averagePoint =
+      (rowsTotalReview?.[0]?.totalPoint || 0) /
+      (rowsTotalReview?.[0]?.totalReview || 1);
+
     return {
       status: true,
       message: "Lấy danh sách đánh giá thành công",
       result: {
         reviews: {
           items: rowsSelect,
-          averagePoint: rowsTotalReview[0].totalPoint ?? 0,
+          averagePoint: averagePoint ?? 0,
           totalItems: rowsTotalReview[0].totalReview,
           itemsPerPage: limit,
         },

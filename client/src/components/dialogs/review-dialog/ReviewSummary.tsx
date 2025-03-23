@@ -14,7 +14,7 @@ const ReviewSummary = ({
   return (
     <Box className="mt-2">
       <p className="text-sm text-gray-50 text-center mb-4">
-        {averagePoint} /{" "}
+        {averagePoint} điểm /{" "}
         <span className="text-gray-400">{totalItems} lượt đánh giá</span>
       </p>
     </Box>

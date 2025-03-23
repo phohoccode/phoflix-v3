@@ -80,7 +80,7 @@ const SearchPreview = ({ keyword }: SearchPreviewProps) => {
         <Button
           onClick={() => dispatch(setIsOpenModalSearch(false))}
           size="sm"
-          className="w-full bg-[#2f3241] text-gray-50 hover:text-[#f0c14b] transition-all"
+          className="w-full bg-[#ffd875] text-gray-800"
         >
           Xem tất cả
           <ArrowRightIcon />

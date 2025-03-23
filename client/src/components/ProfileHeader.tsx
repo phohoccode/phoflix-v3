@@ -20,6 +20,8 @@ const ProfileHeader = () => {
     );
   }
 
+  if (!session) return null;
+
   return (
     <Box className="flex gap-2 items-center">
       <AvatarUser src={session?.user.image} name={session?.user?.username} />

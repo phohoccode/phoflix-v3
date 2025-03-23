@@ -42,12 +42,19 @@ const SkeletonInfoPage = () => {
             </GridItem>
             <GridItem colSpan={{ base: 12, md: 12, lg: 12, xl: 8 }}>
               <Box className="relative z-[10] flex flex-col gap-4 p-8 h-full xl:rounded-tl-4xl xl:rounded-tr-4xl xl:rounded-br-4xl xl:rounded-bl-none lg:rounded-bl-4xl lg:rounded-br-4xl lg:bg-[#282b3a8a] lg:backdrop-blur-lg">
-                <Box className="flex gap-6 lg:flex-row xl:justify-start justify-center xl:items-start items-center flex-col">
-                  <Skeleton width="176px" height="60px" rounded="full" />
-                  <Box className="flex gap-2">
-                    <Skeleton width="64px" height="60px" borderRadius="8px" />
-                    <Skeleton width="64px" height="60px" borderRadius="8px" />
-                    <Skeleton width="64px" height="60px" borderRadius="8px" />
+                <Box className="flex gap-6 md:flex-row flex-col md:justify-start justify-center md:items-start items-center">
+                  <Skeleton
+                    height="60px"
+                    className="md:w-44 sm:w-[40%] xs:w-[80%] w-full"
+                    rounded="full"
+                  />
+                  <Box className="flex justify-between gap-6 flex-1 items-center">
+                    <Box className="flex gap-2">
+                      <Skeleton width="64px" height="60px" borderRadius="8px" />
+                      <Skeleton width="64px" height="60px" borderRadius="8px" />
+                      <Skeleton width="64px" height="60px" borderRadius="8px" />
+                    </Box>
+                    <Skeleton className="xs:min-w-32 w-12 rounded-full h-12" />
                   </Box>
                 </Box>
                 <Box className="flex flex-col gap-2 w-full">
@@ -59,7 +66,7 @@ const SkeletonInfoPage = () => {
                   <Skeleton width="100%" height="1" />
                   <Skeleton width="120px" height="3" className="mt-3" />
 
-                  <Box className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 w-full">
+                  <Box className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2 w-full">
                     {[...Array(24)].map((_, index) => (
                       <Skeleton key={index} className="w-full h-8" />
                     ))}

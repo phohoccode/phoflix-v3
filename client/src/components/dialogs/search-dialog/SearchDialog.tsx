@@ -22,7 +22,6 @@ import { toaster } from "@/components/ui/toaster";
 import SearchHistory from "./SearchHistory";
 import { createUserSearchHistory } from "@/store/asyncThunks/userAsyncThunk";
 import { useSession } from "next-auth/react";
-import { isDataExistsToday } from "@/lib/utils";
 
 interface SearchDialogProps {
   isOpen: boolean;
@@ -30,7 +29,6 @@ interface SearchDialogProps {
 }
 
 const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
-  const { items } = useSelector((state: RootState) => state.user.searchHistory);
   const [keyword, setKeyword] = useState("");
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
@@ -80,7 +78,7 @@ const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
     <DialogRoot scrollBehavior="inside" open={isOpen} onOpenChange={onClose}>
       <DialogContent
         padding={1}
-        className="bg-[#0f111af2] text-gray-50 border border-[#ffffff10] rounded-2xl backdrop-blur mx-4 lg:max-w-[560px] md:max-w-[520px] max-w-[420px]"
+        className="bg-[#2a314e] text-gray-50 border border-[#ffffff10] rounded-2xl backdrop-blur mx-4 lg:max-w-[560px] md:max-w-[520px] max-w-[420px]"
       >
         <DialogHeader p={1}>
           <DialogTitle>
@@ -90,11 +88,10 @@ const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
               className="w-full"
             >
               <Input
-                _focus={{ borderColor: "#ffffff10" }}
                 onKeyDown={(e) => handleKeyDown(e)}
                 value={keyword}
                 onChange={(e) => handleSearch(e)}
-                className="font-normal text-gray-50 rounded-xl truncate bg-transparent border-0 focus:border focus:border-[#ffffff10]"
+                className="font-normal text-gray-50 rounded-xl truncate bg-transparent border-2 border-gray-600 focus:border-2 focus:border-gray-400"
                 placeholder="Nhập tên phim cần tìm..."
               />
             </InputGroup>

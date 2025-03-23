@@ -32,8 +32,6 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
   const { selectedPlaylistId } = useSelector((state: RootState) => state.user);
   const pathname = usePathname();
 
-  console.log("selectedPlaylistId", selectedPlaylistId);
-
   const updatePageAndRefresh = (newPage: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set("page", newPage.toString());

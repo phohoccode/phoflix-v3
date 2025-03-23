@@ -34,10 +34,12 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    startTransition(() => {
-      handleGetReviewsByMovie();
-    });
-  }, [movie.slug]);
+    if (movie) {
+      startTransition(() => {
+        handleGetReviewsByMovie();
+      });
+    }
+  }, [movie?.slug]);
 
   const handleGetReviewsByMovie = async () => {
     const response = await getReviewsByMovie({
