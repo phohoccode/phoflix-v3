@@ -1,0 +1,35 @@
+{
+  "msg": "Thành công.",
+  "result": {
+    "has_more": false,
+    "item_count": 3,
+    "items": [
+      {
+        "_id": "67dd2f97b048e9255274b683",
+        "parent_id": null,
+        "author": {
+          "_id": "6799f4a0a04dabf13823c01b",
+          "name": "long",
+          "role": "member",
+          "gender": "other",
+          "avatar": "/images/avatar/6799f4a0a04dabf13823c01b.jpg"
+        },
+        "content": "đánh như như john wich mà hơi suy luận",
+        "created_at": 1742548887,
+        "is_spam": false,
+        "mention_id": null,
+        "mention_user": null,
+        "movie_slug": "phohoccode",
+        "reviews_id": "67dd2f97b048e9255274b681",
+        "reviews": {
+          "_id": "67dd2f97b048e9255274b681",
+          "point": 8
+        },
+        "total_children": 0,
+        "total_dislike": 0,
+        "total_like": 0
+      }
+    ]
+  },
+  "status": true
+}

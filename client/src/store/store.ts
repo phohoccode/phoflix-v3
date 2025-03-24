@@ -2,14 +2,14 @@ import { configureStore } from "@reduxjs/toolkit";
 import systemReducer from "./slices/systemSlice";
 import movieReducer from "./slices/movieSlice";
 import userReducer from "./slices/userSlice";
-import commentReducer from "./slices/commentSlice";
+import feedbackReducer from "./slices/feedbackSlice";
 
 export const store = configureStore({
   reducer: {
     system: systemReducer,
     movie: movieReducer,
     user: userReducer,
-    comment: commentReducer,
+    feedback: feedbackReducer,
   },
 });
 

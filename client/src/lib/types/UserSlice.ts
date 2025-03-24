@@ -23,4 +23,9 @@ type UserSlice = {
     } | null;
     reviewContent: string | null;
   };
+  comments: {
+    items: any;
+    loading: boolean;
+    error: boolean;
+  };
 };

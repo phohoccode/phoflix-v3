@@ -1,3 +1,9 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/vi";
+
+dayjs.locale("vi");
+
 export const generateUrlImage = (url: string) => {
   if (url?.includes("https://phimimg.com")) {
     return url;
@@ -83,7 +89,7 @@ export const isDataExistsToday = <T>(
   const today = new Date().toISOString().split("T")[0];
 
   return dataList.some((data: any) => {
-    const createdAt = data.createdAt?.split("T")[0]; 
+    const createdAt = data.createdAt?.split("T")[0];
     return createdAt === today && item === data[compareWidth];
   });
 };
@@ -104,3 +110,7 @@ export const handleShare = () => {
   }
 };
 
+export const formatDataUnix = (data: string) => {
+  dayjs.extend(relativeTime);
+  return dayjs.unix(Number(data)).fromNow(); // Trả về thời gian tương đối từ hiện tại
+};

@@ -26,7 +26,7 @@ CREATE TABLE
   );
 
 CREATE TABLE
-  `feedback` (
+  `user_report` (
     `id` CHAR(36) PRIMARY KEY NOT NULL,
     `user_id` CHAR(36) NOT NULL,
     `subject` VARCHAR(255) NOT NULL,
@@ -46,45 +46,32 @@ CREATE TABLE
   );
 
 CREATE TABLE
-  `reviews` (
+  `feedbacks` (
     `id` CHAR(36) PRIMARY KEY NOT NULL,
     `user_id` CHAR(36) NOT NULL,
     `movie_slug` VARCHAR(255) NOT NULL,
+    `parent_id` CHAR(36) DEFAULT NULL,
     `content` TEXT NULL,
-    `parent_id` CHAR(36) DEFAULT NULL,
     `is_spam` TINYINT (1) DEFAULT 0,
-    `point` INT CHECK (`point` BETWEEN 1 AND 10),
+    `type` ENUM ('comment', 'review') NOT NULL,
+    `point` INT DEFAULT NULL CHECK (`point` BETWEEN 1 AND 10),
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`parent_id`) REFERENCES `reviews` (`id`) ON DELETE CASCADE
+    FOREIGN KEY (`parent_id`) REFERENCES `feedbacks` (`id`) ON DELETE CASCADE
   );
 
 CREATE TABLE
-  `comments` (
+  `feedback_likes` (
     `id` CHAR(36) PRIMARY KEY NOT NULL,
     `user_id` CHAR(36) NOT NULL,
-    `movie_slug` VARCHAR(255) NOT NULL,
-    `parent_id` CHAR(36) DEFAULT NULL,
-    `content` TEXT NOT NULL,
-    `is_spam` TINYINT (1) DEFAULT 0,
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`parent_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE
-  );
-
-CREATE TABLE
-  `comment_likes` (
-    `id` CHAR(36) PRIMARY KEY NOT NULL,
-    `user_id` CHAR(36) NOT NULL,
-    `comment_id` CHAR(36) NOT NULL,
+    `feedback_id` CHAR(36) NOT NULL,
     `type` ENUM ('like', 'dislike') NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-    FOREIGN KEY (`comment_id`) REFERENCES `comments` (`id`) ON DELETE CASCADE,
-    UNIQUE (`user_id`, `comment_id`)
+    FOREIGN KEY (`feedback_id`) REFERENCES `feedbacks` (`id`) ON DELETE CASCADE,
+    UNIQUE (`user_id`, `feedback_id`)
   );
 
 CREATE TABLE

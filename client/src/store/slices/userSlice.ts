@@ -20,6 +20,11 @@ const initialState: UserSlice = {
     },
     reviewContent: "",
   },
+  comments: {
+    items: [],
+    loading: false,
+    error: false,
+  },
 };
 
 const userSlice = createSlice({

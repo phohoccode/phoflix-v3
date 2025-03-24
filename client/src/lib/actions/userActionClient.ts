@@ -398,20 +398,20 @@ export const getPlaylistsContainingMovie = async ({
 };
 
 // ===================== GET REVIEWS BY MOVIE =====================
-interface GetReviewsByMovie {
+interface getFeedbacks {
   movieSlug: string;
-  page: number;
   limit: number;
+  type: "review" | "comment";
 }
 
-export const getReviewsByMovie = async ({
+export const getFeedbacks = async ({
   movieSlug,
-  page,
   limit,
-}: GetReviewsByMovie): Promise<any> => {
+  type,
+}: getFeedbacks): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/reviewsByMovie?movieSlug=${movieSlug}&page=${page}&limit=${limit}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedbacks?movieSlug=${movieSlug}&limit=${limit}&type=${type}`
     );
 
     return response.json();
@@ -426,22 +426,24 @@ export const getReviewsByMovie = async ({
 };
 
 // ===================== ADD NEW REVIEW =====================
-interface AddNewReview {
+interface AddFeedback {
   movieSlug: string;
-  point: number;
   userId: string;
+  type: "review" | "comment";
+  point?: number;
   content?: string;
 }
 
-export const addNewReview = async ({
+export const addFeedback = async ({
   movieSlug,
   point,
   userId,
   content,
-}: AddNewReview): Promise<any> => {
+  type,
+}: AddFeedback): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/review`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedback`,
       {
         method: "POST",
         headers: {
@@ -452,6 +454,7 @@ export const addNewReview = async ({
           point,
           userId,
           content,
+          type,
         }),
       }
     );

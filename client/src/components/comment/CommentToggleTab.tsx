@@ -1,6 +1,6 @@
 "use client";
 
-import { setType } from "@/store/slices/commentSlice";
+import { setType } from "@/store/slices/feedbackSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import { usePathname } from "next/navigation";
@@ -13,7 +13,7 @@ const tabs = [
 ];
 
 const CommentToggleTab = () => {
-  const { type } = useSelector((state: RootState) => state.comment);
+  const { type } = useSelector((state: RootState) => state.feedback);
   const dispatch: AppDispatch = useDispatch();
   const pathname = usePathname();
 

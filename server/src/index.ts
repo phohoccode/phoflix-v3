@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import connection from "./database/connect";
 import authRouter from "./routes/authRouter";
 import userRouter from "./routes/userRouter";
+import movieRouter from "./routes/movieRouter";
 import cors from "cors";
 
 dotenv.config();
@@ -37,6 +38,7 @@ app.get("/", (req: Request, res: Response) => {
 // Sử dụng router
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/movie", movieRouter);
 
 // Lắng nghe máy chủ
 app.listen(port, () => {

@@ -7,10 +7,7 @@ import ReviewSummary from "./ReviewSummary";
 import ReviewEmo from "./ReviewEmo";
 import ReviewComment from "./ReviewComment";
 import { useEffect, useState, useTransition } from "react";
-import {
-  addNewReview,
-  getReviewsByMovie,
-} from "@/lib/actions/userActionClient";
+import { addFeedback, getFeedbacks } from "@/lib/actions/userActionClient";
 import { useSession } from "next-auth/react";
 import { toaster } from "@/components/ui/toaster";
 import { setReviewContent } from "@/store/slices/userSlice";
@@ -36,25 +33,12 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
   useEffect(() => {
     if (movie) {
       startTransition(() => {
-        handleGetReviewsByMovie();
+        handleGetFeedbacks();
       });
     }
   }, [movie?.slug]);
 
-  const handleGetReviewsByMovie = async () => {
-    const response = await getReviewsByMovie({
-      movieSlug: movie.slug,
-      page: 1,
-      limit: 10,
-    });
-
-    if (response?.status) {
-      setReviews({
-        averagePoint: response?.result?.reviews?.averagePoint,
-        totalItems: response?.result?.reviews?.totalItems,
-      });
-    }
-  };
+  const handleGetFeedbacks = async () => {};
 
   const handleAddNewReview = () => {
     if (!session) {
@@ -66,11 +50,12 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
     }
 
     startTransition(async () => {
-      const response = await addNewReview({
+      const response = await addFeedback({
         movieSlug: movie.slug,
         userId: session?.user?.id as string,
         point: Number(selectedReview?.value),
         content: reviewContent as string,
+        type: "review",
       });
 
       if (response?.status) {
@@ -81,7 +66,7 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
         });
 
         // Refresh reviews
-        handleGetReviewsByMovie();
+        handleGetFeedbacks();
 
         // Close dialog
         setOpen(false);
