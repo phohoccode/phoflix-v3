@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   getFeedbacks,
   getMoreFeedbacks,
+  getMoreReplyListFeedback,
+  getReplyListFeedback,
 } from "../asyncThunks/feedbackAsyncThunk";
 
 const initialState: FeedbackSlice = {
@@ -10,9 +12,16 @@ const initialState: FeedbackSlice = {
     loading: false,
     hasMore: false,
     itemCount: 0,
+    totalFeedbacks: 0,
     error: false,
+    showFeedbackId: null,
   },
-
+  replies: {
+    data: {},
+    showReplyId: null,
+  },
+  parentId: null,
+  replyId: null,
   type: "comment",
 };
 
@@ -22,6 +31,18 @@ const feedbackSlice = createSlice({
   reducers: {
     setType: (state, action) => {
       state.type = action.payload;
+    },
+    setParentId: (state, action) => {
+      state.parentId = action.payload;
+    },
+    setReplyId: (state, action) => {
+      state.replyId = action.payload;
+    },
+    setShowReplyId: (state, action) => {
+      state.replies.showReplyId = action.payload;
+    },
+    setShowFeedbackId: (state, action) => {
+      state.feedback.showFeedbackId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -33,6 +54,7 @@ const feedbackSlice = createSlice({
     builder.addCase(getFeedbacks.fulfilled, (state, action) => {
       state.feedback.loading = false;
       state.feedback.items = action.payload?.result?.items || [];
+      state.feedback.totalFeedbacks = action.payload?.result?.total_feedbacks;
       state.feedback.hasMore = action.payload?.result?.has_more ?? false;
       state.feedback.itemCount = action.payload?.result?.item_count ?? 0;
       state.feedback.error = false;
@@ -63,8 +85,82 @@ const feedbackSlice = createSlice({
       state.feedback.loading = false;
       state.feedback.error = true;
     });
+
+    builder.addCase(getReplyListFeedback.pending, (state, action) => {
+      const parentId: string = action.meta.arg.parentId;
+
+      state.replies.data[parentId] = {
+        items: [],
+        hasMore: false,
+        loading: false,
+        error: false,
+      };
+
+      state.replies.data[parentId].loading = true;
+      state.replies.data[parentId].error = false;
+    });
+
+    builder.addCase(getReplyListFeedback.fulfilled, (state, action) => {
+      const parentId = action.meta.arg.parentId;
+
+      if (!state.replies.data[parentId]) {
+        state.replies.data[parentId] = {
+          items: [],
+          hasMore: false,
+          loading: false,
+          error: false,
+        };
+      }
+
+      state.replies.data[parentId].loading = false;
+      state.replies.data[parentId].items = action.payload?.result?.items || [];
+      state.replies.data[parentId].hasMore =
+        action.payload?.result?.has_more ?? false;
+      state.replies.data[parentId].error = false;
+    });
+
+    builder.addCase(getReplyListFeedback.rejected, (state, action) => {
+      const parentId = action.meta.arg.parentId;
+
+      if (!state.replies.data[parentId]) {
+        state.replies.data[parentId] = {
+          items: [],
+          hasMore: false,
+          loading: false,
+          error: false,
+        };
+      }
+      state.replies.data[parentId].loading = false;
+      state.replies.data[parentId].error = true;
+    });
+
+    builder.addCase(getMoreReplyListFeedback.pending, (state, action) => {
+      const parentId = action.meta.arg.parentId;
+
+      state.replies.data[parentId].loading = true;
+      state.replies.data[parentId].error = false;
+    });
+
+    builder.addCase(getMoreReplyListFeedback.fulfilled, (state, action) => {
+      const parentId = action.meta.arg.parentId;
+
+      state.replies.data[parentId].loading = false;
+      state.replies.data[parentId].items = [
+        ...state.replies.data[parentId].items,
+        ...(action.payload?.result?.items || []),
+      ];
+      state.replies.data[parentId].hasMore =
+        action.payload?.result?.has_more ?? false;
+      state.replies.data[parentId].error = false;
+    });
   },
 });
 
-export const { setType } = feedbackSlice.actions;
+export const {
+  setType,
+  setParentId,
+  setShowReplyId,
+  setShowFeedbackId,
+  setReplyId,
+} = feedbackSlice.actions;
 export default feedbackSlice.reducer;

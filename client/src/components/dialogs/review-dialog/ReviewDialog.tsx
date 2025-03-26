@@ -7,7 +7,11 @@ import ReviewSummary from "./ReviewSummary";
 import ReviewEmo from "./ReviewEmo";
 import ReviewComment from "./ReviewComment";
 import { useEffect, useState, useTransition } from "react";
-import { addFeedback, getFeedbacks } from "@/lib/actions/userActionClient";
+import {
+  addFeedback,
+  getFeedbacks,
+  getStatsByMovie,
+} from "@/lib/actions/userActionClient";
 import { useSession } from "next-auth/react";
 import { toaster } from "@/components/ui/toaster";
 import { setReviewContent } from "@/store/slices/userSlice";
@@ -24,21 +28,36 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
   const [isPending, startTransition] = useTransition();
-  const [reviews, setReviews] = useState({
+  const [statsByMovie, setStatsByMovie] = useState({
     averagePoint: 0,
-    totalItems: 0,
+    totalReviews: 0,
   });
   const dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
     if (movie) {
       startTransition(() => {
-        handleGetFeedbacks();
+        handleGetStatsByMovie();
       });
     }
   }, [movie?.slug]);
 
-  const handleGetFeedbacks = async () => {};
+  const handleGetStatsByMovie = async () => {
+    const response = await getStatsByMovie(movie.slug);
+
+    if (response?.status) {
+      setStatsByMovie({
+        averagePoint: response?.result?.average_point,
+        totalReviews: response?.result?.total_reviews,
+      });
+    } else {
+      toaster.create({
+        description: response?.message,
+        type: "error",
+        duration: 1500,
+      });
+    }
+  };
 
   const handleAddNewReview = () => {
     if (!session) {
@@ -66,7 +85,7 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
         });
 
         // Refresh reviews
-        handleGetFeedbacks();
+        handleGetStatsByMovie();
 
         // Close dialog
         setOpen(false);
@@ -101,8 +120,8 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
             <Dialog.Header>
               <Dialog.Title className="text-center">{movie?.name}</Dialog.Title>
               <ReviewSummary
-                averagePoint={reviews?.averagePoint}
-                totalItems={reviews?.totalItems}
+                averagePoint={statsByMovie?.averagePoint}
+                totalReviews={statsByMovie?.totalReviews}
               />
             </Dialog.Header>
             <Dialog.Body>

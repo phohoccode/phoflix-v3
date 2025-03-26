@@ -2,14 +2,16 @@
 
 import { getFeedbacks } from "@/store/asyncThunks/feedbackAsyncThunk";
 import { AppDispatch, RootState } from "@/store/store";
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CommentItem from "./CommentItem";
+import FeedbackItem from "./FeedbackItem";
 import SeeMoreFeedback from "./SeeMoreFeedback";
+import EmptyData from "../EmptyData";
+import { BiSolidMessageDetail } from "react-icons/bi";
 
-const CommentList = () => {
+const FeedbackList = () => {
   const { items, loading, hasMore } = useSelector(
     (state: RootState) => state.feedback.feedback
   );
@@ -26,7 +28,6 @@ const CommentList = () => {
             movieSlug: params.slug as string,
             type: "comment",
             limit: 10,
-            afterTime: 0,
           })
         );
       });
@@ -41,11 +42,23 @@ const CommentList = () => {
     );
   }
 
+  if (!items || items.length === 0) {
+    return (
+      <Box className="flex justify-center items-center h-48 mt-8 bg-[#0003] rounded-2xl">
+        <EmptyData
+          title="Chưa có bình luận nào"
+          description="Hãy trở thành người đầu tiên bình luận về phim này"
+          icon={<BiSolidMessageDetail />}
+        />
+      </Box>
+    );
+  }
+
   return (
     <Box className="flex flex-col gap-6 mt-12">
       <Box className="flex flex-col gap-8">
         {items?.map((item: any, index: number) => (
-          <CommentItem key={index} comment={item} />
+          <FeedbackItem key={index} feedback={item} />
         ))}
       </Box>
 
@@ -54,4 +67,4 @@ const CommentList = () => {
   );
 };
 
-export default CommentList;
+export default FeedbackList;

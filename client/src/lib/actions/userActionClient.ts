@@ -469,3 +469,65 @@ export const addFeedback = async ({
     };
   }
 };
+
+// ===================== ADD NEW REPLY =====================
+interface AddReply {
+  movieSlug: string;
+  userId: string;
+  content: string;
+  type: "review" | "comment";
+  parentId: string;
+}
+
+export const addReply = async ({
+  movieSlug,
+  userId,
+  content,
+  type,
+  parentId,
+}: AddReply): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedback/reply`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          movieSlug,
+          userId,
+          content,
+          type,
+          parentId,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+export const getStatsByMovie = async (movieSlug: string): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/statsByMovie?movieSlug=${movieSlug}`
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};

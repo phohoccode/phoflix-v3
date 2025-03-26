@@ -12,7 +12,7 @@ const tabs = [
   { id: "review", value: "review", label: "Đánh giá" },
 ];
 
-const CommentToggleTab = () => {
+const FeedbackToggleTab = () => {
   const { type } = useSelector((state: RootState) => state.feedback);
   const dispatch: AppDispatch = useDispatch();
   const pathname = usePathname();
@@ -25,16 +25,16 @@ const CommentToggleTab = () => {
     <ButtonGroup
       variant="outline"
       size="sm"
-      className="gap-0 border border-gray-50 rounded-xl h-9 p-[2px] overflow-hidden"
+      className="gap-0 border border-gray-50 rounded-lg h-8 p-[2px] overflow-hidden"
     >
       {tabs.map((tab) => (
         <Button
           key={tab.id}
           size="sm"
-          onClick={() => dispatch(setType(tab.value))}
+          onClick={() => dispatch(setType(tab.value))}  
           bg={type === tab.value ? "white" : "transparent"}
           color={type === tab.value ? "black" : "white"}
-          className="rounded-[9px] border-none h-[31px] lg:text-sm text-xs"
+          className="rounded-[4px] border-none h-[26px] lg:text-sm xs:text-xs text-[10px] px-2"
         >
           {tab.label}
         </Button>
@@ -43,4 +43,4 @@ const CommentToggleTab = () => {
   );
 };
 
-export default CommentToggleTab;
+export default FeedbackToggleTab;

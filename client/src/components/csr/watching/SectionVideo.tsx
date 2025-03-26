@@ -11,13 +11,19 @@ const SectionVideo = () => {
 
   return (
     <Box className="relative border border-[#ffffff10] h-0 lg:pt-[42%] md:pt-[46%] pt-[56%] xl:rounded-tl-2xl xl:rounded-tr-2xl overflow-hidden">
-      <iframe
-        src={currentEpisode?.link_embed}
-        title={currentEpisode?.name}
-        frameBorder="0"
-        allowFullScreen
-        className="absolute w-full h-full inset-0"
-      ></iframe>
+      {currentEpisode?.link_embed ? (
+        <iframe
+          src={currentEpisode?.link_embed}
+          title={currentEpisode?.name}
+          frameBorder="0"
+          allowFullScreen
+          className="absolute w-full h-full inset-0"
+        ></iframe>
+      ) : (
+        <Box className="absolute w-full h-full inset-0 flex items-center justify-center bg-[#08080a]">
+          <h1 className="text-white text-2xl">Video không có sẵn {":(("}</h1>
+        </Box>
+      )}
     </Box>
   );
 };

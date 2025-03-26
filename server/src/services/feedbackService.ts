@@ -23,54 +23,84 @@ export const handleGetFeedbacks = async ({
       ? [movieSlug, type, afterTime, Number(limit)]
       : [movieSlug, type, Number(limit)];
 
+    const sqlSelectTotalFeedbacks = `
+        SELECT COUNT(*) AS total_feedbacks
+        FROM feedbacks f
+        WHERE f.movie_slug = ? AND f.type = ? AND parent_id IS NULL
+    `;
+
+    const [totalFeedbacks]: any = await connection
+      .promise()
+      .query(sqlSelectTotalFeedbacks, [movieSlug, type]);
+
     // Lấy tổng số bản ghi thỏa mãn điều kiện
     const [countResult] = await connection.promise().query(
-      `SELECT COUNT(*) AS total_count
-             FROM feedbacks f
-             WHERE movie_slug = ? AND type = ? ${conditionQuery}`,
-      params.slice(0, -1) // Không truyền limit vào đây
+      ` SELECT COUNT(*) AS total_count
+        FROM feedbacks f
+        WHERE movie_slug = ? AND type = ? AND parent_id is NULL ${conditionQuery}`,
+      params.slice(0, -1)
     );
 
-  
     const total_count = (countResult as any)[0].total_count;
 
-    // Truy vấn lấy danh sách feedbacks theo afterTime
-    const [feedbacks]: any = await connection.promise().query(
-      `SELECT 
+    const sqlGetFeedbacks = `WITH RECURSIVE feedback_hierarchy AS (
+        SELECT id, parent_id
+        FROM feedbacks
+        WHERE parent_id IS NOT NULL
+        
+        UNION ALL
+        
+        SELECT f.id, fh.parent_id
+        FROM feedbacks f
+        JOIN feedback_hierarchy fh ON f.parent_id = fh.id
+      )
+      SELECT 
           f.id AS _id,
           f.parent_id,
           JSON_OBJECT(
-            '_id', u.id,
-            'name', u.username,
-            'role', u.role,
-            'gender', u.gender,
-            'avatar', u.avatar
+              '_id', u.id,
+              'name', u.username,
+              'role', u.role,
+              'gender', u.gender,
+              'avatar', u.avatar
           ) AS author,
-            f.content,
-            UNIX_TIMESTAMP(f.created_at) AS created_at,
-            f.is_spam,
-            NULL AS mention_id,
-            NULL AS mention_user,
-            f.movie_slug,
-            CASE WHEN f.type = 'review' THEN f.id ELSE NULL END AS reviews_id,
-            CASE WHEN f.type = 'review' THEN JSON_OBJECT('point', f.point) ELSE NULL END AS reviews,
-            (SELECT COUNT(*) FROM feedbacks AS c WHERE c.parent_id = f.id) AS total_children,
-            (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
-            (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'like') AS total_like
-          FROM 
-              feedbacks AS f
-          JOIN 
-              users AS u ON f.user_id = u.id
-          WHERE 
-              f.movie_slug = ? AND f.type = ? ${conditionQuery}
-          ORDER BY f.created_at DESC
-          LIMIT ?`,
-      params
-    );
+          f.content,
+          UNIX_TIMESTAMP(f.created_at) AS created_at,
+          f.is_spam,
+          NULL AS mention_id,
+          NULL AS mention_user,
+          f.movie_slug,
+          CASE WHEN f.type = 'review' THEN f.id ELSE NULL END AS reviews_id,
+          CASE WHEN f.type = 'review' THEN JSON_OBJECT('point', f.point) ELSE NULL END AS reviews,
+          (
+              SELECT COUNT(*) 
+              FROM feedback_hierarchy fh 
+              WHERE fh.parent_id = f.id
+          ) AS total_children,
+          (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
+          (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'like') AS total_like
+      FROM 
+          feedbacks AS f
+      JOIN 
+          users AS u ON f.user_id = u.id
+      WHERE 
+          f.movie_slug = ? AND f.type = ? AND f.parent_id IS NULL ${conditionQuery}
+      ORDER BY f.created_at DESC
+      LIMIT ?;`;
 
+    const [feedbacks]: any = await connection
+      .promise()
+      .query(
+        sqlGetFeedbacks,
+        afterTime
+          ? [movieSlug, type, afterTime, limit]
+          : [movieSlug, type, limit]
+      );
+
+    // Format lại dữ liệu trả về
     const finalFeedbacks = feedbacks.map((feedback: any) => ({
       ...feedback,
-      author: JSON.parse(feedback.author),
+      author: feedback?.author ? JSON.parse(feedback?.author) : null,
     }));
 
     return {
@@ -79,6 +109,7 @@ export const handleGetFeedbacks = async ({
       result: {
         has_more: total_count > finalFeedbacks.length,
         item_count: total_count,
+        total_feedbacks: totalFeedbacks[0]?.total_feedbacks ?? 0,
         items: finalFeedbacks,
       },
     };
@@ -107,27 +138,39 @@ export const handleGetReplyListFeedbacks = async ({
   type,
 }: GetReplyListFeedbacks) => {
   try {
+    // lấy bảng ghi có thời gian tạo nhỏ hơn thời gian của bản ghi cuối cùng
     const conditionQuery = afterTime
       ? `AND UNIX_TIMESTAMP(f.created_at) < ?`
       : ``;
 
-    const params = afterTime
-      ? [parentId, type, afterTime, Number(limit)]
-      : [parentId, type, Number(limit)];
+    const sqlCountResult = `
+        WITH RECURSIVE CommentCount AS (
+          SELECT id FROM feedbacks f
+          WHERE f.parent_id = ? AND f.type = ? ${conditionQuery}
+          UNION ALL
+          SELECT f.id FROM feedbacks f
+          INNER JOIN CommentCount c ON f.parent_id = c.id
+          WHERE f.type = ? ${conditionQuery}
+        )
+        SELECT COUNT(*) AS total_count FROM CommentCount
+    `;
 
-    // Lấy tổng số bản ghi thỏa mãn
-    const [countResult] = await connection.promise().query(
-      `SELECT COUNT(*) AS total_count
-       FROM feedbacks f
-       WHERE parent_id = ? AND type = ? ${conditionQuery}`,
-      params.slice(0, -1) // Không truyền limit vào đây
-    );
+    const [countResult] = await connection
+      .promise()
+      .query(
+        sqlCountResult,
+        afterTime
+          ? [parentId, type, afterTime, type, afterTime]
+          : [parentId, type, type]
+      );
 
-    const total_count = (countResult as any)[0].total_count;
+    // Số lượng bảng ghi còn lại
+    const total_count = (countResult as any)[0]?.total_count;
 
-    // Truy vấn lấy danh sách feedbacks theo afterTime
-    const [feedbacks]: any = await connection.promise().query(
-      `SELECT 
+    // Lấy danh sách reply feedback
+    const sqlGetReplyFeedbacks = `
+        WITH RECURSIVE CommentHierarchy AS (
+        SELECT 
           f.id AS _id,
           f.parent_id,
           JSON_OBJECT(
@@ -140,7 +183,7 @@ export const handleGetReplyListFeedbacks = async ({
           f.content,
           UNIX_TIMESTAMP(f.created_at) AS created_at,
           f.is_spam,
-          p.id AS mention_id,
+          pu.id AS mention_id,
           JSON_OBJECT(
               '_id', pu.id,
               'name', pu.username
@@ -148,37 +191,73 @@ export const handleGetReplyListFeedbacks = async ({
           f.movie_slug,
           CASE WHEN f.type = 'review' THEN f.id ELSE NULL END AS reviews_id,
           CASE WHEN f.type = 'review' THEN JSON_OBJECT('point', f.point) ELSE NULL END AS reviews,
-          (SELECT COUNT(*) FROM feedbacks AS c WHERE c.parent_id = f.id) AS total_children,
           (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
           (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'like') AS total_like
-      FROM 
-          feedbacks AS f
-      JOIN 
-          users AS u ON f.user_id = u.id
-      LEFT JOIN 
-          feedbacks AS p ON f.parent_id = p.id
-      LEFT JOIN 
-          users AS pu ON p.user_id = pu.id
-      WHERE 
-          f.parent_id = ? AND f.type = ? ${conditionQuery}
-      ORDER BY f.created_at DESC
-      LIMIT ?`,
-      params
-    );
+        FROM feedbacks AS f
+        JOIN users AS u ON f.user_id = u.id
+        LEFT JOIN feedbacks AS p ON f.parent_id = p.id
+        LEFT JOIN users AS pu ON p.user_id = pu.id
+        WHERE f.parent_id = ? AND f.type = ? ${conditionQuery}
 
-    const finalReplyFeedback = feedbacks.map((feedback: any) => ({
+        UNION ALL
+
+        SELECT 
+          f.id AS _id,
+          f.parent_id,
+          JSON_OBJECT(
+              '_id', u.id,
+              'name', u.username,
+              'role', u.role,
+              'gender', u.gender,
+              'avatar', u.avatar
+          ) AS author,
+          f.content,
+          UNIX_TIMESTAMP(f.created_at) AS created_at,
+          f.is_spam,
+          pu.id AS mention_id,
+          JSON_OBJECT(
+              '_id', pu.id,
+              'name', pu.username
+          ) AS mention_user,
+          f.movie_slug,
+          CASE WHEN f.type = 'review' THEN f.id ELSE NULL END AS reviews_id,
+          CASE WHEN f.type = 'review' THEN JSON_OBJECT('point', f.point) ELSE NULL END AS reviews,
+          (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
+          (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'like') AS total_like
+        FROM feedbacks AS f
+        JOIN users AS u ON f.user_id = u.id
+        LEFT JOIN feedbacks AS p ON f.parent_id = p.id
+        LEFT JOIN users AS pu ON p.user_id = pu.id
+        INNER JOIN CommentHierarchy ch ON f.parent_id = ch._id
+        WHERE f.type = ? ${conditionQuery}
+      )
+      SELECT * FROM CommentHierarchy
+      ORDER BY created_at DESC
+      LIMIT ?`;
+
+    const [replies]: any = await connection
+      .promise()
+      .query(
+        sqlGetReplyFeedbacks,
+        afterTime
+          ? [parentId, type, afterTime, type, afterTime, limit]
+          : [parentId, type, type, limit]
+      );
+
+    // Format lại dữ liệu trả về
+    const finalReplyFeedback = replies.map((feedback: any) => ({
       ...feedback,
-      author: JSON.parse(feedback.author),
-      mention_user: feedback.mention_user
-        ? JSON.parse(feedback.mention_user)
+      author: JSON.parse(feedback?.author),
+      mention_user: feedback?.mention_user
+        ? JSON.parse(feedback?.mention_user)
         : null,
     }));
 
     return {
       status: true,
-      msg: "Thành công.",
+      msg: "Thành công!",
       result: {
-        has_more: total_count > finalReplyFeedback.length,
+        has_more: total_count > finalReplyFeedback?.length,
         item_count: total_count,
         items: finalReplyFeedback,
       },
@@ -192,7 +271,6 @@ export const handleGetReplyListFeedbacks = async ({
     };
   }
 };
-
 
 // ==================== ADD NEW FEEDBACK ====================
 interface AddFeedback {
@@ -378,6 +456,116 @@ const addComment = async ({
     return {
       status: false,
       message: "Error adding new comment",
+      result: null,
+    };
+  }
+};
+
+// ==================== ADD NEW REPLY ====================
+interface AddReplyFeedback {
+  movieSlug: string;
+  userId: string;
+  content: string;
+  type: "review" | "comment";
+  parentId: string;
+}
+
+export const handleAddReplyFeedback = async ({
+  movieSlug,
+  userId,
+  content,
+  type,
+  parentId,
+}: AddReplyFeedback) => {
+  try {
+    const sqlCheckUserExists = `
+        SELECT id
+        FROM users
+        WHERE id = ?;
+    `;
+
+    const [rowsCheckUser]: any = await connection
+      .promise()
+      .query(sqlCheckUserExists, [userId]);
+
+    if (rowsCheckUser.length === 0) {
+      return {
+        status: false,
+        message: "Người dùng không tồn tại",
+        result: null,
+      };
+    }
+
+    const sqlInsertComment = `
+        INSERT INTO feedbacks (id, movie_slug, user_id, content, type, parent_id)
+        VALUES (?, ?, ?, ?, ?, ?);
+    `;
+
+    const commentId = uuidv4();
+
+    const [rows]: any = await connection
+      .promise()
+      .query(sqlInsertComment, [
+        commentId,
+        movieSlug,
+        userId,
+        content,
+        type,
+        parentId,
+      ]);
+
+    if (rows.affectedRows === 0) {
+      return {
+        status: false,
+        message: "Thêm trả lời thất bại",
+        result: null,
+      };
+    }
+
+    return {
+      status: true,
+      message: "Thêm trả lời thành công",
+      result: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Error adding new reply",
+      result: null,
+    };
+  }
+};
+
+// ==================== GET STATS BY MOVIE ====================
+
+export const handleGetStatsByMovie = async (movieSlug: string) => {
+  try {
+    const sqlGetStatsByMovie = `
+        SELECT AVG(point) AS average_point, COUNT(*) AS total_reviews
+        FROM feedbacks
+        WHERE movie_slug = ? AND type = 'review';
+    `;
+
+    const [rows]: any = await connection
+      .promise()
+      .query(sqlGetStatsByMovie, [movieSlug]);
+
+    console.log(typeof rows[0]?.average_point, rows[0]?.average_point);
+
+    return {
+      status: true,
+      msg: "Thành công.",
+      result: {
+        average_point: parseFloat(rows[0]?.average_point ?? 0).toFixed(1) ?? 0,
+        total_reviews: rows[0]?.total_reviews ?? 0,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Error fetching stats by movie",
       result: null,
     };
   }

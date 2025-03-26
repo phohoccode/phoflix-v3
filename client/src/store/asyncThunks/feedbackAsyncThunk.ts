@@ -4,7 +4,6 @@ interface GetFeedbacks {
   movieSlug: string;
   type: "review" | "comment";
   limit: number;
-  afterTime?: number;
 }
 
 export const getFeedbacks = createAsyncThunk(
@@ -32,7 +31,6 @@ export const getFeedbacks = createAsyncThunk(
     return data;
   }
 );
-
 
 // ========================= GET MORE FEEDBACK =========================
 interface GetMoreFeedbacks {
@@ -71,11 +69,20 @@ export const getMoreFeedbacks = createAsyncThunk(
 
 // ========================= REPLY =========================
 
-export const getReplyFeedbacks = createAsyncThunk(
-  "feedback/getReplyFeedbacks",
-  async ({ feedbackId }: { feedbackId: string }) => {
+interface GetReplyListFeedback {
+  parentId: string;
+  limit: number;
+  type: "review" | "comment";
+}
+
+export const getReplyListFeedback = createAsyncThunk(
+  "feedback/getReplyListFeedback",
+  async ({ parentId, limit, type }: GetReplyListFeedback) => {
+    const limitParam = `&limit=${limit}`;
+    const typeParam = `&type=${type}`;
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedbacks/reply?feedbackId=${feedbackId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedback/reply-list?parentId=${parentId}${limitParam}${typeParam}`,
       {
         method: "GET",
         headers: {
@@ -86,6 +93,40 @@ export const getReplyFeedbacks = createAsyncThunk(
 
     if (!response.ok) {
       throw new Error("Failed to fetch reply feedbacks");
+    }
+
+    const data = await response.json();
+
+    return data;
+  }
+);
+
+interface GetMoreReplyListFeedback {
+  parentId: string;
+  limit: number;
+  type: "review" | "comment";
+  afterTime: number;
+}
+
+export const getMoreReplyListFeedback = createAsyncThunk(
+  "feedback/getMoreReplyListFeedback",
+  async ({ parentId, limit, type, afterTime }: GetMoreReplyListFeedback) => {
+    const limitParam = `&limit=${limit}`;
+    const typeParam = `&type=${type}`;
+    const afterTimeParam = `&afterTime=${afterTime}`;
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedback/reply-list?parentId=${parentId}${limitParam}${typeParam}${afterTimeParam}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch more reply feedbacks");
     }
 
     const data = await response.json();

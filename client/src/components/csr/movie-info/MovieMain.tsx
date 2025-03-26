@@ -9,7 +9,7 @@ import FavoriteButton from "@/components/movie/controls/FavoriteButton";
 import PlaylistButton from "@/components/movie/controls/PlaylistButton";
 import ShareButton from "@/components/movie/controls/ShareButton";
 import ReviewButton from "@/components/movie/controls/ReviewButton";
-import CommentSection from "@/components/comment/CommentSection";
+import CommentSection from "@/components/feedback/FeedbackSection";
 
 const MovieMain = () => {
   const params = useParams();

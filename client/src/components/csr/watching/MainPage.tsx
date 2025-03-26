@@ -19,7 +19,7 @@ import FavoriteButton from "@/components/movie/controls/FavoriteButton";
 import PlaylistButton from "@/components/movie/controls/PlaylistButton";
 import ShareButton from "@/components/movie/controls/ShareButton";
 import ReportFilmButton from "@/components/movie/controls/ReportFilmButton";
-import CommentSection from "@/components/comment/CommentSection";
+import CommentSection from "@/components/feedback/FeedbackSection";
 
 const MainPage = () => {
   const searchParams = useSearchParams();
