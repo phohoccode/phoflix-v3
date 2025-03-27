@@ -17,8 +17,8 @@ SELECT
              CASE WHEN f.type = 'review' THEN f.id ELSE NULL END AS reviews_id,
              CASE WHEN f.type = 'review' THEN JSON_OBJECT('point', f.point) ELSE NULL END AS reviews,
              (SELECT COUNT(*) FROM feedbacks AS c WHERE c.parent_id = f.id) AS total_children,
-             (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
-             (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'like') AS total_like
+             (SELECT COUNT(*) FROM feedback_vote WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
+             (SELECT COUNT(*) FROM feedback_vote WHERE feedback_id = f.id AND type = 'like') AS total_like
            FROM
                feedbacks AS f
            JOIN

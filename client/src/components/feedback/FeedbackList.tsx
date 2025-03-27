@@ -1,6 +1,10 @@
 "use client";
 
-import { getFeedbacks } from "@/store/asyncThunks/feedbackAsyncThunk";
+import {
+  getFeedbacks,
+  getMoreFeedbacks,
+  getVoteListFeedback,
+} from "@/store/asyncThunks/feedbackAsyncThunk";
 import { AppDispatch, RootState } from "@/store/store";
 import { Box } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
@@ -15,6 +19,9 @@ const FeedbackList = () => {
   const { items, loading, hasMore } = useSelector(
     (state: RootState) => state.feedback.feedback
   );
+  const { feedbackType } = useSelector(
+    (state: RootState) => state.feedback
+  );
   const { movie } = useSelector((state: RootState) => state.movie.movieInfo);
   const dispatch: AppDispatch = useDispatch();
   const [isPending, startTransition] = useTransition();
@@ -22,17 +29,31 @@ const FeedbackList = () => {
 
   useEffect(() => {
     if (movie) {
-      startTransition(() => {
-        dispatch(
-          getFeedbacks({
-            movieSlug: params.slug as string,
-            type: "comment",
-            limit: 10,
-          })
-        );
+      startTransition(async () => {
+        await Promise.all([
+          dispatch(
+            getFeedbacks({
+              movieSlug: params.slug as string,
+              type: feedbackType,
+              limit: 10,
+            })
+          ),
+          dispatch(getVoteListFeedback(params.slug as string)),
+        ]);
       });
     }
-  }, [params.slug]);
+  }, [params.slug, feedbackType]);
+
+  const handleSeeMoreFeedbacks = () => {
+    dispatch(
+      getMoreFeedbacks({
+        movieSlug: params.slug as string,
+        type: feedbackType,
+        limit: 5,
+        afterTime: items?.length ? items[items.length - 1].created_at : 0,
+      })
+    );
+  };
 
   if (isPending) {
     return (
@@ -55,14 +76,14 @@ const FeedbackList = () => {
   }
 
   return (
-    <Box className="flex flex-col gap-6 mt-12">
+    <Box className="flex flex-col gap-6">
       <Box className="flex flex-col gap-8">
         {items?.map((item: any, index: number) => (
           <FeedbackItem key={index} feedback={item} />
         ))}
       </Box>
 
-      {hasMore && <SeeMoreFeedback />}
+      {hasMore && <SeeMoreFeedback callback={handleSeeMoreFeedbacks} />}
     </Box>
   );
 };

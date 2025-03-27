@@ -2,7 +2,7 @@
 
 import { fetchDataMovieInfo } from "@/store/asyncThunks/movieAsyncThunk";
 import { AppDispatch, RootState } from "@/store/store";
-import { Box, Em, GridItem, SimpleGrid } from "@chakra-ui/react";
+import { Box, GridItem, SimpleGrid } from "@chakra-ui/react";
 import { useParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";

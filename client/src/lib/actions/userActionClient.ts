@@ -470,6 +470,40 @@ export const addFeedback = async ({
   }
 };
 
+// ===================== DELETE FEEDBACK =====================
+interface DeleteFeedback {
+  feedbackId: string;
+  userId: string;
+}
+
+export const deleteFeedback = async ({
+  feedbackId,
+  userId,
+}: DeleteFeedback): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedback?feedbackId=${feedbackId}&userId=${userId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+
+
 // ===================== ADD NEW REPLY =====================
 interface AddReply {
   movieSlug: string;
@@ -531,3 +565,45 @@ export const getStatsByMovie = async (movieSlug: string): Promise<any> => {
     };
   }
 };
+
+// ===================== ADD VOTE =====================
+interface AddVote {
+  movieSlug: string;
+  userId: string;
+  feedbackId: string;
+  voteType: "like" | "dislike";
+}
+
+export const addVote = async ({
+  movieSlug,
+  userId,
+  feedbackId,
+  voteType,
+}: AddVote): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/vote`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          movieSlug,
+          userId,
+          feedbackId,
+          voteType,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+}

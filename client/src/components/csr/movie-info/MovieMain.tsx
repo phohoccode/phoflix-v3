@@ -9,7 +9,7 @@ import FavoriteButton from "@/components/movie/controls/FavoriteButton";
 import PlaylistButton from "@/components/movie/controls/PlaylistButton";
 import ShareButton from "@/components/movie/controls/ShareButton";
 import ReviewButton from "@/components/movie/controls/ReviewButton";
-import CommentSection from "@/components/feedback/FeedbackSection";
+import FeedbackSection from "@/components/feedback/FeedbackSection";
 
 const MovieMain = () => {
   const params = useParams();
@@ -40,12 +40,11 @@ const MovieMain = () => {
             <ReviewButton />
           </Box>
         </Box>
-        <Box>
-          <MovieTabs />
-        </Box>
-        <Box>
-          <CommentSection />
-        </Box>
+        <MovieTabs />
+
+        <Box className="w-full h-[0.5px] bg-[#ffffff10] my-6"></Box>
+
+        <FeedbackSection />
       </Box>
     </Box>
   );

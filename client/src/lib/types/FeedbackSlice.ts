@@ -8,6 +8,10 @@ type FeedbackSlice = {
     error: boolean;
     showFeedbackId: string | null;
   };
+  voteList: {
+    userLikedFeedbacks: string[];
+    userDislikedFeedbacks: string[];
+  };
   replies: {
     data: Record<
       string,
@@ -17,5 +21,5 @@ type FeedbackSlice = {
   };
   parentId: string | null;
   replyId: string | null;
-  type: "comment" | "review";
+  feedbackType: "comment" | "review";
 };

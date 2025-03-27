@@ -4,17 +4,22 @@ import {
   getMoreFeedbacks,
   getMoreReplyListFeedback,
   getReplyListFeedback,
+  getVoteListFeedback,
 } from "../asyncThunks/feedbackAsyncThunk";
 
 const initialState: FeedbackSlice = {
   feedback: {
     items: [],
-    loading: false,
-    hasMore: false,
     itemCount: 0,
     totalFeedbacks: 0,
     error: false,
+    hasMore: false,
+    loading: false,
     showFeedbackId: null,
+  },
+  voteList: {
+    userLikedFeedbacks: [],
+    userDislikedFeedbacks: [],
   },
   replies: {
     data: {},
@@ -22,15 +27,15 @@ const initialState: FeedbackSlice = {
   },
   parentId: null,
   replyId: null,
-  type: "comment",
+  feedbackType: "comment",
 };
 
 const feedbackSlice = createSlice({
   name: "feedback",
   initialState,
   reducers: {
-    setType: (state, action) => {
-      state.type = action.payload;
+    setFeedbackType: (state, action) => {
+      state.feedbackType = action.payload;
     },
     setParentId: (state, action) => {
       state.parentId = action.payload;
@@ -153,11 +158,28 @@ const feedbackSlice = createSlice({
         action.payload?.result?.has_more ?? false;
       state.replies.data[parentId].error = false;
     });
+
+    builder.addCase(getVoteListFeedback.pending, (state, action) => {
+      state.voteList.userLikedFeedbacks = [];
+      state.voteList.userDislikedFeedbacks = [];
+    });
+
+    builder.addCase(getVoteListFeedback.fulfilled, (state, action) => {
+      state.voteList.userLikedFeedbacks =
+        action.payload?.result?.user_liked_feedbacks || [];
+      state.voteList.userDislikedFeedbacks =
+        action.payload?.result?.user_disliked_feedbacks || [];
+    });
+
+    builder.addCase(getVoteListFeedback.rejected, (state, action) => {
+      state.voteList.userLikedFeedbacks = [];
+      state.voteList.userDislikedFeedbacks = [];
+    });
   },
 });
 
 export const {
-  setType,
+  setFeedbackType,
   setParentId,
   setShowReplyId,
   setShowFeedbackId,

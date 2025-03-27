@@ -62,10 +62,11 @@ CREATE TABLE
   );
 
 CREATE TABLE
-  `feedback_likes` (
+  `feedback_vote` (
     `id` CHAR(36) PRIMARY KEY NOT NULL,
     `user_id` CHAR(36) NOT NULL,
     `feedback_id` CHAR(36) NOT NULL,
+    `movie_slug` VARCHAR(255) NOT NULL,
     `type` ENUM ('like', 'dislike') NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

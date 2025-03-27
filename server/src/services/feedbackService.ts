@@ -77,8 +77,8 @@ export const handleGetFeedbacks = async ({
               FROM feedback_hierarchy fh 
               WHERE fh.parent_id = f.id
           ) AS total_children,
-          (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
-          (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'like') AS total_like
+          (SELECT COUNT(*) FROM feedback_vote WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
+          (SELECT COUNT(*) FROM feedback_vote WHERE feedback_id = f.id AND type = 'like') AS total_like
       FROM 
           feedbacks AS f
       JOIN 
@@ -101,6 +101,7 @@ export const handleGetFeedbacks = async ({
     const finalFeedbacks = feedbacks.map((feedback: any) => ({
       ...feedback,
       author: feedback?.author ? JSON.parse(feedback?.author) : null,
+      reviews: feedback?.reviews ? JSON.parse(feedback?.reviews) : null,
     }));
 
     return {
@@ -191,8 +192,8 @@ export const handleGetReplyListFeedbacks = async ({
           f.movie_slug,
           CASE WHEN f.type = 'review' THEN f.id ELSE NULL END AS reviews_id,
           CASE WHEN f.type = 'review' THEN JSON_OBJECT('point', f.point) ELSE NULL END AS reviews,
-          (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
-          (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'like') AS total_like
+          (SELECT COUNT(*) FROM feedback_vote WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
+          (SELECT COUNT(*) FROM feedback_vote WHERE feedback_id = f.id AND type = 'like') AS total_like
         FROM feedbacks AS f
         JOIN users AS u ON f.user_id = u.id
         LEFT JOIN feedbacks AS p ON f.parent_id = p.id
@@ -222,8 +223,8 @@ export const handleGetReplyListFeedbacks = async ({
           f.movie_slug,
           CASE WHEN f.type = 'review' THEN f.id ELSE NULL END AS reviews_id,
           CASE WHEN f.type = 'review' THEN JSON_OBJECT('point', f.point) ELSE NULL END AS reviews,
-          (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
-          (SELECT COUNT(*) FROM feedback_likes WHERE feedback_id = f.id AND type = 'like') AS total_like
+          (SELECT COUNT(*) FROM feedback_vote WHERE feedback_id = f.id AND type = 'dislike') AS total_dislike,
+          (SELECT COUNT(*) FROM feedback_vote WHERE feedback_id = f.id AND type = 'like') AS total_like
         FROM feedbacks AS f
         JOIN users AS u ON f.user_id = u.id
         LEFT JOIN feedbacks AS p ON f.parent_id = p.id
@@ -328,6 +329,50 @@ export const handleAddFeedback = async ({
     return {
       status: false,
       message: "Error adding new review",
+      result: null,
+    };
+  }
+};
+
+// ==================== DELETE FEEDBACK ====================
+
+interface DeleteFeedback {
+  feedbackId: string;
+  userId: string;
+}
+
+export const handleDeleteFeedback = async ({
+  userId,
+  feedbackId,
+}: DeleteFeedback) => {
+  try {
+    const sqlDeleteFeedback = `
+        DELETE FROM feedbacks
+        WHERE id = ? AND user_id = ?;
+    `;
+
+    const [rows]: any = await connection
+      .promise()
+      .query(sqlDeleteFeedback, [feedbackId, userId]);
+
+    if (rows.affectedRows === 0) {
+      return {
+        status: false,
+        message: "Xóa bình luận thất bại",
+        result: null,
+      };
+    }
+
+    return {
+      status: true,
+      message: "Xóa bình luận thành công",
+      result: null,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Error deleting feedback",
       result: null,
     };
   }
@@ -551,8 +596,6 @@ export const handleGetStatsByMovie = async (movieSlug: string) => {
       .promise()
       .query(sqlGetStatsByMovie, [movieSlug]);
 
-    console.log(typeof rows[0]?.average_point, rows[0]?.average_point);
-
     return {
       status: true,
       msg: "Thành công.",
@@ -566,6 +609,165 @@ export const handleGetStatsByMovie = async (movieSlug: string) => {
     return {
       status: false,
       message: "Error fetching stats by movie",
+      result: null,
+    };
+  }
+};
+
+// ==================== VOTE FOR FEEDBACK ====================
+interface FeedbackVote {
+  userId: string;
+  feedbackId: string;
+  voteType: "like" | "dislike";
+  movieSlug: string;
+}
+
+export async function createFeedbackVote({
+  userId,
+  feedbackId,
+  voteType, // 'like' hoặc 'dislike'
+  movieSlug,
+}: FeedbackVote) {
+  try {
+    // Kiểm tra người dùng có tồn tại không
+    const sqlCheckUserExists = `SELECT id FROM users WHERE id = ?;`;
+    const [rowsCheckUser]: any = await connection
+      .promise()
+      .query(sqlCheckUserExists, [userId]);
+
+    if (rowsCheckUser.length === 0) {
+      return {
+        status: false,
+        message: "Người dùng không tồn tại",
+        result: null,
+      };
+    }
+
+    // Kiểm tra xem user đã vote chưa
+    const sqlCheckVoteExists = `
+      SELECT id, type
+      FROM feedback_vote
+      WHERE user_id = ? AND feedback_id = ?;
+    `;
+    const [rowsCheckVote]: any = await connection
+      .promise()
+      .query(sqlCheckVoteExists, [userId, feedbackId]);
+
+    const existingVote = rowsCheckVote[0] || null;
+    let sqlQueryVote = "";
+    let queryParams: any[] = [];
+
+    if (existingVote) {
+      if (existingVote.type === voteType) {
+        // Nếu đã vote cùng loại → XÓA vote (hủy like/dislike)
+        sqlQueryVote = `
+          DELETE FROM feedback_vote
+          WHERE user_id = ? AND feedback_id = ?;
+        `;
+        queryParams = [userId, feedbackId];
+      } else {
+        // Nếu đã vote khác loại → CẬP NHẬT vote
+        sqlQueryVote = `
+          UPDATE feedback_vote
+          SET type = ?
+          WHERE user_id = ? AND feedback_id = ?;
+        `;
+        queryParams = [voteType, userId, feedbackId];
+      }
+    } else {
+      // Nếu chưa vote → THÊM mới
+      sqlQueryVote = `
+        INSERT INTO feedback_vote (id, user_id, feedback_id, type, movie_slug)
+        VALUES (?, ?, ?, ?, ?);
+      `;
+      queryParams = [uuidv4(), userId, feedbackId, voteType, movieSlug];
+    }
+
+    const [result]: any = await connection
+      .promise()
+      .query(sqlQueryVote, queryParams);
+
+    if (result.affectedRows === 0) {
+      return {
+        status: false,
+        message: "Xử lý bình chọn thất bại",
+        result: null,
+      };
+    }
+
+    return {
+      status: true,
+      message: existingVote
+        ? existingVote.type === voteType
+          ? "Hủy vote thành công"
+          : "Cập nhật vote thành công"
+        : "Thêm vote thành công",
+      result: { voteType },
+    };
+  } catch (error) {
+    console.error("Lỗi xử lý vote:", error);
+    return {
+      status: false,
+      message: "Lỗi khi xử lý bình chọn",
+      result: null,
+    };
+  }
+}
+
+// ==================== GET VOTE LIST ====================
+export const handleGetVoteList = async (movieSlug: string) => {
+  try {
+    const sqlGetVoteList = `
+      SELECT feedback_id, type, user_id
+      FROM feedback_vote
+      WHERE movie_slug = ?;
+    `;
+
+    const [rows]: any = await connection
+      .promise()
+      .query(sqlGetVoteList, [movieSlug]);
+
+    // Tạo object để nhóm user_id theo feedback_id
+    const userLikedFeedbacks: Record<string, string[]> = {};
+    const userDislikedFeedbacks: Record<string, string[]> = {};
+
+    rows.forEach(
+      ({
+        feedback_id,
+        type,
+        user_id,
+      }: {
+        feedback_id: string;
+        type: "like" | "dislike";
+        user_id: string;
+      }) => {
+        if (type === "like") {
+          if (!userLikedFeedbacks[feedback_id]) {
+            userLikedFeedbacks[feedback_id] = [];
+          }
+          userLikedFeedbacks[feedback_id].push(user_id);
+        } else if (type === "dislike") {
+          if (!userDislikedFeedbacks[feedback_id]) {
+            userDislikedFeedbacks[feedback_id] = [];
+          }
+          userDislikedFeedbacks[feedback_id].push(user_id);
+        }
+      }
+    );
+
+    return {
+      status: true,
+      msg: "Thành công.",
+      result: {
+        user_liked_feedbacks: userLikedFeedbacks,
+        user_disliked_feedbacks: userDislikedFeedbacks,
+      },
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Error fetching vote list",
       result: null,
     };
   }

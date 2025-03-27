@@ -16,7 +16,7 @@ interface ReplySectionProps {
 
 const ReplySection = ({ totalChildren, parentId }: ReplySectionProps) => {
   const dispatch: AppDispatch = useDispatch();
-  const { replies } = useSelector((state: RootState) => state.feedback);
+  const { replies, feedbackType } = useSelector((state: RootState) => state.feedback);
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -26,7 +26,7 @@ const ReplySection = ({ totalChildren, parentId }: ReplySectionProps) => {
         dispatch(
           getReplyListFeedback({
             parentId,
-            type: "comment",
+            type: feedbackType,
             limit: 5,
           })
         );
@@ -40,7 +40,7 @@ const ReplySection = ({ totalChildren, parentId }: ReplySectionProps) => {
   return (
     <Box className="mt-4">
       <Box
-        className="flex items-center gap-1 text-[#ffd875] cursor-pointer"
+        className="flex items-center select-none gap-1 text-[#ffd875] cursor-pointer"
         onClick={handleToggleReply}
       >
         {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}

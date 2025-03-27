@@ -64,10 +64,10 @@ const SectionInfo = ({ data }: SectionInfoProps) => {
           </Box>
         </Box>
 
-        <Box className="flex flex-col gap-4">
+        <Box>
           <ShowMoreText text={data?.content} maxLength={260} />
           <Link
-            className="text-[#ffd875] text-sm gap-1 hover:underline inline-flex items-center"
+            className="text-[#ffd875] mt-4 text-sm gap-1 hover:underline inline-flex items-center"
             href={`/info/${data?.slug}?name=${formatStringForURL(
               data?.name,
               "-"

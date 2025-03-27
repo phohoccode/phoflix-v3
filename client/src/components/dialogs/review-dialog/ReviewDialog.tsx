@@ -7,14 +7,11 @@ import ReviewSummary from "./ReviewSummary";
 import ReviewEmo from "./ReviewEmo";
 import ReviewComment from "./ReviewComment";
 import { useEffect, useState, useTransition } from "react";
-import {
-  addFeedback,
-  getFeedbacks,
-  getStatsByMovie,
-} from "@/lib/actions/userActionClient";
+import { addFeedback, getStatsByMovie } from "@/lib/actions/userActionClient";
 import { useSession } from "next-auth/react";
 import { toaster } from "@/components/ui/toaster";
 import { setReviewContent } from "@/store/slices/userSlice";
+import { getFeedbacks } from "@/store/asyncThunks/feedbackAsyncThunk";
 
 interface ReviewDialogProps {
   trigger: React.ReactNode;
@@ -25,6 +22,7 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
   const { selectedReview, reviewContent } = useSelector(
     (state: RootState) => state.user.reviews
   );
+  const { feedbackType } = useSelector((state: RootState) => state.feedback);
   const [open, setOpen] = useState(false);
   const { data: session } = useSession();
   const [isPending, startTransition] = useTransition();
@@ -68,6 +66,15 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
       });
     }
 
+    if (reviewContent?.trim() === "") {
+      toaster.create({
+        description: "Nội dung đánh giá không được để trống",
+        type: "error",
+        duration: 1500,
+      });
+      return;
+    }
+
     startTransition(async () => {
       const response = await addFeedback({
         movieSlug: movie.slug,
@@ -83,6 +90,18 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
           type: "success",
           duration: 1500,
         });
+
+        // làm mới feedback khi feedbackType là review
+
+        if (feedbackType === "review") {
+          await dispatch(
+            getFeedbacks({
+              movieSlug: movie.slug,
+              type: "review",
+              limit: 10,
+            })
+          );
+        }
 
         // Refresh reviews
         handleGetStatsByMovie();

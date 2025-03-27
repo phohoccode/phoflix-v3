@@ -1,6 +1,6 @@
 "use client";
 
-import { setType } from "@/store/slices/feedbackSlice";
+import { setFeedbackType } from "@/store/slices/feedbackSlice";
 import { AppDispatch, RootState } from "@/store/store";
 import { Button, ButtonGroup } from "@chakra-ui/react";
 import { usePathname } from "next/navigation";
@@ -13,13 +13,17 @@ const tabs = [
 ];
 
 const FeedbackToggleTab = () => {
-  const { type } = useSelector((state: RootState) => state.feedback);
+  const { feedbackType } = useSelector((state: RootState) => state.feedback);
   const dispatch: AppDispatch = useDispatch();
   const pathname = usePathname();
 
   useEffect(() => {
-    dispatch(setType("comment"));
+    dispatch(setFeedbackType("comment"));
   }, [pathname]);
+
+  const handleChangeTab = (value: string) => {
+    dispatch(setFeedbackType(value));
+  }
 
   return (
     <ButtonGroup
@@ -31,9 +35,9 @@ const FeedbackToggleTab = () => {
         <Button
           key={tab.id}
           size="sm"
-          onClick={() => dispatch(setType(tab.value))}  
-          bg={type === tab.value ? "white" : "transparent"}
-          color={type === tab.value ? "black" : "white"}
+          onClick={() => handleChangeTab(tab.value)}  
+          bg={feedbackType === tab.value ? "white" : "transparent"}
+          color={feedbackType === tab.value ? "black" : "white"}
           className="rounded-[4px] border-none h-[26px] lg:text-sm xs:text-xs text-[10px] px-2"
         >
           {tab.label}

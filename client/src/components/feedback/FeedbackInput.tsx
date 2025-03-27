@@ -19,22 +19,27 @@ import {
 } from "@/store/slices/feedbackSlice";
 
 interface FeedbackInputProps {
-  action: "comment" | "reply";
+  action: "comment" | "reply" | "edit";
   autoFocus?: boolean;
+  parentId?: string;
 }
 
-const FeedbackInput = ({ action, autoFocus = false }: FeedbackInputProps) => {
+const FeedbackInput = ({
+  action,
+  autoFocus = false,
+  parentId,
+}: FeedbackInputProps) => {
   const params = useParams();
   const dispatch: AppDispatch = useDispatch();
-  const { parentId, replyId } = useSelector(
-    (state: RootState) => state.feedback
-  );
-
+  const { replyId } = useSelector((state: RootState) => state.feedback);
+  const { feedbackType } = useSelector((state: RootState) => state.feedback);
   const { data: session } = useSession();
   const [length, setLength] = useState(0);
   const [value, setValue] = useState("");
   const [isPending, startTransition] = useTransition();
   const maxLength = 1000;
+
+  console.log("parentId", parentId);
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
@@ -78,7 +83,7 @@ const FeedbackInput = ({ action, autoFocus = false }: FeedbackInputProps) => {
           parentId: replyId as string,
           userId: session?.user?.id as string,
           content: value,
-          type: "comment",
+          type: feedbackType,
           movieSlug: params.slug as string,
         });
       }
@@ -96,7 +101,7 @@ const FeedbackInput = ({ action, autoFocus = false }: FeedbackInputProps) => {
         await dispatch(
           getFeedbacks({
             movieSlug: params.slug as string,
-            type: "comment",
+            type: feedbackType,
             limit: 10,
           })
         );
@@ -106,7 +111,7 @@ const FeedbackInput = ({ action, autoFocus = false }: FeedbackInputProps) => {
           await dispatch(
             getReplyListFeedback({
               parentId: parentId as string,
-              type: "comment",
+              type: feedbackType,
               limit: 10,
             })
           );
@@ -125,7 +130,7 @@ const FeedbackInput = ({ action, autoFocus = false }: FeedbackInputProps) => {
   };
 
   return (
-    <Box className="flex flex-col justify-end gap-2 p-2 rounded-xl bg-[#ffffff10] mt-4">
+    <Box className="flex flex-col justify-end gap-2 p-2 rounded-xl bg-[#ffffff10]">
       <Box className="relative">
         <Textarea
           autoFocus={autoFocus}

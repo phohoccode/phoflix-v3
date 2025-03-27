@@ -134,3 +134,27 @@ export const getMoreReplyListFeedback = createAsyncThunk(
     return data;
   }
 );
+
+// ========================= VOTE =========================
+export const getVoteListFeedback = createAsyncThunk(
+  "feedback/getVoteListFeedback",
+  async (movieSlug: string) => {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/voteList?movieSlug=${movieSlug}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch vote feedbacks");
+    }
+
+    const data = await response.json();
+
+    return data;
+  }
+);
