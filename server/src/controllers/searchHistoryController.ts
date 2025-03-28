@@ -21,9 +21,12 @@ export const getUserSearchHistory = async (
       });
     }
 
-    const response = await handleGetUserSearchHistory(id as string);
+    const response = await handleGetUserSearchHistory({
+      id: id as string,
+      limit: 10,
+    });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -49,9 +52,12 @@ export const createSearchHistory = async (
       });
     }
 
-    const response = await handleCreateSearchHistory(userId, keyword);
+    const response = await handleCreateSearchHistory({
+      userId,
+      keyword,
+    });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -77,12 +83,12 @@ export const deleteSearchHistory = async (
       });
     }
 
-    const response = await handleDeleteSearchHistory(
-      id as string,
-      userId as string
-    );
+    const response = await handleDeleteSearchHistory({
+      id: id as string,
+      userId: userId as string,
+    });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -110,7 +116,7 @@ export const deleteAllSearchHistory = async (
 
     const response = await handleDeleteAllSearchHistory(userId as string);
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({

@@ -12,7 +12,7 @@ const SearchButton = () => {
   return (
     <Button
       onClick={() => dispatch(setIsOpenModalSearch(true))}
-      className="lg:min-w-64 lg:bg-[#ffffff5e] bg-transparent"
+      className="2xl:min-w-60 lg:min-w-48 lg:bg-[#ffffff5e] bg-transparent"
       size="sm"
       variant="solid"
       rounded="full"

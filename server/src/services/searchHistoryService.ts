@@ -1,10 +1,15 @@
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
+import {
+  CreateSearchHistory,
+  DeleteSearchHistory,
+  GetUserSearchHistory,
+} from "../lib/types/SearchHistory";
 
-export const handleGetUserSearchHistory = async (
-  id: string,
-  limit: number = 20
-) => {
+export const handleGetUserSearchHistory = async ({
+  id,
+  limit = 10,
+}: GetUserSearchHistory) => {
   try {
     const sqlGetUserSearchHistory = `
       SELECT
@@ -19,18 +24,11 @@ export const handleGetUserSearchHistory = async (
       .promise()
       .query(sqlGetUserSearchHistory, [id, limit]);
 
-    if ((rows as any)?.length === 0) {
-      return {
-        status: false,
-        message: "Lịch sử tìm kiếm trống!",
-        result: [],
-      };
-    }
-
     return {
       status: true,
       message: "Lấy lịch sử tìm kiếm thành công!",
-      result: rows,
+      result: rows || [],
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
@@ -38,14 +36,15 @@ export const handleGetUserSearchHistory = async (
       status: false,
       message: "Lỗi server! Vui lòng thử lại sau.",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
-export const handleCreateSearchHistory = async (
-  userId: string,
-  keyword: string
-) => {
+export const handleCreateSearchHistory = async ({
+  userId,
+  keyword,
+}: CreateSearchHistory) => {
   try {
     const id = uuidv4();
     const today = new Date().toISOString().split("T")[0];
@@ -81,6 +80,7 @@ export const handleCreateSearchHistory = async (
           status: false,
           message: "Cập nhật lịch sử tìm kiếm thất bại!",
           result: null,
+          statusCode: 400,
         };
       }
 
@@ -88,6 +88,7 @@ export const handleCreateSearchHistory = async (
         status: true,
         message: "Cập nhật lịch sử tìm kiếm thành công!",
         result: null,
+        statusCode: 200,
       };
     } else {
       sqlCreateOrUpdateSearchHistory = `
@@ -104,6 +105,7 @@ export const handleCreateSearchHistory = async (
           status: false,
           message: "Tạo lịch sử tìm kiếm thất bại!",
           result: null,
+          statusCode: 400,
         };
       }
 
@@ -111,6 +113,7 @@ export const handleCreateSearchHistory = async (
         status: true,
         message: "Tạo lịch sử tìm kiếm thành công!",
         result: null,
+        statusCode: 200,
       };
     }
   } catch (error) {
@@ -119,11 +122,15 @@ export const handleCreateSearchHistory = async (
       status: false,
       message: "Lỗi server! Vui lòng thử lại sau.",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
-export const handleDeleteSearchHistory = async (id: string, userId: string) => {
+export const handleDeleteSearchHistory = async ({
+  id,
+  userId,
+}: DeleteSearchHistory) => {
   try {
     const sqlDeleteSearchHistory = `
       DELETE FROM search_history
@@ -139,6 +146,7 @@ export const handleDeleteSearchHistory = async (id: string, userId: string) => {
         status: false,
         message: "Xóa lịch sử tìm kiếm thất bại!",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -146,6 +154,7 @@ export const handleDeleteSearchHistory = async (id: string, userId: string) => {
       status: true,
       message: "Xóa lịch sử tìm kiếm thành công!",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
@@ -153,6 +162,7 @@ export const handleDeleteSearchHistory = async (id: string, userId: string) => {
       status: false,
       message: "Lỗi server! Vui lòng thử lại sau.",
       result: null,
+      statusCode: 500,
     };
   }
 };
@@ -173,6 +183,7 @@ export const handleDeleteAllSearchHistory = async (userId: string) => {
         status: false,
         message: "Xóa lịch sử tìm kiếm thất bại!",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -180,6 +191,7 @@ export const handleDeleteAllSearchHistory = async (userId: string) => {
       status: true,
       message: "Tất cả lịch sử tìm kiếm đã được xóa!",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
@@ -187,6 +199,7 @@ export const handleDeleteAllSearchHistory = async (userId: string) => {
       status: false,
       message: "Lỗi server! Vui lòng thử lại sau.",
       result: null,
+      statusCode: 500,
     };
   }
 };

@@ -411,7 +411,7 @@ export const getFeedbacks = async ({
 }: getFeedbacks): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedbacks?movieSlug=${movieSlug}&limit=${limit}&type=${type}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/list?movieSlug=${movieSlug}&limit=${limit}&type=${type}`
     );
 
     return response.json();
@@ -443,7 +443,7 @@ export const addFeedback = async ({
 }: AddFeedback): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedback`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/add`,
       {
         method: "POST",
         headers: {
@@ -482,7 +482,7 @@ export const deleteFeedback = async ({
 }: DeleteFeedback): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedback?feedbackId=${feedbackId}&userId=${userId}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/delete?feedbackId=${feedbackId}&userId=${userId}`,
       {
         method: "DELETE",
         headers: {
@@ -502,7 +502,44 @@ export const deleteFeedback = async ({
   }
 };
 
+// ===================== UPDATE CONTENT FEEDBACK =====================
+interface UpdateContentFeedback {
+  feedbackId: string;
+  userId: string;
+  content: string;
+}
 
+export const updateContentFeedback = async ({
+  feedbackId,
+  userId,
+  content,
+}: UpdateContentFeedback): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/update`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          feedbackId,
+          userId,
+          content,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
 
 // ===================== ADD NEW REPLY =====================
 interface AddReply {
@@ -522,7 +559,7 @@ export const addReply = async ({
 }: AddReply): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedback/reply`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/reply`,
       {
         method: "POST",
         headers: {
@@ -552,7 +589,7 @@ export const addReply = async ({
 export const getStatsByMovie = async (movieSlug: string): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/statsByMovie?movieSlug=${movieSlug}`
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/statsByMovie?movieSlug=${movieSlug}`
     );
 
     return response.json();
@@ -606,4 +643,4 @@ export const addVote = async ({
       result: null,
     };
   }
-}
+};

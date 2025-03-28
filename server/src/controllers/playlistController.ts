@@ -18,18 +18,21 @@ export const createPlaylist = async (
     if (!userId || !playlistName) {
       return res.status(400).json({
         status: false,
-        message: "Missing required parameters",
+        message: "Thiếu tham số bắt buộc",
         result: null,
       });
     }
 
-    const response = await handleCreatePlaylist(userId, playlistName);
+    const response = await handleCreatePlaylist({
+      userId,
+      playlistName,
+    });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: "Error creating playlist",
+      message: "Lỗi tạo playlist",
       result: null,
     });
   }
@@ -45,18 +48,18 @@ export const getPlaylists = async (
     if (!userId) {
       return res.status(400).json({
         status: false,
-        message: "Missing required parameters",
+        message: "Thiếu tham số bắt buộc",
         result: null,
       });
     }
 
     const response = await handleGetPlaylists(userId as string);
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: "Error getting playlist",
+      message: "Lỗi lấy danh sách playlist",
       result: null,
     });
   }
@@ -77,13 +80,13 @@ export const updatePlaylist = async (
       });
     }
 
-    const response = await handleUpdatePlaylist(
+    const response = await handleUpdatePlaylist({
       userId,
       playlistId,
-      playlistName
-    );
+      playlistName,
+    });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
@@ -108,9 +111,12 @@ export const deletePlaylist = async (
       });
     }
 
-    const response = await handleDeletePlaylist(userId, playlistId);
+    const response = await handleDeletePlaylist({
+      userId,
+      playlistId,
+    });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
@@ -141,7 +147,7 @@ export const getMoviesFromPlaylist = async (
       limit: limit ? parseInt(limit as string) : 10,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
@@ -166,12 +172,12 @@ export const getPlaylistsContainingMovie = async (
       });
     }
 
-    const response = await handleGetPlaylistsContainingMovie(
-      userId as string,
-      movieSlug as string
-    );
+    const response = await handleGetPlaylistsContainingMovie({
+      userId: userId as string,
+      movieSlug: movieSlug as string,
+    });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,

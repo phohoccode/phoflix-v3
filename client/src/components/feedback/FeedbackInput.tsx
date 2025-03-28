@@ -18,28 +18,21 @@ import {
   setShowReplyId,
 } from "@/store/slices/feedbackSlice";
 
-interface FeedbackInputProps {
-  action: "comment" | "reply" | "edit";
-  autoFocus?: boolean;
-  parentId?: string;
-}
-
 const FeedbackInput = ({
   action,
   autoFocus = false,
-  parentId,
+  rootId,
 }: FeedbackInputProps) => {
   const params = useParams();
   const dispatch: AppDispatch = useDispatch();
-  const { replyId } = useSelector((state: RootState) => state.feedback);
-  const { feedbackType } = useSelector((state: RootState) => state.feedback);
   const { data: session } = useSession();
+  const { replyId, feedbackType } = useSelector(
+    (state: RootState) => state.feedback
+  );
   const [length, setLength] = useState(0);
   const [value, setValue] = useState("");
   const [isPending, startTransition] = useTransition();
   const maxLength = 1000;
-
-  console.log("parentId", parentId);
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
@@ -98,27 +91,27 @@ const FeedbackInput = ({
           duration: 1500,
         });
 
-        await dispatch(
-          getFeedbacks({
-            movieSlug: params.slug as string,
-            type: feedbackType,
-            limit: 10,
-          })
-        );
+        dispatch(setShowFeedbackId(null));
+        dispatch(setShowReplyId(null));
 
-        // nếu không có parentId thì không cần lấy lại danh sách phản hồi
-        if (parentId) {
-          await dispatch(
-            getReplyListFeedback({
-              parentId: parentId as string,
+        // Làm mới danh sách bình luận
+        await Promise.all([
+          dispatch(
+            getFeedbacks({
+              movieSlug: params.slug as string,
               type: feedbackType,
               limit: 10,
             })
-          );
-        }
+          ),
 
-        dispatch(setShowFeedbackId(null));
-        dispatch(setShowReplyId(null));
+          dispatch(
+            getReplyListFeedback({
+              parentId: rootId as string,
+              type: feedbackType,
+              limit: 10,
+            })
+          ),
+        ]);
       } else {
         toaster.create({
           description: response?.message,

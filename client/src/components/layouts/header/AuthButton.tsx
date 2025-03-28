@@ -25,9 +25,7 @@ const AuthButton = () => {
         rounded="full"
         onClick={handleSignIn}
         size="sm"
-        colorPalette="yellow"
-        variant="solid"
-        className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
+        className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)] bg-[#ffda7d] text-gray-900"
       >
         Đăng nhập
       </Button>

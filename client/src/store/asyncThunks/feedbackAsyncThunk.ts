@@ -13,7 +13,7 @@ export const getFeedbacks = createAsyncThunk(
     const typeParam = `&type=${type}`;
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedbacks?movieSlug=${movieSlug}${limitParam}${typeParam}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/list?movieSlug=${movieSlug}${limitParam}${typeParam}`,
       {
         method: "GET",
         headers: {
@@ -48,7 +48,7 @@ export const getMoreFeedbacks = createAsyncThunk(
     const afterTimeParam = `&afterTime=${afterTime}`;
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedbacks?movieSlug=${movieSlug}${limitParam}${typeParam}${afterTimeParam}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/list?movieSlug=${movieSlug}${limitParam}${typeParam}${afterTimeParam}`,
       {
         method: "GET",
         headers: {
@@ -82,7 +82,7 @@ export const getReplyListFeedback = createAsyncThunk(
     const typeParam = `&type=${type}`;
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedback/reply-list?parentId=${parentId}${limitParam}${typeParam}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/replyList?parentId=${parentId}${limitParam}${typeParam}`,
       {
         method: "GET",
         headers: {
@@ -105,7 +105,7 @@ interface GetMoreReplyListFeedback {
   parentId: string;
   limit: number;
   type: "review" | "comment";
-  afterTime: number;
+  afterTime: number | string;
 }
 
 export const getMoreReplyListFeedback = createAsyncThunk(
@@ -116,7 +116,7 @@ export const getMoreReplyListFeedback = createAsyncThunk(
     const afterTimeParam = `&afterTime=${afterTime}`;
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/movie/feedback/reply-list?parentId=${parentId}${limitParam}${typeParam}${afterTimeParam}`,
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/replyList?parentId=${parentId}${limitParam}${typeParam}${afterTimeParam}`,
       {
         method: "GET",
         headers: {

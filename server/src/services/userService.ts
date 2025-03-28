@@ -1,13 +1,14 @@
 import connection from "../database/connect";
 import bcrypt from "bcrypt";
 import validator from "validator";
+import { GetUserProfile, UpdateUserPassword, UpdateUserProfile } from "../lib/types/User";
 
 const salt = bcrypt.genSaltSync(10);
 
-export const handleGetUserProfile = async (
-  email: string,
-  typeAccount: "credentials" | "google"
-) => {
+export const handleGetUserProfile = async ({
+  email,
+  typeAccount,
+}: GetUserProfile) => {
   try {
     const sqlGetUserInfo = `
       SELECT
@@ -25,6 +26,7 @@ export const handleGetUserProfile = async (
         status: false,
         message: "Người dùng không tồn tại!",
         result: null,
+        statusCode: 404,
       };
     }
 
@@ -41,6 +43,7 @@ export const handleGetUserProfile = async (
         role: rows[0]?.role,
         gender: rows[0]?.gender,
       },
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
@@ -48,19 +51,12 @@ export const handleGetUserProfile = async (
       status: false,
       message: "Lỗi server! Vui lòng thử lại sau.",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
 // ========================= UPDATE USER PROFILE =========================
-
-interface UpdateUserProfile {
-  userId: string;
-  username: string;
-  gender: "other" | "female" | "male";
-  avatar: string;
-  typeAccount: "credentials" | "google";
-}
 
 export const handleUpdateUserProfile = async ({
   userId,
@@ -85,6 +81,7 @@ export const handleUpdateUserProfile = async ({
         status: false,
         message: "Người dùng không tồn tại!",
         result: null,
+        statusCode: 404,
       };
     }
 
@@ -109,6 +106,7 @@ export const handleUpdateUserProfile = async ({
         status: false,
         message: "Cập nhật thông tin thất bại!",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -116,6 +114,7 @@ export const handleUpdateUserProfile = async ({
       status: true,
       message: "Cập nhật thông tin thành công!",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
@@ -123,18 +122,12 @@ export const handleUpdateUserProfile = async ({
       status: false,
       message: "Lỗi server! Vui lòng thử lại sau.",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
 // ========================= UPDATE USER PASSWORD =========================
-
-interface UpdateUserPassword {
-  email: string;
-  newPassword: string;
-  oldPassword: string;
-  typeAccount: "credentials";
-}
 
 export const handleUpdateUserPassword = async ({
   email,
@@ -149,6 +142,7 @@ export const handleUpdateUserPassword = async ({
         message:
           "Mật khẩu có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt.",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -172,6 +166,7 @@ export const handleUpdateUserPassword = async ({
         status: false,
         message: "Mật khẩu cũ không chính xác!",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -192,6 +187,7 @@ export const handleUpdateUserPassword = async ({
         status: false,
         message: "Cập nhật mật khẩu thất bại!",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -199,6 +195,7 @@ export const handleUpdateUserPassword = async ({
       status: true,
       message: "Cập nhật mật khẩu thành công!",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
@@ -206,6 +203,7 @@ export const handleUpdateUserPassword = async ({
       status: false,
       message: "Lỗi server! Vui lòng thử lại sau.",
       result: null,
+      statusCode: 500,
     };
   }
 };

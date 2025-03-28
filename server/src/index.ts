@@ -4,7 +4,6 @@ import dotenv from "dotenv";
 import connection from "./database/connect";
 import authRouter from "./routes/authRouter";
 import userRouter from "./routes/userRouter";
-import movieRouter from "./routes/movieRouter";
 import feedbackRouter from "./routes/feedbackRouter";
 import cors from "cors";
 
@@ -39,7 +38,6 @@ app.get("/", (req: Request, res: Response) => {
 // Sử dụng router
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
-app.use("/movie", movieRouter);
 app.use("/feedback", feedbackRouter);
 
 // Lắng nghe máy chủ

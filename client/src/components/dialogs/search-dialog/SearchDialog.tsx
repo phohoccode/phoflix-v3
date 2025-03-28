@@ -10,10 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import { InputGroup } from "@/components/ui/input-group";
 import { fetchDataMoviePreview } from "@/store/asyncThunks/movieAsyncThunk";
-import { AppDispatch, RootState } from "@/store/store";
+import { AppDispatch } from "@/store/store";
 import { Box, Input, Kbd } from "@chakra-ui/react";
-import React, { useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useCallback, useState } from "react";
+import { useDispatch } from "react-redux";
 import SearchPreview from "./SearchPreview";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
@@ -59,6 +59,10 @@ const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
         return;
       }
 
+      router.push(`/search?keyword=${encodeURIComponent(keyword)}`);
+      dispatch(setIsOpenModalSearch(false));
+      setKeyword("");
+
       if (sesstion) {
         dispatch(
           createUserSearchHistory({
@@ -67,10 +71,6 @@ const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
           })
         );
       }
-
-      router.push(`/search?keyword=${encodeURIComponent(keyword)}`);
-      dispatch(setIsOpenModalSearch(false));
-      setKeyword("");
     }
   };
 

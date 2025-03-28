@@ -110,7 +110,7 @@ export const handleShare = () => {
   }
 };
 
-export const formatDataUnix = (data: string) => {
+export const formatDataUnix = (data: string | number) => {
   dayjs.extend(relativeTime);
   return dayjs.unix(Number(data)).fromNow(); // Trả về thời gian tương đối từ hiện tại
 };

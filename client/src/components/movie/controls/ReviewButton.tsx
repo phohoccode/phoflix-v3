@@ -24,7 +24,7 @@ const ReviewButton = () => {
         className="p-2 md:min-w-32 text-gray-50 rounded-full bg-[#3556b6]"
       >
         <MdReviews />
-        <span className="texts-sm hidden xs:block">Đánh giá</span>
+        <span className="sm:text-sm text-[10px] hidden xs:block">Đánh giá</span>
       </Button>
     );
   }

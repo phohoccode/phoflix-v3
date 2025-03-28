@@ -124,4 +124,3 @@ type Countries =
   | "brazil"
   | "y"
   | "na-uy"
-  | "namh";

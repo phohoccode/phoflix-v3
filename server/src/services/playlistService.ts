@@ -1,10 +1,17 @@
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
+import {
+  CreatePlaylist,
+  DeletePlaylist,
+  GetMoviesFromPlaylist,
+  GetPlaylistsContainingMovie,
+  UpdatePlaylist,
+} from "../lib/types/Playlist";
 
-export const handleCreatePlaylist = async (
-  userId: string,
-  playlistName: string
-) => {
+export const handleCreatePlaylist = async ({
+  userId,
+  playlistName,
+}: CreatePlaylist) => {
   try {
     const sqlCheckPlaylistExists = `
       SELECT id FROM playlists WHERE user_id = ? AND name = ?
@@ -19,6 +26,7 @@ export const handleCreatePlaylist = async (
         status: false,
         message: "Playlist đã tồn tại",
         result: null,
+        statusCode: 404,
       };
     }
 
@@ -38,6 +46,7 @@ export const handleCreatePlaylist = async (
         status: false,
         message: "Tạo playlist thất bại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -49,12 +58,14 @@ export const handleCreatePlaylist = async (
         userId,
         name: playlistName,
       },
+      statusCode: 200,
     };
   } catch (error) {
     return {
       status: false,
-      message: "Error creating playlist",
+      message: "Lỗi khi tạo playlist",
       result: null,
+      statusCode: 500,
     };
   }
 };
@@ -74,36 +85,30 @@ export const handleGetPlaylists = async (userId: string) => {
       .promise()
       .query(sqlGetPlaylist, [userId]);
 
-    if (rows.length === 0) {
-      return {
-        status: false,
-        message: "Không có playlist nào",
-        result: null,
-      };
-    }
-
     return {
       status: true,
       message: "Lấy danh sách playlist thành công",
       result: {
-        playlists: rows,
+        playlists: rows ?? [],
       },
+      statusCode: 200,
     };
   } catch (error) {
     console.error("Error getting playlists:", error);
     return {
       status: false,
-      message: "Error getting playlist",
+      message: "Lỗi khi lấy danh sách playlist",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
-export const handleUpdatePlaylist = async (
-  userId: string,
-  playlistId: string,
-  playlistName: string
-) => {
+export const handleUpdatePlaylist = async ({
+  userId,
+  playlistId,
+  playlistName,
+}: UpdatePlaylist) => {
   try {
     const sqlCheckPlaylistExists = `
       SELECT id FROM playlists WHERE id = ? AND user_id = ?
@@ -118,6 +123,7 @@ export const handleUpdatePlaylist = async (
         status: false,
         message: "Playlist không tồn tại",
         result: null,
+        statusCode: 404,
       };
     }
 
@@ -134,6 +140,7 @@ export const handleUpdatePlaylist = async (
         status: false,
         message: "Cập nhật playlist thất bại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -141,20 +148,22 @@ export const handleUpdatePlaylist = async (
       status: true,
       message: "Cập nhật playlist thành công",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     return {
       status: false,
-      message: "Error updating playlist",
+      message: "Lỗi khi cập nhật playlist",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
-export const handleDeletePlaylist = async (
-  userId: string,
-  playlistId: string
-) => {
+export const handleDeletePlaylist = async ({
+  userId,
+  playlistId,
+}: DeletePlaylist) => {
   try {
     const sqlCheckPlaylistExists = `
       SELECT id FROM playlists WHERE id = ? AND user_id = ?
@@ -169,6 +178,7 @@ export const handleDeletePlaylist = async (
         status: false,
         message: "Playlist không tồn tại",
         result: null,
+        statusCode: 404,
       };
     }
 
@@ -185,6 +195,7 @@ export const handleDeletePlaylist = async (
         status: false,
         message: "Xóa playlist thất bại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -192,24 +203,19 @@ export const handleDeletePlaylist = async (
       status: true,
       message: "Xóa playlist thành công",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     return {
       status: false,
-      message: "Error deleting playlist",
+      message: "Lỗi khi xóa playlist",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
 // ======================== Get movies from playlist ========================
-
-interface GetMoviesFromPlaylist {
-  userId: string;
-  playlistId: string;
-  page: number;
-  limit: number;
-}
 
 export const handleGetMovieFromPlaylist = async ({
   userId,
@@ -231,6 +237,7 @@ export const handleGetMovieFromPlaylist = async ({
         status: false,
         message: "Playlist không tồn tại",
         result: null,
+        statusCode: 404,
       };
     }
 
@@ -262,6 +269,7 @@ export const handleGetMovieFromPlaylist = async ({
         status: false,
         message: "Không có phim nào trong playlist",
         result: null,
+        statusCode: 404,
       };
     }
 
@@ -273,21 +281,23 @@ export const handleGetMovieFromPlaylist = async ({
         totalItems: rowsTotalMoviesFromPlaylist[0].total,
         totalItemsPerPage: limit,
       },
+      statusCode: 200,
     };
   } catch (error) {
     return {
       status: false,
-      message: "Error getting movies from playlist",
+      message: "Lỗi khi lấy danh sách phim trong playlist",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
 // ======================== Get playlists containing movie ========================
-export const handleGetPlaylistsContainingMovie = async (
-  userId: string,
-  movieSlug: string
-) => {
+export const handleGetPlaylistsContainingMovie = async ({
+  userId,
+  movieSlug,
+}: GetPlaylistsContainingMovie) => {
   try {
     const sqlCheckMovieInPlaylists = `
       SELECT p.id
@@ -312,12 +322,14 @@ export const handleGetPlaylistsContainingMovie = async (
       result: {
         playlistIds,
       },
+      statusCode: 200,
     };
   } catch (error) {
     return {
       status: false,
-      message: "Error checking movie in playlists",
+      message: "Lỗi khi kiểm tra phim trong playlist",
       result: null,
+      statusCode: 500,
     };
   }
 };

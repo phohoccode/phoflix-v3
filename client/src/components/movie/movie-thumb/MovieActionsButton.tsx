@@ -15,9 +15,7 @@ const MovieActionsButton = ({ item }: MovieActionsButtonProps) => {
       <Link href={`/watching/${item?.slug}`}>
         <Button
           size="sm"
-          colorPalette="yellow"
-          variant="solid"
-          className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
+          className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)] bg-[#ffd875] text-gray-900"
         >
           <PlayIcon />
           Xem ngay

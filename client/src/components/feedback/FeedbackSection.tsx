@@ -11,7 +11,7 @@ const FeedbackSection = () => {
   const { feedbackType } = useSelector((state: RootState) => state.feedback);
 
   return (
-    <Box className="flex flex-col gap-8">
+    <Box className="flex flex-col gap-8" id="feedback">
       <FeedbackSummary />
       {feedbackType === "comment" ? <FeedbackInput action="comment" /> : null}
       <FeedbackList />

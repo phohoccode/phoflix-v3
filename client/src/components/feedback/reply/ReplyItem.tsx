@@ -12,14 +12,9 @@ import { useSession } from "next-auth/react";
 import EditableFeedback from "../EditableFeedback";
 import ShowMoreText from "@/components/ShowMoreText";
 
-interface ReplyItemProps {
-  reply: any;
-  parentId?: string;
-}
-
 const ReplyItem = ({ reply, parentId }: ReplyItemProps) => {
   const { showReplyId } = useSelector(
-    (state: RootState) => state.feedback.replies
+    (state: RootState) => state.feedback.repliesData
   );
   const { _id: userId } = reply?.author || {};
   const { data: session } = useSession();
@@ -52,6 +47,8 @@ const ReplyItem = ({ reply, parentId }: ReplyItemProps) => {
               </span>
 
               <EditableFeedback
+                parentId={parentId}
+                feedbackId={reply?._id}
                 defaultValue={reply?.content}
                 readonly={session?.user?.id !== userId}
               >
@@ -59,7 +56,7 @@ const ReplyItem = ({ reply, parentId }: ReplyItemProps) => {
               </EditableFeedback>
             </Box>
 
-            <FeedbackActions data={reply} action="reply" parentId={parentId} />
+            <FeedbackActions data={reply} action="reply" rootId={parentId} />
           </>
         ) : (
           <span className="text-xs text-gray-400 italic">
@@ -68,7 +65,7 @@ const ReplyItem = ({ reply, parentId }: ReplyItemProps) => {
         )}
 
         {showReplyId === reply?._id && (
-          <FeedbackInput action="reply" autoFocus parentId={parentId} />
+          <FeedbackInput action="reply" autoFocus rootId={parentId} />
         )}
       </Box>
     </Box>

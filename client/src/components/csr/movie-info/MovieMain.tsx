@@ -10,6 +10,7 @@ import PlaylistButton from "@/components/movie/controls/PlaylistButton";
 import ShareButton from "@/components/movie/controls/ShareButton";
 import ReviewButton from "@/components/movie/controls/ReviewButton";
 import FeedbackSection from "@/components/feedback/FeedbackSection";
+import CommentButton from "@/components/movie/controls/CommentButton";
 
 const MovieMain = () => {
   const params = useParams();
@@ -36,6 +37,7 @@ const MovieMain = () => {
               <FavoriteButton placement="vertical" />
               <PlaylistButton placement="vertical" />
               <ShareButton placement="vertical" />
+              <CommentButton placement="vertical" />
             </Box>
             <ReviewButton />
           </Box>

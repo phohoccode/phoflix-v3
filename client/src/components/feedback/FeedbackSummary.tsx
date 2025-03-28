@@ -8,7 +8,7 @@ import { RootState } from "@/store/store";
 
 const FeedbackSummary = () => {
   const { totalFeedbacks } = useSelector(
-    (state: RootState) => state.feedback.feedback
+    (state: RootState) => state.feedback.feedbackData
   );
 
   return (

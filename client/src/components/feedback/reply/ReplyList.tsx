@@ -1,18 +1,11 @@
 "use client";
 
-import { Box, Spinner } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import ReplyItem from "./ReplyItem";
-import { useState } from "react";
-import { useParams } from "next/navigation";
 import { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { getMoreReplyListFeedback } from "@/store/asyncThunks/feedbackAsyncThunk";
 import SeeMoreFeedback from "../SeeMoreFeedback";
-
-interface ReplyListProps {
-  data: any;
-  parentId: string;
-}
 
 const ReplyList = ({ data, parentId }: ReplyListProps) => {
   const { items: replies, hasMore } = data;
@@ -25,7 +18,9 @@ const ReplyList = ({ data, parentId }: ReplyListProps) => {
         parentId,
         type: feedbackType,
         limit: 5,
-        afterTime: replies?.length ? replies[replies.length - 1].created_at : 0,
+        afterTime: replies?.length
+          ? replies?.[replies?.length - 1]?.created_at
+          : 0,
       })
     );
   };

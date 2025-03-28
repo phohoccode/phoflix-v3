@@ -2,7 +2,7 @@ import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
 import bcrypt from "bcrypt";
 import validator from "validator";
-import { UserLogin, UserRegister } from "../lib/types/auth";
+import { UserLogin, UserRegister } from "../lib/types/Auth";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { decryptData, encryptData, generateHtmlSendMail } from "../lib/utils";

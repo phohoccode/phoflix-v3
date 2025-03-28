@@ -171,8 +171,8 @@ const PlaylistButton = ({
                 {playlists?.map((playlist, index) => (
                   <Checkbox
                     key={index}
-                    colorPalette="yellow"
-                    variant="solid"
+                    colorPalette="whiteAlpha"
+                    variant="subtle"
                     className="flex items-center gap-2 cursor-pointer"
                     checked={playlistIds?.includes(playlist.id)}
                     onCheckedChange={(checked) => {

@@ -60,7 +60,7 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
     if (response?.status) {
       toaster.create({
         title: response?.message,
-        type: "info",
+        type: "success",
         duration: 2000,
       });
 

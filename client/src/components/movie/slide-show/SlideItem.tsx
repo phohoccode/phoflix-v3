@@ -1,36 +1,36 @@
 "use client";
 
-import { Box, Button, Image } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 import Link from "next/link";
-import PlayIcon from "../../icons/PlayIcon";
-import InfoIcon from "../../icons/InfoIcon";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { TagClassic } from "../TagClassic";
-import "@/assets/css/movie.css";
 import MovieActionsButton from "../movie-thumb/MovieActionsButton";
+import "@/assets/css/movie.css";
 
 const SlideItem = ({ item }: any) => {
   const { windowWidth } = useSelector((state: RootState) => state.system);
   const href = windowWidth > 1024 ? "#" : `/info/${item?.slug}`;
 
   return (
-    <Box className="relative lg:before:absolute lg:before:inset-0 lg:before:bg-[url('/images/dotted.png')] lg:before:bg-repeat lg:before:opacity-20 lg:before:z-[1]">
-      <Link href={href} className="relative z-10">
-        <Image
-          onError={({ currentTarget }) => {
-            currentTarget.onerror = null;
-            currentTarget.src = "/images/placeholder.png";
-          }}
-          src={item?.thumb_url ?? "/images/placeholder.jpg"}
-          alt={item?.name ?? "Không xác định"}
-          objectFit="cover"
-          loading="lazy"
-          className="lg:h-[600px] md:h-[400px] h-[300px] w-full brightness-[0.85]"
-        />
-      </Link>
+    <Box className="relative">
+      <Box className="lg:before:absolute lg:before:inset-0 lg:before:bg-[url('/images/dotted.png')] lg:before:bg-repeat lg:before:opacity-20 lg:before:z-[1]">
+        <Link href={href}>
+          <Image
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null;
+              currentTarget.src = "/images/placeholder.png";
+            }}
+            src={item?.thumb_url ?? "/images/placeholder.jpg"}
+            alt={item?.name ?? "Không xác định"}
+            objectFit="cover"
+            loading="lazy"
+            className="lg:h-[600px] md:h-[400px] h-[300px] w-full brightness-[0.85]"
+          />
+        </Link>
+      </Box>
 
-      <Box className="absolute bottom-2 left-2 right-2 lg:pl-6 lg:pr-6 lg:pb-20 p-4 slide-in z-10">
+      <Box className="absolute bottom-2 left-2 right-2 lg:pl-6 lg:pr-6 lg:pb-20 p-4 slide-in z-6">
         <h4 className="font-bold title-text lg:text-4xl md:text-2xl lg:inline-block block text-xl truncate lg:text-left text-center ">
           {item?.name ?? "Không xác định"}
         </h4>

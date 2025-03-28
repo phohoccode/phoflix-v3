@@ -8,7 +8,7 @@ import {
 } from "../asyncThunks/feedbackAsyncThunk";
 
 const initialState: FeedbackSlice = {
-  feedback: {
+  feedbackData: {
     items: [],
     itemCount: 0,
     totalFeedbacks: 0,
@@ -18,10 +18,10 @@ const initialState: FeedbackSlice = {
     showFeedbackId: null,
   },
   voteList: {
-    userLikedFeedbacks: [],
-    userDislikedFeedbacks: [],
+    userLikedFeedbacks: {},
+    userDislikedFeedbacks: {},
   },
-  replies: {
+  repliesData: {
     data: {},
     showReplyId: null,
   },
@@ -31,7 +31,7 @@ const initialState: FeedbackSlice = {
 };
 
 const feedbackSlice = createSlice({
-  name: "feedback",
+  name: "feedbackData",
   initialState,
   reducers: {
     setFeedbackType: (state, action) => {
@@ -44,72 +44,73 @@ const feedbackSlice = createSlice({
       state.replyId = action.payload;
     },
     setShowReplyId: (state, action) => {
-      state.replies.showReplyId = action.payload;
+      state.repliesData.showReplyId = action.payload;
     },
     setShowFeedbackId: (state, action) => {
-      state.feedback.showFeedbackId = action.payload;
+      state.feedbackData.showFeedbackId = action.payload;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(getFeedbacks.pending, (state, action) => {
-      state.feedback.loading = true;
-      state.feedback.error = false;
+      state.feedbackData.loading = true;
+      state.feedbackData.error = false;
     });
 
     builder.addCase(getFeedbacks.fulfilled, (state, action) => {
-      state.feedback.loading = false;
-      state.feedback.items = action.payload?.result?.items || [];
-      state.feedback.totalFeedbacks = action.payload?.result?.total_feedbacks;
-      state.feedback.hasMore = action.payload?.result?.has_more ?? false;
-      state.feedback.itemCount = action.payload?.result?.item_count ?? 0;
-      state.feedback.error = false;
+      state.feedbackData.loading = false;
+      state.feedbackData.items = action.payload?.result?.items || [];
+      state.feedbackData.totalFeedbacks =
+        action.payload?.result?.total_feedbacks;
+      state.feedbackData.hasMore = action.payload?.result?.has_more ?? false;
+      state.feedbackData.itemCount = action.payload?.result?.item_count ?? 0;
+      state.feedbackData.error = false;
     });
 
     builder.addCase(getFeedbacks.rejected, (state, action) => {
-      state.feedback.loading = false;
-      state.feedback.error = true;
+      state.feedbackData.loading = false;
+      state.feedbackData.error = true;
     });
 
     builder.addCase(getMoreFeedbacks.pending, (state, action) => {
-      state.feedback.loading = true;
-      state.feedback.error = false;
+      state.feedbackData.loading = true;
+      state.feedbackData.error = false;
     });
 
     builder.addCase(getMoreFeedbacks.fulfilled, (state, action) => {
-      state.feedback.loading = false;
-      state.feedback.items = [
-        ...state.feedback.items,
+      state.feedbackData.loading = false;
+      state.feedbackData.items = [
+        ...state.feedbackData.items,
         ...(action.payload?.result?.items || []),
       ];
-      state.feedback.hasMore = action.payload?.result?.has_more ?? false;
-      state.feedback.itemCount = action.payload?.result?.item_count ?? 0;
-      state.feedback.error = false;
+      state.feedbackData.hasMore = action.payload?.result?.has_more ?? false;
+      state.feedbackData.itemCount = action.payload?.result?.item_count ?? 0;
+      state.feedbackData.error = false;
     });
 
     builder.addCase(getMoreFeedbacks.rejected, (state, action) => {
-      state.feedback.loading = false;
-      state.feedback.error = true;
+      state.feedbackData.loading = false;
+      state.feedbackData.error = true;
     });
 
     builder.addCase(getReplyListFeedback.pending, (state, action) => {
       const parentId: string = action.meta.arg.parentId;
 
-      state.replies.data[parentId] = {
+      state.repliesData.data[parentId] = {
         items: [],
         hasMore: false,
         loading: false,
         error: false,
       };
 
-      state.replies.data[parentId].loading = true;
-      state.replies.data[parentId].error = false;
+      state.repliesData.data[parentId].loading = true;
+      state.repliesData.data[parentId].error = false;
     });
 
     builder.addCase(getReplyListFeedback.fulfilled, (state, action) => {
       const parentId = action.meta.arg.parentId;
 
-      if (!state.replies.data[parentId]) {
-        state.replies.data[parentId] = {
+      if (!state.repliesData.data[parentId]) {
+        state.repliesData.data[parentId] = {
           items: [],
           hasMore: false,
           loading: false,
@@ -117,51 +118,52 @@ const feedbackSlice = createSlice({
         };
       }
 
-      state.replies.data[parentId].loading = false;
-      state.replies.data[parentId].items = action.payload?.result?.items || [];
-      state.replies.data[parentId].hasMore =
+      state.repliesData.data[parentId].loading = false;
+      state.repliesData.data[parentId].items =
+        action.payload?.result?.items || [];
+      state.repliesData.data[parentId].hasMore =
         action.payload?.result?.has_more ?? false;
-      state.replies.data[parentId].error = false;
+      state.repliesData.data[parentId].error = false;
     });
 
     builder.addCase(getReplyListFeedback.rejected, (state, action) => {
       const parentId = action.meta.arg.parentId;
 
-      if (!state.replies.data[parentId]) {
-        state.replies.data[parentId] = {
+      if (!state.repliesData.data[parentId]) {
+        state.repliesData.data[parentId] = {
           items: [],
           hasMore: false,
           loading: false,
           error: false,
         };
       }
-      state.replies.data[parentId].loading = false;
-      state.replies.data[parentId].error = true;
+      state.repliesData.data[parentId].loading = false;
+      state.repliesData.data[parentId].error = true;
     });
 
     builder.addCase(getMoreReplyListFeedback.pending, (state, action) => {
       const parentId = action.meta.arg.parentId;
 
-      state.replies.data[parentId].loading = true;
-      state.replies.data[parentId].error = false;
+      state.repliesData.data[parentId].loading = true;
+      state.repliesData.data[parentId].error = false;
     });
 
     builder.addCase(getMoreReplyListFeedback.fulfilled, (state, action) => {
       const parentId = action.meta.arg.parentId;
 
-      state.replies.data[parentId].loading = false;
-      state.replies.data[parentId].items = [
-        ...state.replies.data[parentId].items,
+      state.repliesData.data[parentId].loading = false;
+      state.repliesData.data[parentId].items = [
+        ...state.repliesData.data[parentId].items,
         ...(action.payload?.result?.items || []),
       ];
-      state.replies.data[parentId].hasMore =
+      state.repliesData.data[parentId].hasMore =
         action.payload?.result?.has_more ?? false;
-      state.replies.data[parentId].error = false;
+      state.repliesData.data[parentId].error = false;
     });
 
     builder.addCase(getVoteListFeedback.pending, (state, action) => {
-      state.voteList.userLikedFeedbacks = [];
-      state.voteList.userDislikedFeedbacks = [];
+      state.voteList.userLikedFeedbacks = {};
+      state.voteList.userDislikedFeedbacks = {};
     });
 
     builder.addCase(getVoteListFeedback.fulfilled, (state, action) => {
@@ -172,8 +174,8 @@ const feedbackSlice = createSlice({
     });
 
     builder.addCase(getVoteListFeedback.rejected, (state, action) => {
-      state.voteList.userLikedFeedbacks = [];
-      state.voteList.userDislikedFeedbacks = [];
+      state.voteList.userLikedFeedbacks = {};
+      state.voteList.userDislikedFeedbacks = {};
     });
   },
 });

@@ -20,12 +20,12 @@ export const getUserProfile = async (
       });
     }
 
-    const response = await handleGetUserProfile(
-      email as string,
-      typeAccount as "credentials" | "google"
-    );
+    const response = await handleGetUserProfile({
+      email: email as string,
+      typeAccount: typeAccount as "credentials" | "google",
+    });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -60,7 +60,7 @@ export const updateUserProfile = async (
       typeAccount,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -102,7 +102,7 @@ export const resetPassword = async (
       typeAccount,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     console.log(error);
     return res.status(500).json({

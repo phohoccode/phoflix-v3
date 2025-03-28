@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Editable, EditableInput, Show } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { Avatar } from "../ui/avatar";
 import { formatDataUnix } from "@/lib/utils";
 import FeedbackActions from "./FeedbackActions";
@@ -14,20 +14,24 @@ import Rated from "./review/Rated";
 import EditableFeedback from "./EditableFeedback";
 import { useSession } from "next-auth/react";
 
-interface FeedItemProps {
-  feedback: any;
-}
+import "@/assets/css/animation.css";
 
-const FeedbackItem = ({ feedback }: FeedItemProps) => {
-  const { showFeedbackId } = useSelector(
-    (state: RootState) => state.feedback.feedback
-  );
-  const { feedbackType } = useSelector((state: RootState) => state.feedback);
-  const { _id: userId } = feedback?.author || {};
+const FeedbackItem = ({ feedback }: FeedbackItemProps) => {
   const { data: session } = useSession();
+  const { feedbackType, feedbackData } = useSelector(
+    (state: RootState) => state.feedback
+  );
+  const showFeedbackId = feedbackData.showFeedbackId;
+  const { _id: userId } = feedback?.author || {};
+  const params = new URLSearchParams(window.location.search);
+  const cid = params.get("cid");
 
   return (
-    <Box className="flex gap-4 items-start">
+    <Box
+      className={`flex gap-4 items-start ${
+        feedback?._id === cid ? "mine" : ""
+      }`}
+    >
       <Avatar
         name={feedback?.author?.name}
         src={feedback?.author?.avatar}
@@ -53,6 +57,8 @@ const FeedbackItem = ({ feedback }: FeedItemProps) => {
         {feedback?.is_spam === 0 ? (
           <>
             <EditableFeedback
+              feedbackId={feedback?._id}
+              parentId={null}
               defaultValue={feedback?.content}
               readonly={session?.user?.id !== userId}
             >
@@ -63,11 +69,7 @@ const FeedbackItem = ({ feedback }: FeedItemProps) => {
               />
             </EditableFeedback>
 
-            <FeedbackActions
-              data={feedback}
-              action="comment"
-              parentId={feedback?._id}
-            />
+            <FeedbackActions data={feedback} action="comment" />
           </>
         ) : (
           <span className="text-xs text-gray-400 italic">
@@ -76,7 +78,7 @@ const FeedbackItem = ({ feedback }: FeedItemProps) => {
         )}
 
         {showFeedbackId === feedback?._id && (
-          <FeedbackInput action="reply" autoFocus parentId={feedback?._id} />
+          <FeedbackInput action="reply" autoFocus rootId={feedback?._id} />
         )}
 
         {feedback?.total_children > 0 && (

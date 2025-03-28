@@ -2,11 +2,11 @@
 
 import { Box, Button, HStack } from "@chakra-ui/react";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { PaginationItems, PaginationRoot } from "../ui/pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import {
   changeQuery,
   formatTypeMovie,
@@ -15,6 +15,8 @@ import {
 } from "@/lib/utils";
 import { setCurrentEpisode } from "@/store/slices/movieSlice";
 import { toaster } from "../ui/toaster";
+import { FaPlay } from "react-icons/fa6";
+import { BsPlayFill } from "react-icons/bs";
 
 type Episode = {
   name: string;
@@ -99,10 +101,10 @@ const EpisodesList = ({
   return (
     <Box className="flex flex-col gap-4">
       <h3 className="text-gray-50 text-sm font-semibold">{title}</h3>
-      <Box
+      <Box  
         className={`grid grid-cols-${colums.base ?? 2} md:grid-cols-${
           colums.md ?? 4
-        } lg:grid-cols-${colums.lg ?? 6} xl:grid-cols-${colums.xl ?? 8} gap-2`}
+        } lg:grid-cols-${colums.lg ?? 6} xl:grid-cols-${colums.xl ?? 8} lg:gap-4 gap-2`}
       >
         {episodeDisplay?.map((item: any, index: number) => (
           <Link
@@ -119,22 +121,13 @@ const EpisodesList = ({
           >
             <Button
               size="md"
-              className={`w-full shadow transition-all ${
+              className={`w-full lg:h-[50px] h-[42px] shadow transition-all ${
                 currentEpisode?.link_embed === item?.link_embed
                   ? "bg-[#ffd875] text-[#282b3a]"
                   : "text-gray-50 bg-[#2a314e] hover:text-[#ffd875]"
               }`}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                fill="currentColor"
-                className="bi bi-play-fill"
-                viewBox="0 0 16 16"
-              >
-                <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393" />
-              </svg>
+              <BsPlayFill />
               {item?.name}
             </Button>
           </Link>

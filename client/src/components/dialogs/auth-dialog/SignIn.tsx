@@ -171,10 +171,8 @@ const SignIn = () => {
         <Button
           onClick={handleSignIn}
           size="sm"
-          colorPalette="yellow"
-          variant="solid"
           loading={isPending}
-          className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
+          className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)] bg-[#ffd875] text-gray-900"
         >
           Đăng nhập
         </Button>

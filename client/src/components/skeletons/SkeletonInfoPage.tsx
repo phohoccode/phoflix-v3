@@ -53,6 +53,7 @@ const SkeletonInfoPage = () => {
                       <Skeleton width="64px" height="60px" borderRadius="8px" />
                       <Skeleton width="64px" height="60px" borderRadius="8px" />
                       <Skeleton width="64px" height="60px" borderRadius="8px" />
+                      <Skeleton width="64px" height="60px" borderRadius="8px" className="xs:flex hidden"/>
                     </Box>
                     <Skeleton className="xs:min-w-32 w-12 rounded-full h-12" />
                   </Box>

@@ -163,9 +163,7 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
                 loading={isPending}
                 onClick={handleAddNewReview}
                 size="xs"
-                colorPalette="yellow"
-                variant="solid"
-                className="min-w-24 hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
+                className="min-w-24 hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)] bg-[#ffd875] text-gray-900"
               >
                 Gửi đánh giá
               </Button>

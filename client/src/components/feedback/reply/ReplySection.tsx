@@ -9,14 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 import ReplyList from "./ReplyList";
 import { setParentId } from "@/store/slices/feedbackSlice";
 
-interface ReplySectionProps {
-  totalChildren: number;
-  parentId: string;
-}
-
 const ReplySection = ({ totalChildren, parentId }: ReplySectionProps) => {
   const dispatch: AppDispatch = useDispatch();
-  const { replies, feedbackType } = useSelector((state: RootState) => state.feedback);
+  const { repliesData, feedbackType } = useSelector(
+    (state: RootState) => state.feedback
+  );
   const [isPending, startTransition] = useTransition();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -51,7 +48,7 @@ const ReplySection = ({ totalChildren, parentId }: ReplySectionProps) => {
       </Box>
 
       {isOpen && (
-        <ReplyList data={replies?.data?.[parentId]} parentId={parentId} />
+        <ReplyList data={repliesData?.data?.[parentId]} parentId={parentId} />
       )}
     </Box>
   );

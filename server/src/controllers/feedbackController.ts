@@ -8,6 +8,7 @@ import {
   handleGetReplyListFeedbacks,
   handleGetStatsByMovie,
   handleGetVoteList,
+  handleUpdateFeedbackContent,
 } from "../services/feedbackService";
 
 export const getFeedbacks = async (
@@ -20,7 +21,7 @@ export const getFeedbacks = async (
     if (!movieSlug || !limit || !type) {
       return res.status(400).json({
         status: false,
-        message: "Missing required parameters",
+        message: "Thiếu tham số bắt buộc.",
         result: null,
       });
     }
@@ -28,7 +29,7 @@ export const getFeedbacks = async (
     if (type !== "review" && type !== "comment") {
       return res.status(400).json({
         status: false,
-        message: "Invalid type parameter",
+        message: "Tham số type không hợp lệ.",
         result: null,
       });
     }
@@ -40,11 +41,11 @@ export const getFeedbacks = async (
       afterTime: afterTime ? parseInt(afterTime as string) : undefined,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: "Error fetching user movies",
+      message: "Lỗi khi lấy danh sách phản hồi.",
       result: null,
     });
   }
@@ -62,7 +63,7 @@ export const getReplyList = async (
     if (!parentId || !limit || !type) {
       return res.status(400).json({
         status: false,
-        message: "Missing required parameters",
+        message: "Thiếu tham số bắt buộc.",
         result: null,
       });
     }
@@ -70,7 +71,7 @@ export const getReplyList = async (
     if (type !== "review" && type !== "comment") {
       return res.status(400).json({
         status: false,
-        message: "Invalid type parameter",
+        message: "Tham số loại không hợp lệ.",
         result: null,
       });
     }
@@ -82,11 +83,11 @@ export const getReplyList = async (
       afterTime: afterTime ? parseInt(afterTime as string) : undefined,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: "Error fetching user movies",
+      message: "Lỗi khi lấy danh sách phản hồi.",
       result: null,
     });
   }
@@ -104,7 +105,7 @@ export const addFeedback = async (
     if (!movieSlug || !userId || !type) {
       return res.status(400).json({
         status: false,
-        message: "Missing required parameters",
+        message: "Thiếu tham số bắt buộc.",
         result: null,
       });
     }
@@ -112,7 +113,7 @@ export const addFeedback = async (
     if (type !== "review" && type !== "comment") {
       return res.status(400).json({
         status: false,
-        message: "Invalid type parameter",
+        message: "Tham số loại không hợp lệ.",
         result: null,
       });
     }
@@ -120,7 +121,7 @@ export const addFeedback = async (
     if (type === "review" && !point) {
       return res.status(400).json({
         status: false,
-        message: "Missing point parameters why type is review",
+        message: "Thiếu tham số point số khi loại là đánh giá",
         result: null,
       });
     }
@@ -128,7 +129,7 @@ export const addFeedback = async (
     if (type === "comment" && !content) {
       return res.status(400).json({
         status: false,
-        message: "Missing content parameters why type is comment",
+        message: "Thiếu tham số content khi loại là bình luận",
         result: null,
       });
     }
@@ -141,17 +142,47 @@ export const addFeedback = async (
       type,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
-      message: "Error adding new review",
+      message: "Lỗi khi thêm phản hồi",
       result: null,
     });
   }
 };
 
 // ===================== EDIT FEEDBACK =====================
+export const updateContentFeedback = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  try {
+    const { feedbackId, content, userId } = req.body;
+
+    if (!feedbackId || !content || !userId) {
+      return res.status(400).json({
+        status: false,
+        message: "Thiếu tham số bắt buộc.",
+        result: null,
+      });
+    }
+
+    const response = await handleUpdateFeedbackContent({
+      feedbackId,
+      content,
+      userId,
+    });
+
+    return res.status(response?.statusCode ?? 200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      status: false,
+      message: "Error editing feedback",
+      result: null,
+    });
+  }
+};
 
 // ========================= DELETE FEEDBACK =====================
 export const deleteFeedback = async (
@@ -174,7 +205,7 @@ export const deleteFeedback = async (
       userId: userId as string,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
@@ -216,7 +247,7 @@ export const addReplyFeedback = async (
       type,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
@@ -243,7 +274,7 @@ export const getStatsByMovie = async (
 
     const response = await handleGetStatsByMovie(movieSlug as string);
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
@@ -284,7 +315,7 @@ export const voteFeedback = async (
       movieSlug,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -313,7 +344,7 @@ export const getVoteList = async (
 
     const response = await handleGetVoteList(movieSlug as string);
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,

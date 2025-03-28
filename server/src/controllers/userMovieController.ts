@@ -36,7 +36,7 @@ export const getUserMovies = async (
       page: parseInt(page as string),
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
@@ -83,7 +83,7 @@ export const addMovie = async (req: Request, res: Response): Promise<any> => {
       playlistId: type === "playlist" ? playlistId : null,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
@@ -124,7 +124,7 @@ export const checkMovieExists = async (
       type,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,
@@ -165,7 +165,7 @@ export const deleteMovie = async (
       playlistId: type === "playlist" ? (playlistId as string) : null,
     });
 
-    return res.status(200).json(response);
+    return res.status(response?.statusCode ?? 200).json(response);
   } catch (error) {
     res.status(500).json({
       status: false,

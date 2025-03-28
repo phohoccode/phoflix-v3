@@ -1,12 +1,15 @@
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
-
-interface GetFeedbacks {
-  movieSlug: string;
-  type: "review" | "comment";
-  limit: number;
-  afterTime?: number;
-}
+import {
+  FeedbackVote,
+  GetFeedbacks,
+  GetReplyListFeedbacks,
+  AddFeedback,
+  AddReplyFeedback,
+  DeleteFeedback,
+  UpdateFeedbackContent,
+  UserVoteFeedback,
+} from "../lib/types/Feedback";
 
 export const handleGetFeedbacks = async ({
   movieSlug,
@@ -113,24 +116,20 @@ export const handleGetFeedbacks = async ({
         total_feedbacks: totalFeedbacks[0]?.total_feedbacks ?? 0,
         items: finalFeedbacks,
       },
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error fetching feedbacks",
+      message: "Lỗi khi lấy danh sách phản hồi.",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
 // ===================== GET REPLY LIST FEEDBACKS =====================
-interface GetReplyListFeedbacks {
-  parentId: string;
-  afterTime?: number;
-  limit: number;
-  type: "review" | "comment";
-}
 
 export const handleGetReplyListFeedbacks = async ({
   parentId,
@@ -262,25 +261,20 @@ export const handleGetReplyListFeedbacks = async ({
         item_count: total_count,
         items: finalReplyFeedback,
       },
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error fetching reply list feedbacks",
+      message: "Lỗi khi lấy danh sách phản hồi.",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
 // ==================== ADD NEW FEEDBACK ====================
-interface AddFeedback {
-  movieSlug: string;
-  userId: string;
-  type: "review" | "comment";
-  content?: string;
-  point?: number;
-}
 
 export const handleAddFeedback = async ({
   movieSlug,
@@ -305,6 +299,7 @@ export const handleAddFeedback = async ({
         status: false,
         message: "Người dùng không tồn tại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -328,18 +323,13 @@ export const handleAddFeedback = async ({
     console.log(error);
     return {
       status: false,
-      message: "Error adding new review",
+      message: "Error adding new feedback",
       result: null,
     };
   }
 };
 
 // ==================== DELETE FEEDBACK ====================
-
-interface DeleteFeedback {
-  feedbackId: string;
-  userId: string;
-}
 
 export const handleDeleteFeedback = async ({
   userId,
@@ -360,6 +350,7 @@ export const handleDeleteFeedback = async ({
         status: false,
         message: "Xóa bình luận thất bại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -367,13 +358,59 @@ export const handleDeleteFeedback = async ({
       status: true,
       message: "Xóa bình luận thành công",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error deleting feedback",
+      message: "Lỗi khi xóa bình luận",
       result: null,
+      statusCode: 500,
+    };
+  }
+};
+
+// ==================== UPDATE CONTENT FEEDBACK ====================
+
+export const handleUpdateFeedbackContent = async ({
+  feedbackId,
+  userId,
+  content,
+}: UpdateFeedbackContent) => {
+  try {
+    const sqlUpdateFeedback = `
+        UPDATE feedbacks
+        SET content = ?
+        WHERE id = ? AND user_id = ?;
+    `;
+
+    const [rows]: any = await connection
+      .promise()
+      .query(sqlUpdateFeedback, [content, feedbackId, userId]);
+
+    if (rows.affectedRows === 0) {
+      return {
+        status: false,
+        message: "Cập nhật bình luận thất bại",
+        result: null,
+        statusCode: 400,
+      };
+    }
+
+    return {
+      status: true,
+      message: "Cập nhật bình luận thành công",
+      result: null,
+      statusCode: 200,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi khi cập nhật bình luận",
+      result: null,
+      statusCode: 500,
     };
   }
 };
@@ -389,16 +426,18 @@ const addReview = async ({
     if (!Number(point)) {
       return {
         status: false,
-        message: "Point must be a number",
+        message: "Điểm đánh giá không hợp lệ",
         result: null,
+        statusCode: 400,
       };
     }
 
     if (Number(point) < 0 || Number(point) > 10) {
       return {
         status: false,
-        message: "Point must be between 0 and 10",
+        message: "Điểm đánh giá phải từ 0 đến 10",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -445,6 +484,7 @@ const addReview = async ({
           ? "Cập nhật đánh giá thất bại"
           : "Thêm đánh giá thất bại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -454,16 +494,20 @@ const addReview = async ({
         ? "Cập nhật đánh giá thành công"
         : "Thêm đánh giá thành công",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error adding new review",
+      message: "Lỗi khi thêm đánh giá",
       result: null,
+      statusCode: 500,
     };
   }
 };
+
+// ==================== ADD NEW COMMENT ====================
 
 const addComment = async ({
   movieSlug,
@@ -488,6 +532,7 @@ const addComment = async ({
         status: false,
         message: "Thêm bình luận thất bại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -495,25 +540,20 @@ const addComment = async ({
       status: true,
       message: "Thêm bình luận thành công",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error adding new comment",
+      message: "Lỗi khi thêm bình luận",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
 // ==================== ADD NEW REPLY ====================
-interface AddReplyFeedback {
-  movieSlug: string;
-  userId: string;
-  content: string;
-  type: "review" | "comment";
-  parentId: string;
-}
 
 export const handleAddReplyFeedback = async ({
   movieSlug,
@@ -538,6 +578,7 @@ export const handleAddReplyFeedback = async ({
         status: false,
         message: "Người dùng không tồn tại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -564,6 +605,7 @@ export const handleAddReplyFeedback = async ({
         status: false,
         message: "Thêm trả lời thất bại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -571,13 +613,15 @@ export const handleAddReplyFeedback = async ({
       status: true,
       message: "Thêm trả lời thành công",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error adding new reply",
+      message: "Lỗi khi thêm trả lời",
       result: null,
+      statusCode: 500,
     };
   }
 };
@@ -603,24 +647,20 @@ export const handleGetStatsByMovie = async (movieSlug: string) => {
         average_point: parseFloat(rows[0]?.average_point ?? 0).toFixed(1) ?? 0,
         total_reviews: rows[0]?.total_reviews ?? 0,
       },
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error fetching stats by movie",
+      message: "Lỗi khi lấy thống kê",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
 // ==================== VOTE FOR FEEDBACK ====================
-interface FeedbackVote {
-  userId: string;
-  feedbackId: string;
-  voteType: "like" | "dislike";
-  movieSlug: string;
-}
 
 export async function createFeedbackVote({
   userId,
@@ -640,6 +680,7 @@ export async function createFeedbackVote({
         status: false,
         message: "Người dùng không tồn tại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -692,6 +733,7 @@ export async function createFeedbackVote({
         status: false,
         message: "Xử lý bình chọn thất bại",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -703,6 +745,7 @@ export async function createFeedbackVote({
           : "Cập nhật vote thành công"
         : "Thêm vote thành công",
       result: { voteType },
+      statusCode: 200,
     };
   } catch (error) {
     console.error("Lỗi xử lý vote:", error);
@@ -710,11 +753,13 @@ export async function createFeedbackVote({
       status: false,
       message: "Lỗi khi xử lý bình chọn",
       result: null,
+      statusCode: 500,
     };
   }
 }
 
 // ==================== GET VOTE LIST ====================
+
 export const handleGetVoteList = async (movieSlug: string) => {
   try {
     const sqlGetVoteList = `
@@ -731,29 +776,13 @@ export const handleGetVoteList = async (movieSlug: string) => {
     const userLikedFeedbacks: Record<string, string[]> = {};
     const userDislikedFeedbacks: Record<string, string[]> = {};
 
-    rows.forEach(
-      ({
-        feedback_id,
-        type,
-        user_id,
-      }: {
-        feedback_id: string;
-        type: "like" | "dislike";
-        user_id: string;
-      }) => {
-        if (type === "like") {
-          if (!userLikedFeedbacks[feedback_id]) {
-            userLikedFeedbacks[feedback_id] = [];
-          }
-          userLikedFeedbacks[feedback_id].push(user_id);
-        } else if (type === "dislike") {
-          if (!userDislikedFeedbacks[feedback_id]) {
-            userDislikedFeedbacks[feedback_id] = [];
-          }
-          userDislikedFeedbacks[feedback_id].push(user_id);
-        }
-      }
-    );
+    rows.forEach(({ feedback_id, type, user_id }: UserVoteFeedback) => {
+      const targetArray =
+        type === "like" ? userLikedFeedbacks : userDislikedFeedbacks;
+
+      // ??= là toán tử gán giá trị mặc định, nếu targetArray[feedback_id] chưa tồn tại thì khởi tạo nó là một mảng rỗng
+      (targetArray[feedback_id] ??= []).push(user_id);
+    });
 
     return {
       status: true,
@@ -762,13 +791,15 @@ export const handleGetVoteList = async (movieSlug: string) => {
         user_liked_feedbacks: userLikedFeedbacks,
         user_disliked_feedbacks: userDislikedFeedbacks,
       },
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error fetching vote list",
+      message: "Lỗi khi lấy danh sách bình chọn",
       result: null,
+      statusCode: 500,
     };
   }
 };

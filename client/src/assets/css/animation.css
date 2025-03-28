@@ -9,10 +9,8 @@
   }
 }
 
-
-
 .slide-in {
-  animation: slideInLeft .5s ease-out forwards;
+  animation: slideInLeft 0.5s ease-out forwards;
 }
 
 @keyframes qtip-animation {
@@ -46,4 +44,23 @@
   overflow: hidden;
   display: inline-block;
   animation: marquee 10s linear infinite;
+}
+
+.mine {
+  padding: 1rem;
+  border-radius: 0.75rem;
+  animation: flash 1s forwards;
+  animation-delay: 1s;
+}
+
+@keyframes flash {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: #ffffff20;
+  }
+  100% {
+    background-color: #ffffff10;
+  }
 }

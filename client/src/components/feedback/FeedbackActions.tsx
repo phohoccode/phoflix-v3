@@ -23,32 +23,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { toaster } from "../ui/toaster";
 import AlertDialog from "../dialogs/AlertDialog";
 
-interface FeedbackActionsProps {
-  data: any;
-  action: "comment" | "reply";
-  parentId?: string;
-}
-
-const FeedbackActions = ({ action, data, parentId }: FeedbackActionsProps) => {
-  const { total_like, total_dislike, _id: feedbackId } = data || {};
-  const { showFeedbackId } = useSelector(
-    (state: RootState) => state.feedback.feedback
-  );
+const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
   const { data: session } = useSession();
-  const { _id: userId } = data?.author || {};
-  const { showReplyId } = useSelector(
-    (state: RootState) => state.feedback.replies
-  );
-  const { voteList, feedbackType } = useSelector(
+  const { feedbackData, repliesData, voteList, feedbackType } = useSelector(
     (state: RootState) => state.feedback
   );
+  const feedbackId = data?._id;
+  const parentId = data?.parent_id;
+  const userId = data?.author?._id;
+
+  const showFeedbackId = feedbackData.showFeedbackId;
+  const showReplyId = repliesData.showReplyId;
+
   const { userLikedFeedbacks, userDislikedFeedbacks } = voteList || {};
+  const totalLiked = userLikedFeedbacks?.[feedbackId]?.length || 0;
+  const totalDisliked = userDislikedFeedbacks?.[feedbackId]?.length || 0;
+  const isLiked = userLikedFeedbacks?.[feedbackId]?.includes(
+    session?.user?.id as string
+  );
+  const isDisliked = userDislikedFeedbacks?.[feedbackId]?.includes(
+    session?.user?.id as string
+  );
+
   const [isPending, startTransition] = useTransition();
   const dispatch: AppDispatch = useDispatch();
   const params = useParams();
 
   const handleToogleReply = (id: string) => {
     const isComment = action === "comment";
+
     const targetId =
       (isComment ? showFeedbackId : showReplyId) === id ? null : feedbackId;
 
@@ -84,25 +87,8 @@ const FeedbackActions = ({ action, data, parentId }: FeedbackActionsProps) => {
           duration: 2000,
         });
 
-        await Promise.all([
-          dispatch(
-            getFeedbacks({
-              movieSlug: params.slug as string,
-              type: feedbackType,
-              limit: 10,
-            })
-          ),
-          dispatch(getVoteListFeedback(params.slug as string)),
-
-          parentId &&
-            dispatch(
-              getReplyListFeedback({
-                parentId: parentId as string,
-                type: feedbackType,
-                limit: 10,
-              })
-            ),
-        ]);
+        // Làm mới lượt bình chọn
+        dispatch(getVoteListFeedback(params.slug as string));
       } else {
         toaster.create({
           type: "error",
@@ -127,15 +113,26 @@ const FeedbackActions = ({ action, data, parentId }: FeedbackActionsProps) => {
           duration: 2000,
         });
 
-        await Promise.all([
+        // Làm mới feedback khi xóa phản hồi cha
+        await dispatch(
+          getFeedbacks({
+            movieSlug: params.slug as string,
+            type: feedbackType,
+            limit: 10,
+          })
+        );
+
+        console.log("parent_id", parentId);
+        console.log("rootId", rootId);
+        // Làm mới reply khi xóa phản hồi con
+        parentId &&
           dispatch(
-            getFeedbacks({
-              movieSlug: params.slug as string,
+            getReplyListFeedback({
+              parentId: rootId as string,
               type: feedbackType,
               limit: 10,
             })
-          ),
-        ]);
+          );
       } else {
         toaster.create({
           type: "error",
@@ -150,30 +147,20 @@ const FeedbackActions = ({ action, data, parentId }: FeedbackActionsProps) => {
     <Box className="flex gap-4 items-center my-4">
       <Box
         onClick={() => handleVote("like")}
-        className={`cursor-pointer hover:text-[#25d366] flex gap-1 items-center ${
-          userLikedFeedbacks?.[feedbackId]?.includes(
-            session?.user?.id as string
-          )
-            ? "text-[#25d366]"
-            : "text-gray-400 "
-        }`}
+        className={`cursor-pointer hover:text-[#25d366] flex gap-1 items-center 
+          ${isLiked ? "text-[#25d366]" : "text-gray-400 "}`}
       >
         <BsArrowUpCircleFill />
-        {total_like > 0 && <span className="text-xs">{total_like}</span>}
+        {totalLiked > 0 && <span className="text-xs">{totalLiked}</span>}
       </Box>
 
       <Box
         onClick={() => handleVote("dislike")}
-        className={`cursor-pointer hover:text-[#d33d25] flex gap-1 items-center ${
-          userDislikedFeedbacks?.[feedbackId]?.includes(
-            session?.user?.id as string
-          )
-            ? "text-[#d33d25]"
-            : "text-gray-400 "
-        }`}
+        className={`cursor-pointer hover:text-[#d33d25] flex gap-1 items-center 
+          ${isDisliked ? "text-[#d33d25]" : "text-gray-400 "}`}
       >
         <BsArrowDownCircleFill />
-        {total_dislike > 0 && <span className="text-xs">{total_dislike}</span>}
+        {totalDisliked > 0 && <span className="text-xs">{totalDisliked}</span>}
       </Box>
 
       <Box
@@ -194,7 +181,7 @@ const FeedbackActions = ({ action, data, parentId }: FeedbackActionsProps) => {
           }
           title="Xóa phản hồi"
           content="Bạn có chắc chắn muốn xóa phản hồi này không?"
-          loading={false}
+          loading={isPending}
           confirmCallback={handleDeleteFeedback}
         />
       )}

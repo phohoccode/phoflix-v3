@@ -1,12 +1,11 @@
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
-
-interface GetUserMovies {
-  userId: string;
-  type: string;
-  limit: number;
-  page: number;
-}
+import {
+  CheckMovieExists,
+  CreateUserMovie,
+  DeleteMovie,
+  GetUserMovies,
+} from "../lib/types/UserMovie";
 
 export const handleGetUserMovies = async ({
   userId,
@@ -39,29 +38,25 @@ export const handleGetUserMovies = async ({
 
     return {
       status: true,
-      message: "User movies fetched successfully",
+      message: "Lấy danh sách phim thành công!",
       result: {
         movies: rows,
         totalItems: rowsTotalItems[0].totalItems,
         totalItemsPerPage: limit,
       },
+      statusCode: 200,
     };
   } catch (error) {
     return {
       status: false,
-      message: "Error fetching user movies",
+      message: "Lỗi khi lấy danh sách phim!",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
 // ====================== CHECK MOVIE EXISTS ======================
-
-interface CheckMovieExists {
-  userId: string;
-  movieSlug: string;
-  type: string;
-}
 
 export const handleCheckMovieExists = async ({
   userId,
@@ -82,6 +77,7 @@ export const handleCheckMovieExists = async ({
         status: true,
         message: "Phim đã có trong danh sách!",
         result: null,
+        statusCode: 200,
       };
     }
 
@@ -89,29 +85,17 @@ export const handleCheckMovieExists = async ({
       status: false,
       message: "Phim không tồn tại trong danh sách!",
       result: null,
+      statusCode: 404,
     };
   } catch (error) {
     return {
       status: false,
-      message: "Error checking movie existence",
+      message: "Lỗi khi kiểm tra phim tồn tại!",
       result: null,
+      statusCode: 500,
     };
   }
 };
-
-// ====================== CREATE USER MOVIE ======================
-
-interface CreateUserMovie {
-  userId: string;
-  movieData: {
-    movieName: string;
-    movieSlug: string;
-    moviePoster: string;
-    movieThumbnail: string;
-  };
-  playlistId?: string;
-  type?: "history" | "favorite" | "playlist";
-}
 
 // ====================== ADD NEW MOVIE ======================
 
@@ -135,6 +119,7 @@ export const handleAddMovie = async ({
         status: false,
         message: "Người dùng không tồn tại!",
         result: null,
+        statusCode: 404,
       };
     }
 
@@ -158,15 +143,17 @@ export const handleAddMovie = async ({
       default:
         return {
           status: false,
-          message: "Invalid type",
+          message: "Type không hợp lệ!",
           result: null,
+          statusCode: 400,
         };
     }
   } catch (error) {
     return {
       status: false,
-      message: "Error creating user movie",
+      message: "Lỗi khi thêm phim vào danh sách!",
       result: null,
+      statusCode: 500,
     };
   }
 };
@@ -206,6 +193,7 @@ const addMovieToHistory = async ({ userId, movieData }: CreateUserMovie) => {
           status: false,
           message: "Cập nhật lịch sử phim thất bại!",
           result: null,
+          statusCode: 400,
         };
       }
 
@@ -213,6 +201,7 @@ const addMovieToHistory = async ({ userId, movieData }: CreateUserMovie) => {
         status: true,
         message: "Cập nhật lịch sử phim thành công!",
         result: null,
+        statusCode: 200,
       };
     }
 
@@ -240,6 +229,7 @@ const addMovieToHistory = async ({ userId, movieData }: CreateUserMovie) => {
         status: false,
         message: "Tạo lịch sử phim thất bại!",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -247,13 +237,15 @@ const addMovieToHistory = async ({ userId, movieData }: CreateUserMovie) => {
       status: true,
       message: "Tạo lịch sử phim thành công!",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error creating user movie history",
+      message: "Lỗi khi thêm phim vào lịch sử!",
       result: null,
+      statusCode: 500,
     };
   }
 };
@@ -275,6 +267,7 @@ const addMovieToFavorite = async ({ userId, movieData }: CreateUserMovie) => {
         status: false,
         message: "Phim đã có trong danh sách yêu thích!",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -302,6 +295,7 @@ const addMovieToFavorite = async ({ userId, movieData }: CreateUserMovie) => {
         status: false,
         message: "Có lỗi xảy ra khi thêm phim vào danh sách yêu thích!",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -311,12 +305,14 @@ const addMovieToFavorite = async ({ userId, movieData }: CreateUserMovie) => {
       result: {
         action: "favorite",
       },
+      statusCode: 200,
     };
   } catch (error) {
     return {
       status: false,
-      message: "Error creating user movie favorite",
+      message: "Lỗi khi thêm phim vào danh sách yêu thích!",
       result: null,
+      statusCode: 500,
     };
   }
 };
@@ -341,6 +337,7 @@ const addMovieToPlaylist = async ({
         status: false,
         message: "Playlist không tồn tại!",
         result: null,
+        statusCode: 404,
       };
     }
 
@@ -369,6 +366,7 @@ const addMovieToPlaylist = async ({
         status: false,
         message: "Có lỗi xảy ra khi thêm phim vào playlist!",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -376,24 +374,21 @@ const addMovieToPlaylist = async ({
       status: true,
       message: "Đã thêm phim vào danh sách",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error creating user movie playlist",
+      message: "Lỗi khi thêm phim vào playlist!",
       result: null,
+      statusCode: 500,
     };
   }
 };
 
 // ====================== DELETE MOVIE ======================
-interface DeleteMovie {
-  userId: string;
-  movieSlug: string;
-  type: string;
-  playlistId?: string | null;
-}
+
 
 export const handleDeleteMovie = async ({
   userId,
@@ -415,6 +410,7 @@ export const handleDeleteMovie = async ({
         status: false,
         message: "Người dùng không tồn tại!",
         result: null,
+        statusCode: 404,
       };
     }
 
@@ -438,6 +434,7 @@ export const handleDeleteMovie = async ({
         status: false,
         message: "Xóa phim thất bại!",
         result: null,
+        statusCode: 400,
       };
     }
 
@@ -445,13 +442,15 @@ export const handleDeleteMovie = async ({
       status: true,
       message: "Đã xóa phim khỏi danh sách!",
       result: null,
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
     return {
       status: false,
-      message: "Error deleting user movie",
+      message: "Lỗi khi xóa phim khỏi danh sách!",
       result: null,
+      statusCode: 500,
     };
   }
 };
