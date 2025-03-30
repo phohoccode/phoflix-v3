@@ -1,5 +1,5 @@
 import Spinner from "@/app/loading";
-import MainPage from "@/components/csr/movie-detail/MainPage";
+import MainPage from "@/components/csr/detail/MainPage";
 import { Suspense } from "react";
 
 const Page = () => {

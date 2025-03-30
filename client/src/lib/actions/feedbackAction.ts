@@ -1,0 +1,213 @@
+// ===================== GET REVIEWS BY MOVIE =====================
+
+export const getFeedbacks = async ({
+  movieSlug,
+  limit,
+  type,
+}: GetFeedbacks): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/list?movieSlug=${movieSlug}&limit=${limit}&type=${type}`
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== ADD NEW REVIEW =====================
+
+export const addFeedback = async ({
+  movieSlug,
+  point,
+  userId,
+  content,
+  type,
+}: AddFeedback): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/add`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          movieSlug,
+          point,
+          userId,
+          content,
+          type,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== DELETE FEEDBACK =====================
+
+export const deleteFeedback = async ({
+  feedbackId,
+  userId,
+}: DeleteFeedback): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/delete?feedbackId=${feedbackId}&userId=${userId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== UPDATE CONTENT FEEDBACK =====================
+
+export const updateContentFeedback = async ({
+  feedbackId,
+  userId,
+  content,
+}: UpdateContentFeedback): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/update`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          feedbackId,
+          userId,
+          content,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== ADD NEW REPLY =====================
+
+export const addReply = async ({
+  movieSlug,
+  userId,
+  content,
+  type,
+  parentId,
+}: AddReplyFeedback): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/reply`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          movieSlug,
+          userId,
+          content,
+          type,
+          parentId,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+export const getStatsByMovie = async (movieSlug: string): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/statsByMovie?movieSlug=${movieSlug}`
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
+
+// ===================== ADD VOTE =====================
+
+export const addVote = async ({
+  movieSlug,
+  userId,
+  feedbackId,
+  voteType,
+}: VoteFeedback): Promise<any> => {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/vote`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          movieSlug,
+          userId,
+          feedbackId,
+          voteType,
+        }),
+      }
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};

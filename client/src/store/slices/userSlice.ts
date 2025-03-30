@@ -25,6 +25,10 @@ const initialState: UserSlice = {
     loading: false,
     error: false,
   },
+  report: {
+    reportError: "",
+    reportDescription: "",
+  },
 };
 
 const userSlice = createSlice({
@@ -39,6 +43,12 @@ const userSlice = createSlice({
     },
     setReviewContent: (state, action) => {
       state.reviews.reviewContent = action.payload;
+    },
+    setReportError: (state, action) => {
+      state.report.reportError = action.payload;
+    },
+    setReportDescription: (state, action) => {
+      state.report.reportDescription = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -59,7 +69,12 @@ const userSlice = createSlice({
   },
 });
 
-export const { setSelectedPlaylistId, setSelectedReview, setReviewContent } =
-  userSlice.actions;
+export const {
+  setSelectedPlaylistId,
+  setSelectedReview,
+  setReviewContent,
+  setReportError,
+  setReportDescription,
+} = userSlice.actions;
 
 export default userSlice.reducer;

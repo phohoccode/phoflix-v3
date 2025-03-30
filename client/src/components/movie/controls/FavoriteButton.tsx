@@ -5,7 +5,7 @@ import {
   addNewMovie,
   checkMovieExists,
   deleteMovie,
-} from "@/lib/actions/userActionClient";
+} from "@/lib/actions/userMovieAction";
 import { RootState } from "@/store/store";
 import { Box, Spinner } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
@@ -28,7 +28,7 @@ const FavoriteButton = ({
   const { data: sesstion } = useSession();
 
   useEffect(() => {
-    if (sesstion) {
+    if (sesstion && movie) {
       startTransition(handleCheckMovieExists);
     }
   }, []);
@@ -40,7 +40,7 @@ const FavoriteButton = ({
       type: "favorite",
     });
 
-    setFavorite(response?.status ?? false);
+    setFavorite(response?.result?.exists ?? false);
   };
 
   const handleActionsFavorite = () => {

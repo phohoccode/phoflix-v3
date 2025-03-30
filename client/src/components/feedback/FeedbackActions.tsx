@@ -1,6 +1,6 @@
 "use client";
 
-import { addVote, deleteFeedback } from "@/lib/actions/userActionClient";
+import { addVote, deleteFeedback } from "@/lib/actions/feedbackAction";
 import {
   getVoteListFeedback,
   getFeedbacks,

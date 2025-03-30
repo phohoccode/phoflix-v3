@@ -6,11 +6,14 @@ import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { TagClassic } from "../TagClassic";
 import MovieActionsButton from "../movie-thumb/MovieActionsButton";
+import { useState } from "react";
 import "@/assets/css/movie.css";
+import { generateUrlImage } from "@/lib/utils";
 
 const SlideItem = ({ item }: any) => {
   const { windowWidth } = useSelector((state: RootState) => state.system);
   const href = windowWidth > 1024 ? "#" : `/info/${item?.slug}`;
+  const [image, setImage] = useState<string>("/images/placeholder.jpg");
 
   return (
     <Box className="relative">
@@ -19,9 +22,10 @@ const SlideItem = ({ item }: any) => {
           <Image
             onError={({ currentTarget }) => {
               currentTarget.onerror = null;
-              currentTarget.src = "/images/placeholder.png";
+              currentTarget.src = "/images/notfound.png";
             }}
-            src={item?.thumb_url ?? "/images/placeholder.jpg"}
+            onLoad={() => setImage(generateUrlImage(item?.thumb_url))}
+            src={image}
             alt={item?.name ?? "Không xác định"}
             objectFit="cover"
             loading="lazy"

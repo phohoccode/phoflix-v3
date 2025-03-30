@@ -28,4 +28,23 @@ type UserSlice = {
     loading: boolean;
     error: boolean;
   };
+  report: {
+    reportError: string;
+    reportDescription: string;
+  };
+};
+
+type UpdateUserProflie = {
+  userId: string;
+  username: string;
+  gender: "other" | "female" | "male";
+  avatar: string;
+  typeAccount: "credentials" | "google";
+};
+
+type UpdateUserPassword = {
+  email: string;
+  newPassword: string;
+  oldPassword: string;
+  typeAccount: "credentials";
 };

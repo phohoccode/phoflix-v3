@@ -1,5 +1,5 @@
 import Spinner from "@/app/loading";
-import MoviePage from "@/components/csr/movie-info/MainPage";
+import MoviePage from "@/components/csr/info/MainPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
 

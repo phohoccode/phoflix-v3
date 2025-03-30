@@ -31,7 +31,7 @@ const Home = () => {
         const rect = scrollableDivRef.current.getBoundingClientRect();
 
         // kiểm tra đã cuộn đến cuối phần scrollableDivRef chưa
-        if (rect.top <= window.innerHeight) {
+        if (rect.top <= window.innerHeight + 100) {
           // kiểm tra xem đã fetch hết dữ liệu chưa
           if (quantityFetchedData.current < initialMovieConfig.length) {
             fetchMoreData();

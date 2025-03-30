@@ -5,11 +5,10 @@ import {
   generateUrlImage,
   getPositionElement,
 } from "@/lib/utils";
-import { Badge, Box, Image } from "@chakra-ui/react";
+import {  Box, Image } from "@chakra-ui/react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import MovieTooltip from "./MovieTooltip";
-import { createPortal } from "react-dom";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 
@@ -31,6 +30,7 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
   const [tooltip, setTooltip] = useState<Tooltip | null>(null);
   const tooltipTimeout = useRef<NodeJS.Timeout | null>(null);
   const { windowWidth } = useSelector((state: RootState) => state.system);
+  const [image, setImage] = useState<string>("/images/placeholder.jpg");
 
   const handleMouseEnter = () => {
     if (windowWidth <= 1280) return;
@@ -78,12 +78,19 @@ const MovieCard = ({ data, orientation }: MovieItemProps) => {
           <Image
             onError={({ currentTarget }) => {
               currentTarget.onerror = null;
-              currentTarget.src = "/images/placeholder.png";
+              currentTarget.src = "/images/notfound.png";
             }}
             ref={cuurentElementRef}
-            src={generateUrlImage(
-              orientation === "horizontal" ? data?.thumb_url : data?.poster_url
-            )}
+            src={image}
+            onLoad={() =>
+              setImage(() =>
+                generateUrlImage(
+                  orientation === "horizontal"
+                    ? data?.thumb_url
+                    : data?.poster_url
+                )
+              )
+            }
             alt={data?.name ?? "Không xác định"}
             objectFit="cover"
             className="border border-gray-800 h-full rounded-xl w-full absolute group-hover:brightness-75 inset-0 transition-all"

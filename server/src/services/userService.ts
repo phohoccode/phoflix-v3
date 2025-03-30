@@ -1,7 +1,13 @@
 import connection from "../database/connect";
 import bcrypt from "bcrypt";
 import validator from "validator";
-import { GetUserProfile, UpdateUserPassword, UpdateUserProfile } from "../lib/types/User";
+import { v4 as uuidv4 } from "uuid";
+import {
+  CreateReportMovie,
+  GetUserProfile,
+  UpdateUserPassword,
+  UpdateUserProfile,
+} from "../lib/types/User";
 
 const salt = bcrypt.genSaltSync(10);
 
@@ -194,6 +200,78 @@ export const handleUpdateUserPassword = async ({
     return {
       status: true,
       message: "Cập nhật mật khẩu thành công!",
+      result: null,
+      statusCode: 200,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+      statusCode: 500,
+    };
+  }
+};
+
+// ========================= CREATE REPORT MOVIE =========================
+export const handleCreateReportMovie = async ({
+  userId,
+  movieSlug,
+  description,
+  title,
+  movieName,
+}: CreateReportMovie) => {
+  try {
+    const sqlCheckUser = `
+      SELECT id
+      FROM users
+      WHERE id = ?
+    `;
+
+    const [rowsCheckUser]: any = await connection
+      .promise()
+      .query(sqlCheckUser, [userId]);
+
+    if ((rowsCheckUser as any)?.length === 0) {
+      return {
+        status: false,
+        message: "Người dùng không tồn tại!",
+        result: null,
+        statusCode: 404,
+      };
+    }
+
+    const reportId = uuidv4();
+
+    const sqlCreateReportMovie = `
+      INSERT INTO user_report (id, user_id, movie_slug, description, title, movie_name)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
+
+    const [rows]: any = await connection
+      .promise()
+      .query(sqlCreateReportMovie, [
+        reportId,
+        userId,
+        movieSlug,
+        description,
+        title,
+        movieName,
+      ]);
+
+    if (rows.affectedRows === 0) {
+      return {
+        status: false,
+        message: "Tạo báo cáo thất bại!",
+        result: null,
+        statusCode: 400,
+      };
+    }
+
+    return {
+      status: true,
+      message: "Tạo báo cáo thành công!",
       result: null,
       statusCode: 200,
     };

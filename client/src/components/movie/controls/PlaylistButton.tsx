@@ -4,12 +4,8 @@ import ActionsPlaylist from "@/components/csr/user/playlist/ActionsPlaylist";
 import PlusIcon from "@/components/icons/PlusIcon";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toaster } from "@/components/ui/toaster";
-import {
-  addNewMovie,
-  deleteMovie,
-  getPlaylists,
-  getPlaylistsContainingMovie,
-} from "@/lib/actions/userActionClient";
+import { getPlaylists, getPlaylistsContainingMovie } from "@/lib/actions/playlistAction";
+import { addNewMovie, deleteMovie } from "@/lib/actions/userMovieAction";
 import { RootState } from "@/store/store";
 import { Box, Button, Popover, Portal } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";

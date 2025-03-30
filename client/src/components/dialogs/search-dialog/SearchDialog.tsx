@@ -91,7 +91,7 @@ const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
                 onKeyDown={(e) => handleKeyDown(e)}
                 value={keyword}
                 onChange={(e) => handleSearch(e)}
-                className="font-normal text-gray-50 rounded-xl truncate bg-transparent border-2 border-gray-600 focus:border-2 focus:border-gray-400"
+                className="font-normal text-gray-50 rounded-xl truncate bg-transparent border border-gray-400 focus:border-gray-100"
                 placeholder="Nhập tên phim cần tìm..."
               />
             </InputGroup>

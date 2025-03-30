@@ -40,3 +40,23 @@ body {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
+/* truncate */
+.two {
+  -webkit-line-clamp: 2;
+}
+
+.three {
+  -webkit-line-clamp: 3;
+}
+
+.one {
+  -webkit-line-clamp: 1;
+}
+
+.truncate-lines.two {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;
+}

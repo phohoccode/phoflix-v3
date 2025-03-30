@@ -7,13 +7,12 @@ import { Box, Skeleton } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "@/assets/css/movie.css";
 import Pagination from "@/components/Pagination";
 import SkeletonMovieList from "@/components/skeletons/SkeletonMovieGrid";
 import EmptyData from "@/components/EmptyData";
 import MovieGrid from "@/components/movie/movie-thumb/MovieGrid";
 import { useSession } from "next-auth/react";
-import { createUserSearchHistory } from "@/store/asyncThunks/userAsyncThunk";
+import "@/assets/css/movie.css";
 
 const MainPage = () => {
   const searchParams = useSearchParams();
@@ -24,7 +23,6 @@ const MainPage = () => {
   const currentPage = Number(searchParams.get("page")) || 1;
   const keyword = searchParams.get("keyword");
   const limit = 24;
-  const { data: sesstion } = useSession();
 
   useEffect(() => {
     dispatch(
@@ -40,8 +38,8 @@ const MainPage = () => {
     return (
       <RootLayout>
         <Box className="flex flex-col gap-4 px-4 lg:pt-28 pt-24">
-          <Skeleton width="25%" height="5" />
-          <Box className="mt-3">
+          <Skeleton className="lg:h-8 md:h-6 h-4 lg:w-[25%] w-[80%]" />
+          <Box className="mt-6">
             <SkeletonMovieList
               limit={limit}
               columns={{ base: 3, md: 4, lg: 5, xl: 6, "2xl": 8 }}

@@ -9,6 +9,7 @@ import PlayIcon from "@/components/icons/PlayIcon";
 import InfoIcon from "@/components/icons/InfoIcon";
 import { TagClassic } from "../TagClassic";
 import MovieActionsButton from "./MovieActionsButton";
+import { useState } from "react";
 
 interface MovieTooltipProps {
   data: any;
@@ -21,6 +22,8 @@ interface MovieTooltipProps {
 }
 
 const MovieTooltip = ({ data, position }: MovieTooltipProps) => {
+  const [image, setImage] = useState<string>("/images/placeholder.jpg");
+
   return createPortal(
     <div
       style={{
@@ -36,9 +39,10 @@ const MovieTooltip = ({ data, position }: MovieTooltipProps) => {
         <Image
           onError={({ currentTarget }) => {
             currentTarget.onerror = null;
-            currentTarget.src = "/images/placeholder.png";
+            currentTarget.src = "/images/notfound.png";
           }}
-          src={generateUrlImage(data?.thumb_url)}
+          src={image}
+          onLoad={() => setImage(() => generateUrlImage(data?.thumb_url))}
           alt={data?.name}
           className="h-52 w-full object-cover"
         />

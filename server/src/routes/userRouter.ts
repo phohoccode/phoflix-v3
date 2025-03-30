@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  createReportMovie,
   getUserProfile,
   resetPassword,
   updateUserProfile,
@@ -41,7 +42,7 @@ router.delete("/search-history/all", deleteAllSearchHistory);
 // user movies
 router.get("/movies", getUserMovies);
 router.post("/movie", addMovie);
-router.post("/check-movie", checkMovieExists);
+router.post("/checkMovie", checkMovieExists);
 router.delete("/movie", deleteMovie);
 
 // playlist
@@ -51,5 +52,8 @@ router.delete("/playlist", deletePlaylist);
 router.put("/playlist", updatePlaylist);
 router.get("/playlist/movies", getMoviesFromPlaylist);
 router.get("/playlists/listByMovie", getPlaylistsContainingMovie);
+
+// report movie
+router.post("/reportMovie", createReportMovie);
 
 export default router;

@@ -6,24 +6,30 @@ import ShowMoreText from "@/components/ShowMoreText";
 import { formatStringForURL, generateUrlImage } from "@/lib/utils";
 import { Box, Image } from "@chakra-ui/react";
 import Link from "next/link";
+import { useState } from "react";
 
 interface SectionInfoProps {
   data: any;
 }
 
 const SectionInfo = ({ data }: SectionInfoProps) => {
+  const [image, setImage] = useState<string>("/images/placeholder.jpg");
+
   return (
     <Box className="flex-1">
       <Box className="flex flex-col gap-6">
         <Box className="flex gap-4">
-          <Box className="flex-shrink-0 w-28">
+          <Box className="flex-shrink-0 w-28 sm:block hidden">
             <Box className="h-0 pt-[150%] relative">
               <Image
                 onError={({ currentTarget }) => {
                   currentTarget.onerror = null;
-                  currentTarget.src = "/images/placeholder.png";
+                  currentTarget.src = "/images/notfound.png";
                 }}
-                src={generateUrlImage(data?.poster_url)}
+                src={image}
+                onLoad={() =>
+                  setImage(() => generateUrlImage(data?.poster_url))
+                }
                 alt={data?.name ?? "Không xác định"}
                 objectFit="cover"
                 className="border border-gray-800 h-full rounded-xl w-full absolute group-hover:brightness-75 inset-0 transition-all"
@@ -32,7 +38,7 @@ const SectionInfo = ({ data }: SectionInfoProps) => {
             </Box>
           </Box>
           <Box className="flex flex-col gap-2">
-            <h4 className="text-2xl text-gray-50 font-semibold">
+            <h4 className="lg:text-2xl truncate-lines three text-lg text-gray-50 font-semibold">
               {data?.name ?? "Không xác định"}
             </h4>
             <p className="text-[#ffd875] text-sm">

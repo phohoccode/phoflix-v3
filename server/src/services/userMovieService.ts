@@ -72,20 +72,13 @@ export const handleCheckMovieExists = async ({
       .promise()
       .query(sqlCheckMovieExists, [userId, type, movieSlug]);
 
-    if (rowsCheckMovie.length > 0) {
-      return {
-        status: true,
-        message: "Phim đã có trong danh sách!",
-        result: null,
-        statusCode: 200,
-      };
-    }
-
     return {
-      status: false,
-      message: "Phim không tồn tại trong danh sách!",
-      result: null,
-      statusCode: 404,
+      status: true,
+      message: "Thành công",
+      result: {
+        exists: rowsCheckMovie.length > 0,
+      },
+      statusCode: 200,
     };
   } catch (error) {
     return {
@@ -388,7 +381,6 @@ const addMovieToPlaylist = async ({
 };
 
 // ====================== DELETE MOVIE ======================
-
 
 export const handleDeleteMovie = async ({
   userId,

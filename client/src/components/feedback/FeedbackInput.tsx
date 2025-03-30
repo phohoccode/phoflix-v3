@@ -1,6 +1,6 @@
 "use client";
 
-import { addFeedback, addReply } from "@/lib/actions/userActionClient";
+import { addFeedback, addReply } from "@/lib/actions/feedbackAction";
 import { AppDispatch, RootState } from "@/store/store";
 import { Box, Button, Textarea } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
@@ -29,9 +29,9 @@ const FeedbackInput = ({
   const { replyId, feedbackType } = useSelector(
     (state: RootState) => state.feedback
   );
+  const [isPending, startTransition] = useTransition();
   const [length, setLength] = useState(0);
   const [value, setValue] = useState("");
-  const [isPending, startTransition] = useTransition();
   const maxLength = 1000;
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

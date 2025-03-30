@@ -3,6 +3,7 @@ import systemReducer from "./slices/systemSlice";
 import movieReducer from "./slices/movieSlice";
 import userReducer from "./slices/userSlice";
 import feedbackReducer from "./slices/feedbackSlice";
+import notificationReducer from "./slices/notificationSlice";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     movie: movieReducer,
     user: userReducer,
     feedback: feedbackReducer,
+    notification: notificationReducer,
   },
 });
 

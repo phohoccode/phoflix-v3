@@ -6,7 +6,7 @@ import {
   createNewPlaylist,
   deletePlaylist,
   updatePlaylist,
-} from "@/lib/actions/userActionClient";
+} from "@/lib/actions/playlistAction";
 import {
   Box,
   Button,

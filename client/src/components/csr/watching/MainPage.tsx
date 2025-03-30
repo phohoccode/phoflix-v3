@@ -13,7 +13,7 @@ import MovieSuggesstions from "@/components/movie/MovieSuggestions";
 import EpisodesList from "@/components/movie/EpisodeList";
 import SkeletonWachingPage from "@/components/skeletons/SkeletonWatchingPage";
 import EmptyData from "@/components/EmptyData";
-import { addNewMovie } from "@/lib/actions/userActionClient";
+import { addNewMovie } from "@/lib/actions/userMovieAction";
 import { useSession } from "next-auth/react";
 import FavoriteButton from "@/components/movie/controls/FavoriteButton";
 import PlaylistButton from "@/components/movie/controls/PlaylistButton";
@@ -93,7 +93,7 @@ const MainPage = () => {
   return (
     <Box className="flex flex-col gap-12 max-w-[1620px] mx-auto lg:px-14">
       <Box className="lg:mt-32 mt-24">
-        <h3 className=" xl:text-4xl lg:text-3xl px-4 md:text-2xl text-xl title-text font-bold mb-6">
+        <h3 className=" xl:text-4xl lg:text-3xl px-4 md:text-2xl text-xl title-text font-bold mb-6 sm:block hidden">
           {movie?.name} - {currentEpisode?.name}
         </h3>
         <Box className="flex flex-col lg:px-4">

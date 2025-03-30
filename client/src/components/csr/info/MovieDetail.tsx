@@ -5,12 +5,15 @@ import ShowMoreText from "@/components/ShowMoreText";
 import { generateUrlImage } from "@/lib/utils";
 import { Box, Image } from "@chakra-ui/react";
 import Link from "next/link";
+import { useState } from "react";
 
 interface MovieDetailProps {
   data: any;
 }
 
 const MovieDetail = ({ data }: MovieDetailProps) => {
+  const [image, setImage] = useState<string>("/images/placeholder.jpg");
+
   return (
     <Box className="flex flex-col h-full p-6 gap-2 items-center lg:backdrop-blur-lg lg:bg-[#282b3a8a] xl:items-start xl:rounded-bl-4xl xl:rounded-tl-4xl xl:rounded-tr-4xl lg:rounded-tl-4xl lg:rounded-tr-4xl relative z-[10]">
       <Box className="w-40 mb-2">
@@ -18,9 +21,10 @@ const MovieDetail = ({ data }: MovieDetailProps) => {
           <Image
             onError={({ currentTarget }) => {
               currentTarget.onerror = null;
-              currentTarget.src = "/images/placeholder.png";
+              currentTarget.src = "/images/notfound.png";
             }}
-            src={generateUrlImage(data?.poster_url)}
+            src={image}
+            onLoad={() => setImage(() => generateUrlImage(data?.poster_url))}
             alt={data?.name ?? "Không xác định"}
             objectFit="cover"
             className="border border-gray-600 h-full rounded-xl w-full absolute inset-0"
@@ -30,7 +34,7 @@ const MovieDetail = ({ data }: MovieDetailProps) => {
       </Box>
 
       <Box className="flex flex-col gap-2 xl:items-start items-center">
-        <h4 className="text-2xl text-gray-50 font-semibold">
+        <h4 className="lg:text-2xl text-lg text-gray-50 font-semibold">
           {data?.name ?? "Không xác định"}
         </h4>
         <p className="text-[#ffd875] text-sm">
@@ -49,7 +53,7 @@ const MovieDetail = ({ data }: MovieDetailProps) => {
           <TagClassic text={data?.time ?? "Không xác định"} />
           <TagClassic text={data?.episode_current ?? "Không xác định"} />
         </Box>
-        
+
         <Box className="flex flex-wrap gap-2 items-center mt-1">
           {data?.category?.map((category: any, index: number) => (
             <TagClassic

@@ -41,8 +41,8 @@ const MainPage = () => {
     return (
       <RootLayout>
         <Box className="flex flex-col gap-4 px-4 lg:pt-28 pt-24">
-          <Skeleton width="25%" height="5" />
-          <Box className="mt-3">
+          <Skeleton className="lg:h-8 md:h-6 h-4 lg:w-[25%] w-[80%]" />
+          <Box className="mt-6">
             <SkeletonMovieGrid
               limit={limit}
               columns={{ base: 3, md: 3, lg: 5, xl: 6, "2xl": 8 }}

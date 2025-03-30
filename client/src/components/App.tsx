@@ -15,14 +15,13 @@ import {
   setLoaded,
   setWidth,
 } from "@/store/slices/systemSlice";
-import NotifyDialog from "./dialogs/notification-dialog/NotificationDialog";
 import { useEffect } from "react";
 import DrawerCustom from "./layouts/drawer/DrawerCustom";
 import { toaster, Toaster } from "./ui/toaster";
 import Footer from "./layouts/Footer";
 import AuthDialog from "./dialogs/auth-dialog/AuthDialog";
 import ScrollToTopButton from "./ScrollToTopButton";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const App = ({ children }: { children: React.ReactNode }) => {
   const {
@@ -44,6 +43,8 @@ const App = ({ children }: { children: React.ReactNode }) => {
           description: "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
           duration: 2000,
         });
+
+        signOut();
       }
     }
   }, [status]);
@@ -96,11 +97,6 @@ const App = ({ children }: { children: React.ReactNode }) => {
       <SearchDialog
         isOpen={isOpenModalSearch}
         onClose={() => dispatch(setIsOpenModalSearch(false))}
-      />
-
-      <NotifyDialog
-        isOpen={isOpenModalNotification}
-        onClose={() => dispatch(setIsOpenModalNotification(false))}
       />
 
       <AuthDialog

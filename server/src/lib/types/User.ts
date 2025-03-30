@@ -17,3 +17,11 @@ export type UpdateUserPassword = {
   oldPassword: string;
   typeAccount: "credentials";
 };
+
+export type CreateReportMovie = {
+  userId: string;
+  movieSlug: string;
+  description: string;
+  title: string;
+  movieName: string;
+}

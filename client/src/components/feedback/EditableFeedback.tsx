@@ -3,7 +3,7 @@
 import { Editable, EditableInput } from "@chakra-ui/react";
 import { useState } from "react";
 import { toaster } from "../ui/toaster";
-import { updateContentFeedback } from "@/lib/actions/userActionClient";
+import { updateContentFeedback } from "@/lib/actions/feedbackAction";
 import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";

@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, GridItem, SimpleGrid } from "@chakra-ui/react";
+import { Box, GridItem, Image, SimpleGrid } from "@chakra-ui/react";
 import RootLayout from "./RootLayout";
 import Link from "next/link";
 import GithubIcon from "../icons/GithubIcon";
@@ -13,11 +13,7 @@ const Footer = () => {
       <RootLayout>
         <SimpleGrid
           columns={12}
-          gap={{
-            base: 4,
-            md: 4,
-            lg: 12,
-          }}
+          className="lg:gap-y-4 gap-y-6 lg:gap-x-12 gap-x-6"
         >
           <GridItem
             colSpan={{
@@ -92,7 +88,21 @@ const Footer = () => {
             </Box>
           </GridItem>
           <GridItem colSpan={12}>
-            <p className="text-center text-sm  text-gray-100 mt-2">
+            <Box className="flex gap-2 mb-2 items-center p-2 rounded-full bg-[#78140f] max-w-[320px] mx-auto justify-center">
+              <Box className="w-5 h-5 overflow-hidden">
+                <Image
+                  src="/images/vn_flag.svg"
+                  alt="VietNamNumberOne"
+                  className="w-full h-full object-cover"
+                />
+              </Box>
+              <span className="lg:text-sm text-xs text-gray-50">
+                Hoàng Sa & Trường Sa là của Việt Nam!
+              </span>
+            </Box>
+          </GridItem>
+          <GridItem colSpan={12}>
+            <p className="text-center text-sm text-gray-100">
               © 2025 - Phát triển bởi phohoccode
             </p>
           </GridItem>

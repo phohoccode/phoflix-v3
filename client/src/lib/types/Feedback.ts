@@ -77,7 +77,6 @@ type FeedbackInputProps = {
   rootId?: string | null;
 };
 
-
 ///////////////////////// REPLY /////////////////////////
 
 type ReplyItemProps = {
@@ -96,4 +95,47 @@ type ReplyListProps = {
 type ReplySectionProps = {
   totalChildren: number;
   parentId: string;
+};
+
+type GetFeedbacks = {
+  movieSlug: string;
+  limit: number;
+  type: "review" | "comment";
+};
+
+type AddFeedback = {
+  movieSlug: string;
+  userId: string;
+  type: "review" | "comment";
+  point?: number;
+  content?: string;
+};
+
+type DeleteFeedback = {
+  feedbackId: string;
+  userId: string;
+};
+
+type UpdateContentFeedback = {
+  feedbackId: string;
+  userId: string;
+  content: string;
 }
+
+///////////////////////// REPLY FEEDBACK /////////////////////////
+type AddReplyFeedback = {
+  movieSlug: string;
+  userId: string;
+  content: string;
+  type: "review" | "comment";
+  parentId: string;
+};
+
+
+////////////////////////// VOTE //////////////////////////
+type VoteFeedback = {
+  movieSlug: string;
+  userId: string;
+  feedbackId: string;
+  voteType: "like" | "dislike";
+};

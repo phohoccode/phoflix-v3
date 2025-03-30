@@ -52,7 +52,7 @@ const PopoverUser = () => {
       <Portal>
         <Popover.Positioner>
           <Popover.Content
-            rounded="2xl"
+            rounded="xl"
             p={0}
             className="bg-[#0f111af2] text-gray-50 border border-[#ffffff10]"
           >

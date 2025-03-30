@@ -1,13 +1,8 @@
 "use client";
 
-import { getMoreFeedbacks } from "@/store/asyncThunks/feedbackAsyncThunk";
-import { AppDispatch, RootState } from "@/store/store";
 import { Box, Spinner } from "@chakra-ui/react";
-import { useParams } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useTransition } from "react";
 import { IoIosArrowDown } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
-
 interface SeeMoreFeedbackProps {
   callback: () => void;
 }

@@ -12,6 +12,7 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import ChavronRightIcon from "@/components/icons/ChavronRightIcon";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import { setIsOpenModalSearch } from "@/store/slices/systemSlice";
+import { useEffect, useState } from "react";
 
 interface SearchPreviewProps {
   keyword: string;
@@ -22,6 +23,11 @@ const SearchPreview = ({ keyword }: SearchPreviewProps) => {
     (state: RootState) => state.movie.searchMoviePreview
   );
   const dispatch: AppDispatch = useDispatch();
+  const [image, setImage] = useState<string>("/images/placeholder.jpg");
+
+  useEffect(() => {
+    setImage("/images/placeholder.jpg");
+  }, [keyword]);
 
   if (keyword?.trim() === "") return null;
   if (loading) return <SkeletonSearchPreview />;
@@ -44,9 +50,12 @@ const SearchPreview = ({ keyword }: SearchPreviewProps) => {
                   <Image
                     onError={({ currentTarget }) => {
                       currentTarget.onerror = null;
-                      currentTarget.src = "/images/placeholder.png";
+                      currentTarget.src = "/images/notfound.png";
                     }}
-                    src={generateUrlImage(item?.poster_url)}
+                    src={image}
+                    onLoad={() =>
+                      setImage(() => generateUrlImage(item?.poster_url))
+                    }
                     objectFit="cover"
                     className="w-full h-full rounded-md border border-[#ffffff10]"
                     loading="lazy"

@@ -7,7 +7,7 @@ import ReviewSummary from "./ReviewSummary";
 import ReviewEmo from "./ReviewEmo";
 import ReviewComment from "./ReviewComment";
 import { useEffect, useState, useTransition } from "react";
-import { addFeedback, getStatsByMovie } from "@/lib/actions/userActionClient";
+import { addFeedback, getStatsByMovie } from "@/lib/actions/feedbackAction";
 import { useSession } from "next-auth/react";
 import { toaster } from "@/components/ui/toaster";
 import { setReviewContent } from "@/store/slices/userSlice";
