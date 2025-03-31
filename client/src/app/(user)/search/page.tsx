@@ -1,4 +1,4 @@
-import Spinner from "@/app/loading";
+import Loading from "@/app/loading";
 import MainPage from "@/components/csr/search/MainPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -21,7 +21,7 @@ export async function generateMetadata({
 
 const Page = () => {
   return (
-    <Suspense fallback={<Spinner />}>
+    <Suspense fallback={<Loading />}>
       <MainPage />
     </Suspense>
   );

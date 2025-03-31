@@ -28,4 +28,5 @@ type DeleteMovie = {
   movieSlug: string;
   type: "history" | "favorite" | "playlist";
   playlistId?: string | null;
+  movieId?: string | null;
 };

@@ -28,4 +28,5 @@ export type DeleteMovie = {
   movieSlug: string;
   type: string;
   playlistId?: string | null;
+  movieId?: string | null;
 };

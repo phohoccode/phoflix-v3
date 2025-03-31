@@ -1,4 +1,4 @@
-import Spinner from "@/app/loading";
+import Loading from "@/app/loading";
 import MoviePage from "@/components/csr/info/MainPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
@@ -10,7 +10,7 @@ interface MoviePageProps {
 export async function generateMetadata({
   searchParams,
 }: MoviePageProps): Promise<Metadata> {
-  const params = await searchParams ?? {};
+  const params = (await searchParams) ?? {};
   const name = params.name?.replace(/-/g, " ") ?? "hihihi";
 
   return {
@@ -21,7 +21,7 @@ export async function generateMetadata({
 
 const Page = () => {
   return (
-    <Suspense fallback={<Spinner />}>
+    <Suspense fallback={<Loading />}>
       <MoviePage />
     </Suspense>
   );

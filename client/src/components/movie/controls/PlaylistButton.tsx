@@ -80,7 +80,7 @@ const PlaylistButton = ({
       } else {
         response = await deleteMovie({
           userId: session?.user?.id as string,
-          movieSlug: movie.slug,
+          movieSlug: movie?.slug,
           type: "playlist",
           playlistId: value,
         });

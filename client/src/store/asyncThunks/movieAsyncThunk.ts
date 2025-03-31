@@ -1,10 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export const fetchDataSlideShow = createAsyncThunk(
   "movie/fetchDataSlideShow",
   async () => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/danh-sach/phim-moi-cap-nhat-v3?page=1`
+      `${API_URL}/danh-sach/phim-moi-cap-nhat-v3?page=1`
     );
     return response.json();
   }
@@ -40,8 +42,13 @@ export const fetchDataMovie = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      const _params = new URLSearchParams({
+        page: (params.page ?? 1).toString(),
+        limit: (params.limit ?? 10)?.toString(),
+      });
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/${describe}/${type}?page=${params.page}&limit=${params.limit}`
+        `${API_URL}/v1/api/${describe}/${type}?${_params.toString()}`
       );
 
       if (!response.ok) {
@@ -80,8 +87,13 @@ export const fetchDataMovieDetail = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      const _params = new URLSearchParams({
+        page: page.toString(),
+        limit: limit.toString(),
+      });
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/${describe}/${slug}?page=${page}&limit=${limit}`
+        `${API_URL}/v1/api/${describe}/${slug}?${_params.toString()}`
       );
 
       if (!response.ok) {
@@ -109,8 +121,13 @@ export const fetchDataMoviePreview = createAsyncThunk(
   "movie/fetchDataMoviePreview",
   async ({ keyword, limit }: FetchDataMoviePreview, { rejectWithValue }) => {
     try {
+      const params = new URLSearchParams({
+        keyword,
+        limit: limit.toString(),
+      });
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/tim-kiem?keyword=${keyword}&limit=${limit}`
+        `${API_URL}/v1/api/tim-kiem?${params.toString()}`
       );
 
       if (!response.ok) {
@@ -153,11 +170,19 @@ export const fetchDataMovieSearch = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const query = `keyword=${keyword}&page=${page}&limit=${limit}&sort_lang=${sort_lang}&category=${category}&country=${country}&year=${year}&sort_type=${sort_type}
-    `;
+      const params = new URLSearchParams({
+        keyword,
+        page: page.toString(),
+        limit: limit.toString(),
+        sort_lang,
+        category,
+        country,
+        year: year.toString(),
+        sort_type,
+      });
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/v1/api/tim-kiem?${query}`
+        `${API_URL}/v1/api/tim-kiem?${params.toString()}`
       );
 
       if (!response.ok) {
@@ -183,9 +208,7 @@ export const fetchDataMovieInfo = createAsyncThunk(
   "movie/fetchMovieInfo",
   async ({ slug, page }: FetchMovieInfo, { rejectWithValue }) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/phim/${slug}`
-      );
+      const response = await fetch(`${API_URL}/phim/${slug}`);
 
       if (!response.ok) {
         throw new Error("Fetch failed");

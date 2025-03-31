@@ -1,11 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export const getUserSearchHistory = createAsyncThunk(
   "user/getUserSearchHistory",
   async (id: string) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/search-history?id=${id}`
+        `${BACKEND_URL}/user/search-history?id=${id}`
       );
 
       const data = await response.json();
@@ -33,16 +35,13 @@ export const createUserSearchHistory = createAsyncThunk(
   "user/createUserSearchHistory",
   async ({ userId, keyword }: CreateUserSearchHistoryProps) => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/search-history`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId, keyword }),
-        }
-      );
+      const response = await fetch(`${BACKEND_URL}/user/search-history`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId, keyword }),
+      });
 
       const data = await response.json();
 
@@ -68,8 +67,13 @@ export const deleteUserSearchHistory = createAsyncThunk(
   "user/deleteUserSearchHistory",
   async ({ id, userId }: DeleteUserSearchHistoryProps) => {
     try {
+      const params = new URLSearchParams({
+        id,
+        userId,
+      });
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/search-history?id=${id}&userId=${userId}`,
+        `${BACKEND_URL}/user/search-history?${params.toString()}`,
         {
           method: "DELETE",
         }
@@ -94,7 +98,7 @@ export const deleteAllUserSearchHistory = createAsyncThunk(
   async (userId: string) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/search-history/all?userId=${userId}`,
+        `${BACKEND_URL}/user/search-history/all?userId=${userId}`,
         {
           method: "DELETE",
         }
@@ -113,5 +117,3 @@ export const deleteAllUserSearchHistory = createAsyncThunk(
     }
   }
 );
-
-

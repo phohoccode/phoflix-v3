@@ -1,3 +1,5 @@
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 // ===================== GET USER MOVIES =====================
 
 export const getUserMovies = async ({
@@ -7,8 +9,15 @@ export const getUserMovies = async ({
   limit,
 }: GetUserMovies): Promise<any> => {
   try {
+    const params = new URLSearchParams({
+      userId,
+      type,
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/movies?userId=${userId}&type=${type}&page=${page}&limit=${limit}`
+      `${BACKEND_URL}/user/movies?${params.toString()}`
     );
 
     return response.json();
@@ -30,20 +39,17 @@ export const checkMovieExists = async ({
   type,
 }: CheckMovieExists): Promise<any> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/checkMovie`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          movieSlug,
-          type,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/user/checkMovie`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        movieSlug,
+        type,
+      }),
+    });
 
     return response.json();
   } catch (error) {
@@ -65,21 +71,18 @@ export const addNewMovie = async ({
   playlistId,
 }: AddNewMovie): Promise<any> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/movie`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          movieData,
-          type,
-          playlistId,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/user/movie`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        movieData,
+        type,
+        playlistId,
+      }),
+    });
 
     return response.json();
   } catch (error) {
@@ -99,12 +102,25 @@ export const deleteMovie = async ({
   movieSlug,
   type,
   playlistId = null,
+  movieId = null,
 }: DeleteMovie): Promise<any> => {
   try {
-    const query = `?userId=${userId}&movieSlug=${movieSlug}&type=${type}&playlistId=${playlistId}`;
+    const params = new URLSearchParams({
+      userId,
+      movieSlug,
+      type,
+    });
+
+    if (playlistId) {
+      params.append("playlistId", playlistId);
+    }
+
+    if (movieId) {
+      params.append("movieId", movieId);
+    }
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/movie${query}`,
+      `${BACKEND_URL}/user/movie?${params.toString()}`,
       {
         method: "DELETE",
         headers: {

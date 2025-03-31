@@ -2,12 +2,14 @@
 
 import { signIn } from "@/auth";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export async function authenticate(
   email: string,
   password: string
 ): Promise<any> {
   try {
-    const response = await signIn("credentials", {
+    await signIn("credentials", {
       email: email,
       password: password,
       redirect: false,
@@ -48,22 +50,19 @@ export async function register({
   avatar,
 }: any): Promise<any> {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          name,
-          typeAccount,
-          avatar,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        name,
+        typeAccount,
+        avatar,
+      }),
+    });
 
     const data = await response.json();
 
@@ -81,19 +80,16 @@ export async function forgotPassword(
   typeAccount: "credentials"
 ): Promise<any> {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/forgot-password`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          typeAccount,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/auth/forgot-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        typeAccount,
+      }),
+    });
 
     const data = await response.json();
 
@@ -109,7 +105,7 @@ export async function forgotPassword(
 export async function verifyToken(token: string): Promise<any> {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/verify-token?token=${token}`
+      `${BACKEND_URL}/auth/verify-token?token=${token}`
     );
 
     const data = await response.json();
@@ -126,7 +122,7 @@ export async function verifyToken(token: string): Promise<any> {
 export async function completeRegistration(token: string) {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/complete-registration?token=${token}`
+      `${BACKEND_URL}/auth/complete-registration?token=${token}`
     );
 
     const data = await response.json();
@@ -148,19 +144,16 @@ export async function resetPassword({
   password: string;
 }): Promise<any> {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/reset-password`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/auth/reset-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    });
 
     const data = await response.json();
 

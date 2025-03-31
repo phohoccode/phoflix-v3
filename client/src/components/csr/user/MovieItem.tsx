@@ -9,7 +9,7 @@ import { MdDelete } from "react-icons/md";
 interface MovieItemProps {
   item: any;
   isLoading: boolean;
-  callback: (slug: string) => void;
+  callback: (slug: string, id: string) => void;
 }
 
 const MovieItem = ({ item, isLoading, callback }: MovieItemProps) => {
@@ -62,7 +62,7 @@ const MovieItem = ({ item, isLoading, callback }: MovieItemProps) => {
       <IconButton
         size="xs"
         loading={isLoading}
-        onClick={() => callback(item?.movie_slug)}
+        onClick={() => callback(item?.movie_slug, item?.id)}
         aria-label="Xóa"
         colorPalette="red"
         className="text-gray-50 absolute right-2 top-2"

@@ -48,13 +48,14 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
     }
   }, [items, searchParams]);
 
-  const handleDeleteMovie = async (slug: string) => {
+  const handleDeleteMovie = async (slug: string, id: string) => {
     setSlug(slug);
     const response = await deleteMovie({
       userId,
       movieSlug: slug,
       type,
       playlistId: pathname === "/user/playlist" ? selectedPlaylistId : null,
+      movieId: type === "history" ? id : null,
     });
     setSlug("");
 

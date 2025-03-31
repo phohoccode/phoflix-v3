@@ -1,3 +1,5 @@
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 // ===================== GET REVIEWS BY MOVIE =====================
 
 export const getFeedbacks = async ({
@@ -6,8 +8,14 @@ export const getFeedbacks = async ({
   type,
 }: GetFeedbacks): Promise<any> => {
   try {
+    const params = new URLSearchParams({
+      movieSlug,
+      limit: limit.toString(),
+      type,
+    });
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/list?movieSlug=${movieSlug}&limit=${limit}&type=${type}`
+      `${BACKEND_URL}/feedback/list?${params.toString()}`
     );
 
     return response.json();
@@ -31,22 +39,19 @@ export const addFeedback = async ({
   type,
 }: AddFeedback): Promise<any> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/add`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          movieSlug,
-          point,
-          userId,
-          content,
-          type,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/feedback/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        movieSlug,
+        point,
+        userId,
+        content,
+        type,
+      }),
+    });
 
     return response.json();
   } catch (error) {
@@ -66,8 +71,13 @@ export const deleteFeedback = async ({
   userId,
 }: DeleteFeedback): Promise<any> => {
   try {
+    const params = new URLSearchParams({
+      feedbackId,
+      userId,
+    });
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/delete?feedbackId=${feedbackId}&userId=${userId}`,
+      `${BACKEND_URL}/feedback/delete?${params.toString()}`,
       {
         method: "DELETE",
         headers: {
@@ -95,20 +105,17 @@ export const updateContentFeedback = async ({
   content,
 }: UpdateContentFeedback): Promise<any> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/update`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          feedbackId,
-          userId,
-          content,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/feedback/update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        feedbackId,
+        userId,
+        content,
+      }),
+    });
 
     return response.json();
   } catch (error) {
@@ -131,22 +138,19 @@ export const addReply = async ({
   parentId,
 }: AddReplyFeedback): Promise<any> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/reply`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          movieSlug,
-          userId,
-          content,
-          type,
-          parentId,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/feedback/reply`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        movieSlug,
+        userId,
+        content,
+        type,
+        parentId,
+      }),
+    });
 
     return response.json();
   } catch (error) {
@@ -162,7 +166,7 @@ export const addReply = async ({
 export const getStatsByMovie = async (movieSlug: string): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/statsByMovie?movieSlug=${movieSlug}`
+      `${BACKEND_URL}/feedback/statsByMovie?movieSlug=${movieSlug}`
     );
 
     return response.json();
@@ -185,21 +189,18 @@ export const addVote = async ({
   voteType,
 }: VoteFeedback): Promise<any> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/vote`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          movieSlug,
-          userId,
-          feedbackId,
-          voteType,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/feedback/vote`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        movieSlug,
+        userId,
+        feedbackId,
+        voteType,
+      }),
+    });
 
     return response.json();
   } catch (error) {

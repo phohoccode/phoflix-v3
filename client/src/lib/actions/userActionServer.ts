@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 interface GetUserMovies {
   userId: string;
@@ -16,8 +16,15 @@ export const getUserMovies = async ({
   limit,
 }: GetUserMovies): Promise<any> => {
   try {
+    const params = new URLSearchParams({
+      userId,
+      type,
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/movies?userId=${userId}&type=${type}&page=${page}&limit=${limit}`,
+      `${BACKEND_URL}/user/movies?${params.toString()}`,
       {
         method: "GET",
         headers: {
@@ -51,10 +58,14 @@ export const deleteMovie = async ({
   type,
 }: DeleteMovie): Promise<any> => {
   try {
-    const query = `?userId=${userId}&movieSlug=${movieSlug}&type=${type}`;
+    const params = new URLSearchParams({
+      userId,
+      movieSlug,
+      type,
+    });
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/movie${query}`,
+      `${BACKEND_URL}/user/movie?${params.toString()}`,
       {
         method: "DELETE",
         headers: {
@@ -84,7 +95,7 @@ export const getUserPlaylists = async ({
 }: GetUserPlaylists): Promise<any> => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/playlists?userId=${userId}`
+      `${BACKEND_URL}/user/playlists?userId=${userId}`
     );
 
     return response.json();
@@ -114,8 +125,15 @@ export const getUserMoviesFromPlaylist = async ({
   limit,
 }: GetUserMoviesFromPlaylist): Promise<any> => {
   try {
+    const params = new URLSearchParams({
+      userId,
+      playlistId,
+      page: page.toString(),
+      limit: limit.toString(),
+    });
+
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/playlist/movies?userId=${userId}&playlistId=${playlistId}&page=${page}&limit=${limit}`
+      `${BACKEND_URL}/user/playlist/movies?${params.toString()}`
     );
 
     return response.json();

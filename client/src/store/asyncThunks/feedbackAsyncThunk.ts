@@ -1,5 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 interface GetFeedbacks {
   movieSlug: string;
   type: "review" | "comment";
@@ -9,11 +11,14 @@ interface GetFeedbacks {
 export const getFeedbacks = createAsyncThunk(
   "feedback/getFeedbacks",
   async ({ movieSlug, type, limit }: GetFeedbacks) => {
-    const limitParam = `&limit=${limit}`;
-    const typeParam = `&type=${type}`;
+    const params = new URLSearchParams({
+      movieSlug,
+      limit: limit.toString(),
+      type,
+    });
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/list?movieSlug=${movieSlug}${limitParam}${typeParam}`,
+      `${BACKEND_URL}/feedback/list?${params.toString()}`,
       {
         method: "GET",
         headers: {
@@ -43,12 +48,15 @@ interface GetMoreFeedbacks {
 export const getMoreFeedbacks = createAsyncThunk(
   "feedback/getMoreFeedbacks",
   async ({ movieSlug, type, limit, afterTime }: GetMoreFeedbacks) => {
-    const limitParam = `&limit=${limit}`;
-    const typeParam = `&type=${type}`;
-    const afterTimeParam = `&afterTime=${afterTime}`;
+    const params = new URLSearchParams({
+      movieSlug,
+      limit: limit.toString(),
+      type,
+      afterTime: afterTime.toString(),
+    });
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/list?movieSlug=${movieSlug}${limitParam}${typeParam}${afterTimeParam}`,
+      `${BACKEND_URL}/feedback/list?${params.toString()}`,
       {
         method: "GET",
         headers: {
@@ -78,11 +86,16 @@ interface GetReplyListFeedback {
 export const getReplyListFeedback = createAsyncThunk(
   "feedback/getReplyListFeedback",
   async ({ parentId, limit, type }: GetReplyListFeedback) => {
-    const limitParam = `&limit=${limit}`;
-    const typeParam = `&type=${type}`;
+    if (!parentId) return;
+
+    const params = new URLSearchParams({
+      parentId,
+      limit: limit.toString(),
+      type,
+    });
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/replyList?parentId=${parentId}${limitParam}${typeParam}`,
+      `${BACKEND_URL}/feedback/replyList?${params.toString()}`,
       {
         method: "GET",
         headers: {
@@ -111,12 +124,15 @@ interface GetMoreReplyListFeedback {
 export const getMoreReplyListFeedback = createAsyncThunk(
   "feedback/getMoreReplyListFeedback",
   async ({ parentId, limit, type, afterTime }: GetMoreReplyListFeedback) => {
-    const limitParam = `&limit=${limit}`;
-    const typeParam = `&type=${type}`;
-    const afterTimeParam = `&afterTime=${afterTime}`;
+    const params = new URLSearchParams({
+      parentId,
+      limit: limit.toString(),
+      type,
+      afterTime: afterTime.toString(),
+    });
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/replyList?parentId=${parentId}${limitParam}${typeParam}${afterTimeParam}`,
+      `${BACKEND_URL}/feedback/replyList?${params.toString()}`,
       {
         method: "GET",
         headers: {
@@ -140,7 +156,7 @@ export const getVoteListFeedback = createAsyncThunk(
   "feedback/getVoteListFeedback",
   async (movieSlug: string) => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/feedback/voteList?movieSlug=${movieSlug}`,
+      `${BACKEND_URL}/feedback/voteList?movieSlug=${movieSlug}`,
       {
         method: "GET",
         headers: {

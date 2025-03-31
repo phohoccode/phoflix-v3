@@ -1,5 +1,7 @@
 "use client";
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+
 export const updateUserProfile = async ({
   userId,
   username,
@@ -8,22 +10,19 @@ export const updateUserProfile = async ({
   typeAccount,
 }: UpdateUserProflie): Promise<any> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId,
-          username,
-          gender,
-          avatar,
-          typeAccount,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/user/profile`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId,
+        username,
+        gender,
+        avatar,
+        typeAccount,
+      }),
+    });
 
     return response.json();
   } catch (error) {
@@ -45,21 +44,18 @@ export const resetPassword = async ({
   typeAccount,
 }: UpdateUserPassword): Promise<any> => {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/reset-password`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          newPassword,
-          oldPassword,
-          typeAccount,
-        }),
-      }
-    );
+    const response = await fetch(`${BACKEND_URL}/user/reset-password`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        newPassword,
+        oldPassword,
+        typeAccount,
+      }),
+    });
 
     return response.json();
   } catch (error) {

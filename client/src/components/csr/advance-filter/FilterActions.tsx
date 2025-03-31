@@ -24,11 +24,9 @@ const FilterActions = ({
       <Button
         loading={loading}
         onClick={() => handleSearch()}
-        variant="solid"
         rounded="full"
-        colorPalette="yellow"
         size="sm"
-        className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
+        className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)] bg-[#ffda7d] text-[#1e2939] "
       >
         Lọc kết quả
       </Button>

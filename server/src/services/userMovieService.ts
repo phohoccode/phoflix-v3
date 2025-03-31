@@ -387,6 +387,7 @@ export const handleDeleteMovie = async ({
   movieSlug,
   type,
   playlistId,
+  movieId,
 }: DeleteMovie) => {
   try {
     const sqlCheckUserExists = `
@@ -408,18 +409,26 @@ export const handleDeleteMovie = async ({
 
     const sqlDeleteMovie = `
       DELETE FROM user_movies 
-      WHERE user_id = ? AND type = ? AND movie_slug = ? AND 
-      (${playlistId ? "playlist_id = ?" : "playlist_id IS NULL"})
+      WHERE user_id = ? AND type = ? AND 
+      (${playlistId ? "playlist_id = ?" : "playlist_id IS NULL"}) AND
+      (${type === "history" ? "id = ?" : "movie_slug = ?"})
     `;
+
+    let params = [userId, type];
+
+    if (playlistId) {
+      params.push(playlistId);
+    }
+
+    if (type === "history") {
+      params.push(movieId as string);
+    } else {
+      params.push(movieSlug);
+    }
 
     const [rowsDelete]: any = await connection
       .promise()
-      .query(
-        sqlDeleteMovie,
-        playlistId
-          ? [userId, type, movieSlug, playlistId]
-          : [userId, type, movieSlug]
-      );
+      .query(sqlDeleteMovie, params);
 
     if (rowsDelete.affectedRows === 0) {
       return {

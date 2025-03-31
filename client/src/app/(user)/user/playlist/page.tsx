@@ -1,4 +1,4 @@
-import Spinner from "@/app/loading";
+import Loading from "@/app/loading";
 import { auth } from "@/auth";
 import MovieSection from "@/components/csr/user/MovieSection";
 import ActionsPlaylist from "@/components/csr/user/playlist/ActionsPlaylist";
@@ -72,11 +72,11 @@ const Page = async ({ searchParams }: PageProps) => {
         </ActionsPlaylist>
       </Box>
 
-      <Suspense fallback={<Spinner />}>
+      <Suspense fallback={<Loading />}>
         <Playlists playlists={playlists} />
       </Suspense>
 
-      <Suspense fallback={<Spinner />}>
+      <Suspense fallback={<Loading />}>
         <MovieSection
           movies={movies}
           totalItems={totalItems}

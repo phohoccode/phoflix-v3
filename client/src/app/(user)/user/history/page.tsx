@@ -1,4 +1,4 @@
-import Spinner from "@/app/loading";
+import Loading from "@/app/loading";
 import { auth } from "@/auth";
 import { getUserMovies } from "@/lib/actions/userActionServer";
 import { Suspense } from "react";
@@ -25,7 +25,7 @@ const Page = async ({ searchParams }: PageProps) => {
   const { movies, totalItems, totalItemsPerPage } = response?.result || {};
 
   return (
-    <Suspense fallback={<Spinner />}>
+    <Suspense fallback={<Loading />}>
       <h3 className="text-lg text-gray-50">Lịch sử xem</h3>
       <MovieSection
         movies={movies}
