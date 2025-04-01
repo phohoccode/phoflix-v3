@@ -6,8 +6,8 @@ export type UserLogin = {
 
 export type UserRegister = {
   email: string;
+  name: string;
   password: string;
   typeAccount: "credentials" | "google";
-  name: string;
   avatar: string;
 };

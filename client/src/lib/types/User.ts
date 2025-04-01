@@ -4,6 +4,13 @@ type SearchHistory = {
   createdAt: string;
 };
 
+type GetUserProfile = {
+  email: string;
+  typeAccount: "google" | "credentials";
+}
+
+
+
 type UserSlice = {
   searchHistory: {
     items: SearchHistory[];

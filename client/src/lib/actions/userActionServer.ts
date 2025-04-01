@@ -2,12 +2,30 @@
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-interface GetUserMovies {
-  userId: string;
-  type: "history" | "favorite" | "playlist";
-  page: number;
-  limit: number;
-}
+export const getUserProfile = async ({
+  email,
+  typeAccount,
+}: GetUserProfile): Promise<any> => {
+  try {
+    const params = new URLSearchParams({
+      email,
+      typeAccount,
+    });
+
+    const response = await fetch(
+      `${BACKEND_URL}/user/profile?${params.toString()}`
+    );
+
+    return response.json();
+  } catch (error) {
+    console.log(error);
+    return {
+      status: false,
+      message: "Lỗi server! Vui lòng thử lại sau.",
+      result: null,
+    };
+  }
+};
 
 export const getUserMovies = async ({
   userId,
@@ -44,13 +62,6 @@ export const getUserMovies = async ({
     };
   }
 };
-
-// ===================== DELETE MOVIE =====================
-interface DeleteMovie {
-  userId: string;
-  movieSlug: string;
-  type: "history" | "favorite" | "playlist";
-}
 
 export const deleteMovie = async ({
   userId,
@@ -108,15 +119,6 @@ export const getUserPlaylists = async ({
     };
   }
 };
-
-// ===================== GET USER MOVIES PLAYLIST =====================
-
-interface GetUserMoviesFromPlaylist {
-  userId: string;
-  playlistId: string;
-  page: number;
-  limit: number;
-}
 
 export const getUserMoviesFromPlaylist = async ({
   userId,

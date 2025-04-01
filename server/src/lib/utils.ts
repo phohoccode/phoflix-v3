@@ -1,10 +1,13 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { OAuth2Client } from "google-auth-library";
 
 dotenv.config();
 
 const SECRET_KEY = process.env.SECRET_KEY as string;
+// Khởi tạo client của Google OAuth2
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export const generateToken = () => {
   return crypto.randomBytes(32).toString("hex");
@@ -34,6 +37,15 @@ export const decryptData = (token: string): any => {
     console.error("Lỗi khi giải mã JWT:", error);
     return null;
   }
+};
+
+export const verifyGoogleToken = async (token: string) => {
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
+  const payload = ticket.getPayload();
+  return payload;
 };
 
 export const generateHtmlSendMail = ({

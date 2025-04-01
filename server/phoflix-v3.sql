@@ -4,7 +4,7 @@ CREATE TABLE
     `username` VARCHAR(50) NOT NULL,
     `email` VARCHAR(100) NOT NULL,
     `avatar` VARCHAR(100) DEFAULT '/images/avatars/01.jpg',
-    `password` VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NULL,
     `gender` ENUM ('male', 'female', 'other') DEFAULT 'other',
     `role` ENUM ('member', 'admin') DEFAULT 'member',
     `status` ENUM ('active', 'banned') DEFAULT 'active',
@@ -17,12 +17,15 @@ CREATE TABLE
   `notification` (
     `id` CHAR(36) PRIMARY KEY NOT NULL,
     `user_id` CHAR(36) NOT NULL,
-    `title` VARCHAR(255) NOT NULL,
-    `message` TEXT NOT NULL,
+    `sender_id` CHAR(36) NULL,
+    `content` VARCHAR(255) NOT NULL,
+    `href` VARCHAR(255) DEFAULT '#',
     `type` ENUM ('community', 'individual') NOT NULL,
+    `is_read` TINYINT (1) DEFAULT 0,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
   );
 
 CREATE TABLE

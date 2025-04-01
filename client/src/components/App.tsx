@@ -25,7 +25,6 @@ import { signOut, useSession } from "next-auth/react";
 
 const App = ({ children }: { children: React.ReactNode }) => {
   const {
-    isOpenModalNotification,
     lastScrollY,
     isOpenModalSearch,
     isOpenDrawer,
@@ -33,7 +32,9 @@ const App = ({ children }: { children: React.ReactNode }) => {
     typeAuth,
   } = useSelector((state: RootState) => state.system);
   const dispatch: AppDispatch = useDispatch();
-  const { data: sesstion, status } = useSession();
+  const { data: sesstion, status }: any = useSession();
+
+  console.log(">>> sesstion", sesstion);
 
   useEffect(() => {
     if (status === "authenticated") {

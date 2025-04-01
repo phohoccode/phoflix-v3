@@ -42,6 +42,35 @@ export async function authenticate(
   }
 }
 
+export async function login({
+  email,
+  password,
+  typeAccount,
+}: Login): Promise<any> {
+  try {
+    const response = await fetch(`${BACKEND_URL}/auth/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+        typeAccount,
+      }),
+    });
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    return {
+      status: false,
+      message: "Đã có lỗi xảy ra, vui lòng thử lại!",
+    };
+  }
+}
+
 export async function register({
   email,
   password,
@@ -165,3 +194,39 @@ export async function resetPassword({
     };
   }
 }
+
+export const registerGoogleAccount = async ({
+  email,
+  name,
+  avatar,
+  typeAccount,
+  password,
+}: RegisterGoogleAccount) => {
+  try {
+
+    console.log("password", password);
+
+    const response = await fetch(`${BACKEND_URL}/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        name,
+        avatar,
+        typeAccount,
+        password,
+      }),
+    });
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    return {
+      status: false,
+      message: "Đã có lỗi xảy ra, vui lòng thử lại!",
+    };
+  }
+};

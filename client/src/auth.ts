@@ -1,6 +1,8 @@
 import NextAuth, { AuthError } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
+import { login, registerGoogleAccount } from "./lib/actions/authActionServer";
+import { getUserProfile } from "./lib/actions/userActionServer";
 
 export class InvalidLoginError extends AuthError {
   constructor(public code: any, public details?: string) {
@@ -20,28 +22,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         try {
           const { email, password } = credentials as any;
 
-          const response: any = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/login`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                email,
-                password,
-                typeAccount: "credentials",
-              }),
-            }
-          );
+          const response: any = await login({
+            email,
+            password,
+            typeAccount: "credentials",
+          });
 
-          const data = await response.json();
-
-          if (!data?.status) {
-            throw new InvalidLoginError(data?.code, data?.message);
+          if (!response?.status) {
+            throw new InvalidLoginError(response?.code, response?.message);
           }
 
-          return data?.result;
+          console.log(">>> response", response);
+
+          return response?.result;
         } catch (error) {
           throw error;
         }
@@ -59,33 +52,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   jwt: {
     maxAge: 24 * 60 * 60, // 24 hours
   },
-
   callbacks: {
-    async jwt({ token, profile, account }: any) {
+    async jwt({ token, user, account, profile, isNewUser }: any) {
       if (account?.provider === "google") {
-        // Gọi api kiểm tra tài khoản đã tồn tại chưa
-        const query = `email=${profile?.email}&typeAccount=google`;
-
-        const response: any = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile?${query}`
-        );
-
-        const data = await response.json();
+        const response = await getUserProfile({
+          email: profile?.email,
+          typeAccount: "google",
+        });
 
         // Nếu tài khoản chưa tồn tại thì tạo mới
-        if (!data?.status) {
-          await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              email: profile?.email,
-              name: profile?.name,
-              avatar: profile?.picture,
-              typeAccount: "google",
-              password: "phohoccode",
-            }),
+        if (!response?.status) {
+          await registerGoogleAccount({
+            email: profile?.email,
+            name: profile?.name,
+            avatar: profile?.picture,
+            typeAccount: "google",
+            password: null,
           });
         }
 
@@ -94,25 +76,31 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.typeAccount = "credentials";
       }
 
-      // Gọi api lấy thông tin user gán cho token
-      const query = `email=${token?.email}&typeAccount=${
-        account?.provider ?? token?.typeAccount
-      }`;
+      // Lấy thông tin người dùng từ backend sau đó gán vào token
+      const response = await getUserProfile({
+        email: token?.email,
+        typeAccount: account?.provider ?? token?.typeAccount,
+      });
 
-      const response: any = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/profile?${query}`
-      );
+      // Gán thông tin người dùng vào token
+      token.id = response?.result?.id;
+      token.role = response?.result?.role;
+      token.email = response?.result?.email;
+      token.image = response?.result?.avatar;
+      token.username = response?.result?.username;
+      token.typeAccount = response?.result?.typeAccount;
+      token.gender = response?.result?.gender;
+      token.createdAt = response?.result?.createdAt;
 
-      const data = await response.json();
-
-      token.id = data?.result?.id;
-      token.role = data?.result?.role;
-      token.email = data?.result?.email;
-      token.image = data?.result?.avatar;
-      token.username = data?.result?.username;
-      token.typeAccount = data?.result?.typeAccount;
-      token.gender = data?.result?.gender;
-      token.createdAt = data?.result?.createdAt;
+      if (account?.provider === "credentials") {
+        if (user?.accessToken && user?.refreshToken) {
+          token.accessToken = user?.accessToken;
+        }
+      } else if (account?.provider === "google") {
+        if (account?.access_token) {
+          token.accessToken = account?.access_token;
+        }
+      }
 
       return token;
     },
@@ -126,6 +114,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.gender = token.gender;
       session.user.typeAccount = token.typeAccount;
       session.user.createdAt = token.createdAt;
+      session.user.accessToken = token.accessToken;
 
       return session;
     },

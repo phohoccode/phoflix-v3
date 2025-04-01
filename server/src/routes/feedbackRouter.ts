@@ -10,8 +10,12 @@ import {
   updateContentFeedback,
   voteFeedback,
 } from "../controllers/feedbackController";
+import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = express.Router();
+
+// check token
+router.use(authMiddleware);
 
 // feedback
 router.get("/list", getFeedbacks);

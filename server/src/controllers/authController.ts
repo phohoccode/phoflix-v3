@@ -57,11 +57,19 @@ export const userRegister = async (
   try {
     const { email, password, typeAccount, name, avatar } = req.body;
 
-    if (!email || !password || !typeAccount || !name || !avatar) {
+    if (!email || !typeAccount || !name || !avatar) {
       return res.status(400).json({
         status: false,
         message:
-          "Email, password, typeAccount, name và avatar không được để trống!",
+          "Email, typeAccount, name và avatar không được để trống!",
+        result: null,
+      });
+    }
+
+    if (typeAccount === "credentials" && !password) {
+      return res.status(400).json({
+        status: false,
+        message: "Password không được để trống!",
         result: null,
       });
     }
@@ -174,7 +182,7 @@ export const verifyToken = async (
   try {
     const { token } = req.query;
 
-    if (!token ) {
+    if (!token) {
       return res.status(400).json({
         status: false,
         message: "Token không được để trống!",

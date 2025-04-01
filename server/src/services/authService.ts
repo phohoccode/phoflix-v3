@@ -35,7 +35,11 @@ export const handleUserLogin = async ({
       };
     }
 
-    const sqlCheckAccount = `select * from users where email = ? and type_account = ?`;
+    const sqlCheckAccount = `
+      select * 
+      from users 
+      where email = ? and type_account = ?
+    `;
 
     const [rows]: any = await connection
       .promise()
@@ -66,6 +70,15 @@ export const handleUserLogin = async ({
       };
     }
 
+    const expiresAccess = 60 * 60 * 24; // 1 day
+
+    const dataAccessToken = {
+      userId: rows[0]?.id,
+      role: rows[0]?.role,
+    };
+
+    const accessToken = encryptData(dataAccessToken, expiresAccess);
+
     return {
       status: true,
       message: "Đăng nhập thành công!",
@@ -73,7 +86,8 @@ export const handleUserLogin = async ({
       result: {
         id: rows[0]?.id,
         email: rows[0]?.email,
-        typeAccount: rows[0]?.typeAccount,
+        typeAccount: rows[0]?.type_account,
+        accessToken,
       },
     };
   } catch (error) {
@@ -95,7 +109,7 @@ export const handleCompleteRegistration = async ({
   avatar,
 }: {
   email: string;
-  password: string;
+  password: string | null;
   typeAccount: string;
   name: string;
   avatar: string;
@@ -103,16 +117,19 @@ export const handleCompleteRegistration = async ({
   try {
     const userId = uuidv4();
 
-    const hashPassword = bcrypt.hashSync(password, salt);
+    const hashPassword = password && bcrypt.hashSync(password, salt);
 
-    const sqlRegisterAccount = `insert into users (id, email, password, type_account, username, avatar) values (?, ?, ?, ?, ?, ?)`;
+    const sqlRegisterAccount = `
+      INSERT INTO users 
+        (id, email, password, type_account, username, avatar) 
+        values (?, ?, ?, ?, ?, ?)`;
 
     const [rowsInsert]: any = await connection
       .promise()
       .query(sqlRegisterAccount, [
         userId,
         email,
-        hashPassword,
+        hashPassword ?? null,
         typeAccount,
         name,
         avatar,
@@ -189,7 +206,7 @@ export const handleUserRegister = async ({
     // nếu là tài khoản google thì hoàn tất đăng ký
     // ngược lại thì gửi email xác nhận đăng ký
     if (typeAccount === "google") {
-      handleCompleteRegistration({
+      return handleCompleteRegistration({
         email,
         password,
         typeAccount,
