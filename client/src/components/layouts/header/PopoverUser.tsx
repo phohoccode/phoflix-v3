@@ -57,12 +57,12 @@ const PopoverUser = () => {
             className="bg-[#0f111af2] text-gray-50 border border-[#ffffff10]"
           >
             <Popover.Arrow />
-            <Popover.Body p={0}>
-              <Box className="p-4">
+            <Popover.Header p={0}>
+              <Box className="p-4 border-b-[0.5px] border-[#ffffff10]">
                 <ProfileHeader />
               </Box>
-              <Box className="w-full h-[0.5px] bg-[#ffffff10]" />
-
+            </Popover.Header>
+            <Popover.Body p={0}>
               <ul className="py-2 flex flex-col gap-1">
                 {menu.map((item, index) => (
                   <li key={index} onClick={() => setOpen(false)}>

@@ -8,12 +8,14 @@ export const updateUserProfile = async ({
   gender,
   avatar,
   typeAccount,
+  accessToken,
 }: UpdateUserProflie): Promise<any> => {
   try {
     const response = await fetch(`${BACKEND_URL}/user/profile`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         userId,
@@ -42,12 +44,14 @@ export const resetPassword = async ({
   newPassword,
   oldPassword,
   typeAccount,
+  accessToken,
 }: UpdateUserPassword): Promise<any> => {
   try {
     const response = await fetch(`${BACKEND_URL}/user/reset-password`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         email,

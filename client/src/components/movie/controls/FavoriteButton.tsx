@@ -25,7 +25,7 @@ const FavoriteButton = ({
   const { movie } = useSelector((state: RootState) => state.movie.movieInfo);
   const [favorite, setFavorite] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const { data: sesstion } = useSession();
+  const { data: sesstion }: any = useSession();
 
   useEffect(() => {
     if (sesstion && movie) {
@@ -38,6 +38,7 @@ const FavoriteButton = ({
       userId: sesstion?.user?.id as string,
       movieSlug: movie?.slug,
       type: "favorite",
+      accessToken: sesstion?.user?.accessToken,
     });
 
     setFavorite(response?.result?.exists ?? false);
@@ -65,11 +66,13 @@ const FavoriteButton = ({
               movieThumbnail: movie?.thumb_url,
             },
             type: "favorite",
+            accessToken: sesstion?.user?.accessToken,
           })
         : await deleteMovie({
             userId: sesstion.user?.id as string,
             movieSlug: movie?.slug,
             type: "favorite",
+            accessToken: sesstion?.user?.accessToken,
           });
 
       if (response?.status) {
@@ -108,7 +111,9 @@ const FavoriteButton = ({
         <IoMdHeart />
       )}
       <span
-        className={`text-xs whitespace-nowrap ${!responsiveText ? "block" : "hidden xs:block"}`}
+        className={`text-xs whitespace-nowrap ${
+          !responsiveText ? "block" : "hidden xs:block"
+        }`}
       >
         {favorite ? "Bỏ yêu thích" : "Yêu thích"}
       </span>

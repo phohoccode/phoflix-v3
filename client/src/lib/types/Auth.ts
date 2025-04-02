@@ -11,3 +11,7 @@ type Login = {
   password: string;
   typeAccount: "credentials" | "google";
 };
+
+type ResetPassword = {
+  
+}

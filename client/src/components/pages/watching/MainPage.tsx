@@ -28,7 +28,7 @@ const MainPage = () => {
   const { movie, episodes, loading, error, currentEpisode } = useSelector(
     (state: RootState) => state.movie.movieInfo
   );
-  const { data: sesstion } = useSession();
+  const { data: sesstion }: any = useSession();
   const id = searchParams.get("id");
 
   useEffect(() => {
@@ -52,6 +52,7 @@ const MainPage = () => {
             movieThumbnail: movie?.thumb_url,
           },
           type: "history",
+          accessToken: sesstion?.user?.accessToken,
         });
       }
     }

@@ -1,18 +1,10 @@
 "use client";
 
 import { AppDispatch, RootState } from "@/store/store";
-import {
-  Box,
-  Button,
-  CloseButton,
-  createListCollection,
-  Dialog,
-  Portal,
-  Select,
-} from "@chakra-ui/react";
+import { Box, Button, CloseButton, Dialog, Portal } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import ErrorReportSelect from "./ErrorReportSelect";
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import ErrorDescriptionInput from "./ErrorDescriptionInput";
 import { useSession } from "next-auth/react";
 import { toaster } from "@/components/ui/toaster";
@@ -29,7 +21,7 @@ const ReportDialog = ({ trigger }: ReportDialogProps) => {
   const { reportError, reportDescription } = report;
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const { data: sesstion } = useSession();
+  const { data: sesstion }: any = useSession();
   const dispatch: AppDispatch = useDispatch();
 
   const handleCreateReport = () => {
@@ -70,6 +62,7 @@ const ReportDialog = ({ trigger }: ReportDialogProps) => {
         title: reportError,
         description: reportDescription,
         movieName: movie?.name,
+        accessToken: sesstion?.user?.accessToken as string,
       });
 
       if (response?.status) {

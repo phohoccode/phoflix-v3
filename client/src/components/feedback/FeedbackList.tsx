@@ -19,9 +19,7 @@ const FeedbackList = () => {
   const { items, loading, hasMore } = useSelector(
     (state: RootState) => state.feedback.feedbackData
   );
-  const { feedbackType } = useSelector(
-    (state: RootState) => state.feedback
-  );
+  const { feedbackType } = useSelector((state: RootState) => state.feedback);
   const { movie } = useSelector((state: RootState) => state.movie.movieInfo);
   const dispatch: AppDispatch = useDispatch();
   const [isPending, startTransition] = useTransition();
@@ -67,8 +65,16 @@ const FeedbackList = () => {
     return (
       <Box className="flex justify-center items-center h-48 mt-8 bg-[#0003] rounded-2xl">
         <EmptyData
-          title="Chưa có bình luận nào"
-          description="Hãy trở thành người đầu tiên bình luận về phim này"
+          title={
+            feedbackType === "comment"
+              ? "Chưa có lượt bình luận nào"
+              : "Chưa có lượt đánh giá nào"
+          }
+          description={
+            feedbackType === "comment"
+              ? "Hãy là người đầu tiên bình luận về bộ phim này"
+              : "Hãy là người đầu tiên đánh giá về bộ phim này"
+          }
           icon={<BiSolidMessageDetail />}
         />
       </Box>

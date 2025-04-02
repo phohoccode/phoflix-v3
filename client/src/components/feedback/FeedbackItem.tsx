@@ -2,7 +2,7 @@
 
 import { Box } from "@chakra-ui/react";
 import { Avatar } from "../ui/avatar";
-import { formatDataUnix } from "@/lib/utils";
+import { formatDateUnix } from "@/lib/utils";
 import FeedbackActions from "./FeedbackActions";
 import ReplySection from "./reply/ReplySection";
 import { useSelector } from "react-redux";
@@ -50,7 +50,7 @@ const FeedbackItem = ({ feedback }: FeedbackItemProps) => {
           </Box>
 
           <span className="text-[10px] text-gray-500 ml-1">
-            {formatDataUnix(feedback?.created_at)}
+            {formatDateUnix(feedback?.created_at)}
           </span>
         </Box>
 

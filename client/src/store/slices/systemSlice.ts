@@ -1,14 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: SystemSlice = {
-  isOpenModalSearch: false,
-  isOpenModalNotification: false,
   isShowAuthDialog: false,
+  isShowModalSearch: false,
   typeAuth: "signin",
-  isOpenPopoverUser: false,
   isOpenDrawer: false,
   windowWidth: 0,
-  loaded: false,
   lastScrollY: 0,
   isVisiable: true,
 };
@@ -17,17 +14,11 @@ const systemSlice = createSlice({
   name: "system",
   initialState,
   reducers: {
-    setIsOpenModalSearch: (state, action) => {
-      state.isOpenModalSearch = action.payload;
-    },
-    setIsOpenModalNotification: (state, action) => {
-      state.isOpenModalNotification = action.payload;
-    },
     setWidth: (state, action) => {
       state.windowWidth = action.payload;
     },
-    setLoaded: (state, action) => {
-      state.loaded = action.payload;
+    setIsShowModalSearch: (state, action) => {
+      state.isShowModalSearch = action.payload;
     },
     setIsOpenDrawer: (state, action) => {
       state.isOpenDrawer = action.payload;
@@ -44,22 +35,16 @@ const systemSlice = createSlice({
     setTypeAuth: (state, action) => {
       state.typeAuth = action.payload;
     },
-    setIsOpenPopoverUser: (state, action) => {
-      state.isOpenPopoverUser = action.payload;
-    },
   },
 });
 
 export const {
-  setIsOpenModalSearch,
-  setIsOpenPopoverUser,
-  setIsOpenModalNotification,
   setIsShowAuthDialog,
   setWidth,
+  setIsShowModalSearch,
   setIsVisiable,
   setLastScrollY,
   setIsOpenDrawer,
-  setLoaded,
   setTypeAuth,
 } = systemSlice.actions;
 export default systemSlice.reducer;

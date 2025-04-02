@@ -7,6 +7,7 @@ export const getUserMovies = async ({
   type,
   page,
   limit,
+  accessToken,
 }: GetUserMovies): Promise<any> => {
   try {
     const params = new URLSearchParams({
@@ -17,7 +18,13 @@ export const getUserMovies = async ({
     });
 
     const response = await fetch(
-      `${BACKEND_URL}/user/movies?${params.toString()}`
+      `${BACKEND_URL}/user/movies?${params.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
 
     return response.json();
@@ -37,12 +44,14 @@ export const checkMovieExists = async ({
   userId,
   movieSlug,
   type,
+  accessToken,
 }: CheckMovieExists): Promise<any> => {
   try {
     const response = await fetch(`${BACKEND_URL}/user/checkMovie`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         userId,
@@ -69,12 +78,14 @@ export const addNewMovie = async ({
   movieData,
   type,
   playlistId,
+  accessToken,
 }: AddNewMovie): Promise<any> => {
   try {
     const response = await fetch(`${BACKEND_URL}/user/movie`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         userId,
@@ -101,6 +112,7 @@ export const deleteMovie = async ({
   userId,
   movieSlug,
   type,
+  accessToken,
   playlistId = null,
   movieId = null,
 }: DeleteMovie): Promise<any> => {
@@ -125,6 +137,7 @@ export const deleteMovie = async ({
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );

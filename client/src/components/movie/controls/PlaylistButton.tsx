@@ -1,10 +1,13 @@
 "use client";
 
-import ActionsPlaylist from "@/components/csr/user/playlist/ActionsPlaylist";
+import ActionsPlaylist from "@/components/pages/user/playlist/ActionsPlaylist";
 import PlusIcon from "@/components/icons/PlusIcon";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toaster } from "@/components/ui/toaster";
-import { getPlaylists, getPlaylistsContainingMovie } from "@/lib/actions/playlistAction";
+import {
+  getPlaylists,
+  getPlaylistsContainingMovie,
+} from "@/lib/actions/playlistAction";
 import { addNewMovie, deleteMovie } from "@/lib/actions/userMovieAction";
 import { RootState } from "@/store/store";
 import { Box, Button, Popover, Portal } from "@chakra-ui/react";
@@ -27,7 +30,7 @@ const PlaylistButton = ({
   const [playlistIds, setPlaylistIds] = useState<string[]>([]);
   const [isPending, startTransition] = useTransition();
   const { movie } = useSelector((state: RootState) => state.movie.movieInfo);
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const params = useParams();
 
   useEffect(() => {
@@ -43,7 +46,10 @@ const PlaylistButton = ({
   }, [params.slug]);
 
   const handleGetPlaylist = async () => {
-    const response = await getPlaylists(session?.user?.id as string);
+    const response = await getPlaylists({
+      userId: session?.user?.id as string,
+      accessToken: session?.user?.accessToken,
+    });
 
     const { playlists } = response?.result || {};
 
@@ -54,6 +60,7 @@ const PlaylistButton = ({
     const response = await getPlaylistsContainingMovie({
       userId: session?.user?.id as string,
       movieSlug: (params?.slug as string) || "",
+      accessToken: session?.user?.accessToken,
     });
 
     const { playlistIds } = response?.result || { playlistIds: [] };
@@ -76,6 +83,7 @@ const PlaylistButton = ({
             moviePoster: movie.poster_url,
           },
           playlistId: value,
+          accessToken: session?.user?.accessToken,
         });
       } else {
         response = await deleteMovie({
@@ -83,6 +91,7 @@ const PlaylistButton = ({
           movieSlug: movie?.slug,
           type: "playlist",
           playlistId: value,
+          accessToken: session?.user?.accessToken,
         });
       }
 

@@ -2,7 +2,6 @@
 
 import { Box } from "@chakra-ui/react";
 import Link from "next/link";
-import SearchButton from "./SearchButton";
 import AuthButton from "./AuthButton";
 import MenuBar from "./MenuBar";
 import BarButton from "./BarButton";
@@ -11,8 +10,8 @@ import { RootState } from "@/store/store";
 import { useSession } from "next-auth/react";
 import { SkeletonCircle } from "@/components/ui/skeleton";
 import PopoverUser from "./PopoverUser";
-import "../../../assets/css/navbar.css";
 import PopoverNotification from "./popover-notification/PopoverNotification";
+import SearchDialog from "@/components/dialogs/search-dialog/SearchDialog";
 
 const NavBar = () => {
   const { isVisiable, lastScrollY } = useSelector(
@@ -38,7 +37,7 @@ const NavBar = () => {
         <MenuBar />
       </Box>
       <Box className="flex items-center gap-4">
-        <SearchButton />
+        <SearchDialog />
         <PopoverNotification />
         {status === "loading" && <SkeletonCircle size="9" />}
         {status === "unauthenticated" && <AuthButton />}

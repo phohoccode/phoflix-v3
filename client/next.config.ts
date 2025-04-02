@@ -1,12 +1,18 @@
 import type { NextConfig } from "next";
-import path from "path";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactStrictMode: true,
+  reactStrictMode: false,
   images: {
     domains: ["phimimg.com", "lh3.googleusercontent.com"],
   },
+  webpack: (config) => {
+    config.cache = {
+      type: "filesystem",
+      compression: "gzip",
+      allowCollectingMemory: true,
+    }
+    return config;
+  }
 };
 
 export default nextConfig;

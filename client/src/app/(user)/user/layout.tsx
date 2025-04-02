@@ -1,4 +1,4 @@
-import SideBar from "@/components/csr/user/SideBar";
+import SideBar from "@/components/pages/user/SideBar";
 import { Box } from "@chakra-ui/react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {

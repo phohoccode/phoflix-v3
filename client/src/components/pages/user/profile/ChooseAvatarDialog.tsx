@@ -23,6 +23,7 @@ const ChooseAvatarDialog = () => {
         gender: sesstion.user?.gender as any,
         avatar: seletedAvatar as string,
         typeAccount: sesstion.user?.typeAccount as "credentials" | "google",
+        accessToken: sesstion.user?.accessToken,
       });
 
       if (!response?.status) {

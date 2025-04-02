@@ -1,5 +1,5 @@
 import Loading from "@/app/loading";
-import MainPage from "@/components/csr/watching/MainPage";
+import MainPage from "@/components/pages/watching/MainPage";
 import { Suspense } from "react";
 
 const Page = () => {

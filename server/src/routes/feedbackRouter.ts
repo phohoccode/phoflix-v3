@@ -14,20 +14,21 @@ import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-// check token
-router.use(authMiddleware);
-
 // feedback
 router.get("/list", getFeedbacks);
 router.get("/replyList", getReplyList);
-router.post("/add", addFeedback);
-router.delete("/delete", deleteFeedback);
-router.put("/update", updateContentFeedback);
-router.post("/reply", addReplyFeedback);
 router.get("/statsByMovie", getStatsByMovie);
 
+// feedback protected routes
+router.post("/add", authMiddleware, addFeedback);
+router.delete("/delete", authMiddleware, deleteFeedback);
+router.put("/update", authMiddleware, updateContentFeedback);
+router.post("/reply", authMiddleware, addReplyFeedback);
+
 // vote
-router.post("/vote", voteFeedback);
 router.get("/voteList", getVoteList);
+
+// vote protected routes
+router.post("/vote", authMiddleware, voteFeedback);
 
 export default router;

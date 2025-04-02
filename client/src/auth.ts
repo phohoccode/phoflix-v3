@@ -32,8 +32,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new InvalidLoginError(response?.code, response?.message);
           }
 
-          console.log(">>> response", response);
-
           return response?.result;
         } catch (error) {
           throw error;
@@ -54,13 +52,35 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     async jwt({ token, user, account, profile, isNewUser }: any) {
+      /**
+       * TODO:
+       * 1.
+       *  1.1 Nếu là tài khoản credentials thì lấy accessToken từ user
+       *  1.2 Nếu là tài khoản google thì lấy accessToken từ account
+       *   1.2.1 Nếu là tài khoản google thì gọi api getUserProfile để kiểm tra tài khoản đã tồn tại hay chưa
+       *   1.2.2 Nếu tài khoản chưa tồn tại thì gọi api registerGoogleAccount để tạo mới tài khoản
+       * 2. Gọi api getUserProfile để lấy thông tin người dùng từ backend
+       * 3. Gán thông tin người dùng vào token
+       * 4. Trả về token
+       */
+
+      if (account?.provider === "credentials") {
+        if (user?.accessToken) {
+          token.accessToken = user?.accessToken;
+        }
+      } else if (account?.provider === "google") {
+        if (account?.id_token) {
+          token.accessToken = account?.id_token;
+        }
+      }
+
       if (account?.provider === "google") {
         const response = await getUserProfile({
           email: profile?.email,
           typeAccount: "google",
+          accessToken: token.accessToken,
         });
 
-        // Nếu tài khoản chưa tồn tại thì tạo mới
         if (!response?.status) {
           await registerGoogleAccount({
             email: profile?.email,
@@ -76,13 +96,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.typeAccount = "credentials";
       }
 
-      // Lấy thông tin người dùng từ backend sau đó gán vào token
       const response = await getUserProfile({
         email: token?.email,
         typeAccount: account?.provider ?? token?.typeAccount,
+        accessToken: token?.accessToken,
       });
 
-      // Gán thông tin người dùng vào token
       token.id = response?.result?.id;
       token.role = response?.result?.role;
       token.email = response?.result?.email;
@@ -91,16 +110,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       token.typeAccount = response?.result?.typeAccount;
       token.gender = response?.result?.gender;
       token.createdAt = response?.result?.createdAt;
-
-      if (account?.provider === "credentials") {
-        if (user?.accessToken && user?.refreshToken) {
-          token.accessToken = user?.accessToken;
-        }
-      } else if (account?.provider === "google") {
-        if (account?.access_token) {
-          token.accessToken = account?.access_token;
-        }
-      }
 
       return token;
     },

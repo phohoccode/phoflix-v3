@@ -4,10 +4,16 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 export const getUserSearchHistory = createAsyncThunk(
   "user/getUserSearchHistory",
-  async (id: string) => {
+  async ({ userId, accessToken }: GetUserSearchHistory) => {
     try {
       const response = await fetch(
-        `${BACKEND_URL}/user/search-history?id=${id}`
+        `${BACKEND_URL}/user/search-history?id=${userId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
 
       const data = await response.json();
@@ -26,19 +32,15 @@ export const getUserSearchHistory = createAsyncThunk(
 
 // ======================= CREATE USER SEARCH HISTORY =======================
 
-interface CreateUserSearchHistoryProps {
-  userId: string;
-  keyword: string;
-}
-
 export const createUserSearchHistory = createAsyncThunk(
   "user/createUserSearchHistory",
-  async ({ userId, keyword }: CreateUserSearchHistoryProps) => {
+  async ({ userId, keyword, accessToken }: CreateUserSearchHistory) => {
     try {
       const response = await fetch(`${BACKEND_URL}/user/search-history`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ userId, keyword }),
       });
@@ -58,14 +60,10 @@ export const createUserSearchHistory = createAsyncThunk(
 );
 
 // ======================= DELETE USER SEARCH HISTORY =======================
-interface DeleteUserSearchHistoryProps {
-  id: string;
-  userId: string;
-}
 
 export const deleteUserSearchHistory = createAsyncThunk(
   "user/deleteUserSearchHistory",
-  async ({ id, userId }: DeleteUserSearchHistoryProps) => {
+  async ({ id, userId, accessToken }: DeleteUserSearchHistory) => {
     try {
       const params = new URLSearchParams({
         id,
@@ -76,6 +74,9 @@ export const deleteUserSearchHistory = createAsyncThunk(
         `${BACKEND_URL}/user/search-history?${params.toString()}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 
@@ -95,12 +96,15 @@ export const deleteUserSearchHistory = createAsyncThunk(
 
 export const deleteAllUserSearchHistory = createAsyncThunk(
   "user/deleteAllUserSearchHistory",
-  async (userId: string) => {
+  async ({ userId, accessToken }: DeleteAllUserSearchHistory) => {
     try {
       const response = await fetch(
         `${BACKEND_URL}/user/search-history/all?userId=${userId}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 

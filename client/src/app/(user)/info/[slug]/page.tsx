@@ -1,5 +1,5 @@
 import Loading from "@/app/loading";
-import MoviePage from "@/components/csr/info/MainPage";
+import MoviePage from "@/components/pages/info/MainPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
 

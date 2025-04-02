@@ -1,13 +1,12 @@
 "use client";
 
 import { Box, Skeleton } from "@chakra-ui/react";
-import { SkeletonText } from "../ui/skeleton";
 
 const SkeletonSearchPreview = () => {
   return (
     <ul className="flex flex-col gap-4">
       {[...Array(3)].map((_, index: number) => (
-        <li key={index}>
+        <li key={index} className="p-2">
           <Box className="flex gap-4">
             <Box className="w-20 h-28 flex-shrink-0">
               <Skeleton className="w-full h-full" />

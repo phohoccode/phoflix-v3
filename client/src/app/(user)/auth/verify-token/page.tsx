@@ -1,5 +1,5 @@
 import Loading from "@/app/loading";
-import MainPage from "@/components/csr/verify-token/MainPage";
+import MainPage from "@/components/pages/verify-token/MainPage";
 import { Suspense } from "react";
 
 const Page = () => {

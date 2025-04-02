@@ -1,4 +1,4 @@
-import Home from "@/components/csr/home/Home";
+import Home from "@/components/pages/home/Home";
 import { Suspense } from "react";
 import Spinner from "./loading";
 

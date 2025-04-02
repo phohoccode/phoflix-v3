@@ -9,7 +9,6 @@ interface MovieThumbTitleProps {
   loading: boolean;
   href: string;
   title: string;
-  gradient: string;
   error: boolean;
 }
 
@@ -17,7 +16,6 @@ const MovieThumbTitle = ({
   loading,
   href,
   title,
-  gradient,
   error,
 }: MovieThumbTitleProps) => {
   if (loading) return <SkeletonMovieThumbTitle />;

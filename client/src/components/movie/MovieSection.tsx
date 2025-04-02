@@ -9,7 +9,7 @@ interface MovieSectionProps {
 
 const MovieSection = ({ finalData }: MovieSectionProps) => {
   return (
-    <Box className="flex flex-col gap-12 lg:p-6 p-4">
+    <Box className="flex flex-col gap-12 lg:p-8 p-4">
       {finalData?.map(
         ({ title, link, data, gradient, orientation }: any, index: number) => (
           <Box key={index}>

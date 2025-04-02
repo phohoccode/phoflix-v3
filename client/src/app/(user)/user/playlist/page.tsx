@@ -1,8 +1,8 @@
 import Loading from "@/app/loading";
 import { auth } from "@/auth";
-import MovieSection from "@/components/csr/user/MovieSection";
-import ActionsPlaylist from "@/components/csr/user/playlist/ActionsPlaylist";
-import Playlists from "@/components/csr/user/playlist/Playlists";
+import MovieSection from "@/components/pages/user/MovieSection";
+import ActionsPlaylist from "@/components/pages/user/playlist/ActionsPlaylist";
+import Playlists from "@/components/pages/user/playlist/Playlists";
 import {
   getUserMoviesFromPlaylist,
   getUserPlaylists,
@@ -18,14 +18,14 @@ interface PageProps {
 }
 
 const Page = async ({ searchParams }: PageProps) => {
-  const session = await auth();
+  const session: any = await auth();
   const userId = session?.user?.id as string;
   const params = await searchParams;
   const limit = 18;
   const currentPage = params?.page ? Number(params?.page) : 1;
 
   const [responsePlaylist, responseMovies] = await Promise.all([
-    getUserPlaylists({ userId }),
+    getUserPlaylists({ userId, accessToken: session?.user?.accessToken }),
 
     // kiểm tra xem có playlistId không, nếu có thì lấy danh sách phim trong playlist đó
     params?.playlistId
@@ -34,6 +34,7 @@ const Page = async ({ searchParams }: PageProps) => {
           playlistId: String(params.playlistId),
           page: currentPage,
           limit,
+          accessToken: session?.user?.accessToken,
         })
       : null,
   ]);
@@ -52,6 +53,7 @@ const Page = async ({ searchParams }: PageProps) => {
       playlistId,
       page: currentPage,
       limit,
+      accessToken: session?.user?.accessToken,
     }));
 
   const { movies, totalItems, totalItemsPerPage } = response?.result || {};

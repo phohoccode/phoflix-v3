@@ -69,7 +69,7 @@ const FilterBox = () => {
         ))}
       </>
       <Box className="flex gap-6 items-start p-4">
-        <span className=" min-w-32 ">&nbsp;</span>
+        <span className=" min-w-32 md:inline-block hidden">&nbsp;</span>
         <FilterActions
           handleSearch={handleSearch}
           handleResetFilter={handleResetFilter}

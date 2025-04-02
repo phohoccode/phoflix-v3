@@ -1,5 +1,5 @@
 import Loading from "@/app/loading";
-import MainPage from "@/components/csr/advance-filter/MainPage";
+import MainPage from "@/components/pages/advance-filter/MainPage";
 import { Suspense } from "react";
 
 export async function generateMetadata() {

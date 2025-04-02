@@ -38,7 +38,7 @@ const FilterActions = ({
         <IconButton
           onClick={handleResetFilter}
           rounded="full"
-          className="bg-[#282b3a] border border-[#1e2939]"
+          className="bg-gray-50 text-gray-900 hover:shadow-[0_5px_10px_10px_rgba(255,255,255,.15)]"
           size="sm"
         >
           <Refreshicon />

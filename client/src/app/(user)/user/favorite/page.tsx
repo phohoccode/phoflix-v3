@@ -2,7 +2,7 @@ import Loading from "@/app/loading";
 import { auth } from "@/auth";
 import { getUserMovies } from "@/lib/actions/userActionServer";
 import { Suspense } from "react";
-import MovieSection from "@/components/csr/user/MovieSection";
+import MovieSection from "@/components/pages/user/MovieSection";
 
 interface PageProps {
   searchParams: {
@@ -11,7 +11,7 @@ interface PageProps {
 }
 
 const Page = async ({ searchParams }: PageProps) => {
-  const sesstion = await auth();
+  const sesstion: any = await auth();
   const params = await searchParams;
   const currentPage = params?.page ? Number(params?.page) : 1;
   const limit = 18;
@@ -21,9 +21,11 @@ const Page = async ({ searchParams }: PageProps) => {
     type: "favorite",
     page: currentPage,
     limit,
+    accessToken: sesstion?.user?.accessToken,
   });
+
   const { movies, totalItems, totalItemsPerPage } = response?.result || {};
-  
+
   return (
     <Suspense fallback={<Loading />}>
       <h3 className="text-lg text-gray-50">Yêu thích</h3>
@@ -33,7 +35,7 @@ const Page = async ({ searchParams }: PageProps) => {
         totalItemsPerPage={totalItemsPerPage}
         currentPage={currentPage}
         limit={limit}
-        sesstion={sesstion} 
+        sesstion={sesstion}
         type="favorite"
       />
     </Suspense>

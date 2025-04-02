@@ -3,6 +3,8 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/vi";
 
 dayjs.locale("vi");
+dayjs.extend(relativeTime);
+
 
 export const generateUrlImage = (url: string) => {
   if (url?.includes("https://phimimg.com")) {
@@ -110,7 +112,10 @@ export const handleShare = () => {
   }
 };
 
-export const formatDataUnix = (data: string | number) => {
-  dayjs.extend(relativeTime);
-  return dayjs.unix(Number(data)).fromNow(); // Trả về thời gian tương đối từ hiện tại
+export const formatDateUnix = (date: string | number) => {
+  return dayjs.unix(Number(date)).fromNow(); // Trả về thời gian tương đối từ hiện tại
 };
+
+export const formatDate = (date:string) => {
+  return dayjs(date).fromNow(); 
+}

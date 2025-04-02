@@ -21,7 +21,7 @@ const EditableFeedback = ({
   readonly = false,
 }: EditableFeedbackProps) => {
   const [value, setValue] = useState(defaultValue || "");
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const dispatch: AppDispatch = useDispatch();
   const params = useParams();
   const { feedbackType } = useSelector((state: RootState) => state.feedback);
@@ -41,6 +41,7 @@ const EditableFeedback = ({
       feedbackId,
       content: value,
       userId: session?.user?.id as string,
+      accessToken: session?.user?.accessToken as string,
     });
 
     if (response.status) {

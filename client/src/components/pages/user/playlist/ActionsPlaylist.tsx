@@ -7,19 +7,10 @@ import {
   deletePlaylist,
   updatePlaylist,
 } from "@/lib/actions/playlistAction";
-import {
-  Box,
-  Button,
-  Dialog,
-  IconButton,
-  Input,
-  Portal,
-} from "@chakra-ui/react";
-import { set } from "lodash";
+import { Button, Dialog, IconButton, Input, Portal } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
-import { FaPlus } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 
 interface ActionsPlaylistProps {
@@ -40,9 +31,8 @@ const ActionsPlaylist = ({
   const [playlistName, setPlaylistName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const router = useRouter();
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (action === "create") {
@@ -69,17 +59,20 @@ const ActionsPlaylist = ({
         response = await createNewPlaylist({
           userId: session?.user?.id as string,
           playlistName: playlistName as string,
+          accessToken: session?.user?.accessToken as string,
         });
       } else if (action === "update") {
         response = await updatePlaylist({
           userId: session?.user?.id as string,
           playlistId: playlistId as string,
           playlistName: playlistName as string,
+          accessToken: session?.user?.accessToken as string,
         });
       } else if (action === "delete") {
         response = await deletePlaylist({
           userId: session?.user?.id as string,
           playlistId: playlistId as string,
+          accessToken: session?.user?.accessToken as string,
         });
       }
 

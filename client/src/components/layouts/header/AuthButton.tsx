@@ -33,10 +33,9 @@ const AuthButton = () => {
       {windowWidth > 1024 && (
         <Button
           onClick={handleSignUp}
-          rounded={"full"}
-          size={"sm"}
-          className="bg-[#ffffff5e]"
-          variant={"solid"}
+          rounded="full"
+          size="sm"
+          className="bg-gray-50 text-gray-900 hover:shadow-[0_5px_10px_10px_rgba(255,255,255,.15)]"
         >
           Đăng ký
         </Button>

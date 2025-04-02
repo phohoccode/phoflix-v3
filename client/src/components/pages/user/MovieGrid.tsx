@@ -3,15 +3,13 @@
 import EmptyData from "@/components/EmptyData";
 import { toaster } from "@/components/ui/toaster";
 import { deleteMovie } from "@/lib/actions/userMovieAction";
-import { formatStringForURL, generateUrlImage } from "@/lib/utils";
 import { RootState } from "@/store/store";
-import { Box, IconButton, Image, SimpleGrid } from "@chakra-ui/react";
-import Link from "next/link";
+import { Box, SimpleGrid } from "@chakra-ui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { MdDelete } from "react-icons/md";
 import { useSelector } from "react-redux";
 import MovieItem from "./MovieItem";
+import { useSession } from "next-auth/react";
 
 interface MovieGridProps {
   items: any;
@@ -32,6 +30,7 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
   const searchParams = useSearchParams();
   const { selectedPlaylistId } = useSelector((state: RootState) => state.user);
   const pathname = usePathname();
+  const { data: session }: any = useSession();
 
   const updatePageAndRefresh = (newPage: number) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -56,6 +55,7 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
       type,
       playlistId: pathname === "/user/playlist" ? selectedPlaylistId : null,
       movieId: type === "history" ? id : null,
+      accessToken: session?.user?.accessToken,
     });
     setSlug("");
 

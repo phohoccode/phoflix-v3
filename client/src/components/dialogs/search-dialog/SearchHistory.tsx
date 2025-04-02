@@ -7,17 +7,16 @@ import {
   getUserSearchHistory,
 } from "@/store/asyncThunks/userAsyncThunk";
 import { AppDispatch, RootState } from "@/store/store";
-import { Box, Button, IconButton, Skeleton } from "@chakra-ui/react";
+import { Box, Button, IconButton } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useEffect, useTransition } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GoClockFill } from "react-icons/go";
 import { BsXLg } from "react-icons/bs";
-import Spinner from "@/app/loading";
 import AlertDialog from "../AlertDialog";
 import { toaster } from "@/components/ui/toaster";
 import Link from "next/link";
-import { setIsOpenModalSearch } from "@/store/slices/systemSlice";
+import { setIsShowModalSearch } from "@/store/slices/systemSlice";
 
 interface SearchHistoryProps {
   keyword: string;
@@ -28,12 +27,17 @@ const SearchHistory = ({ keyword }: SearchHistoryProps) => {
     (state: RootState) => state.user.searchHistory
   );
   const dispatch: AppDispatch = useDispatch();
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     if (session) {
-      dispatch(getUserSearchHistory(session.user?.id as string));
+      dispatch(
+        getUserSearchHistory({
+          userId: session.user?.id as string,
+          accessToken: session.user?.accessToken as string,
+        })
+      );
     }
   }, []);
 
@@ -44,9 +48,15 @@ const SearchHistory = ({ keyword }: SearchHistoryProps) => {
           deleteUserSearchHistory({
             id,
             userId: session.user?.id as string,
+            accessToken: session.user?.accessToken as string,
           })
         );
-        dispatch(getUserSearchHistory(session.user?.id as string));
+        dispatch(
+          getUserSearchHistory({
+            userId: session.user?.id as string,
+            accessToken: session.user?.accessToken as string,
+          })
+        );
       });
     }
   };
@@ -55,13 +65,21 @@ const SearchHistory = ({ keyword }: SearchHistoryProps) => {
     if (session) {
       startTransition(async () => {
         const response: any = await dispatch(
-          deleteAllUserSearchHistory(session.user?.id as string)
+          deleteAllUserSearchHistory({
+            userId: session.user?.id as string,
+            accessToken: session.user?.accessToken as string,
+          })
         );
 
         const { status, message } = response.payload;
 
         if (status) {
-          dispatch(getUserSearchHistory(session.user?.id as string));
+          dispatch(
+            getUserSearchHistory({
+              userId: session.user?.id as string,
+              accessToken: session.user?.accessToken as string,
+            })
+          );
         }
 
         toaster.create({
@@ -100,7 +118,7 @@ const SearchHistory = ({ keyword }: SearchHistoryProps) => {
             key={index}
           >
             <Link
-              onClick={() => dispatch(setIsOpenModalSearch(false))}
+              onClick={() => dispatch(setIsShowModalSearch(false))}
               className="flex flex-1 h-full items-center"
               href={`/search?keyword=${encodeURIComponent(item?.keyword)}`}
             >

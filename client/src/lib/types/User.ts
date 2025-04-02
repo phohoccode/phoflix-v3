@@ -7,9 +7,8 @@ type SearchHistory = {
 type GetUserProfile = {
   email: string;
   typeAccount: "google" | "credentials";
-}
-
-
+  accessToken: string;
+};
 
 type UserSlice = {
   searchHistory: {
@@ -47,6 +46,7 @@ type UpdateUserProflie = {
   gender: "other" | "female" | "male";
   avatar: string;
   typeAccount: "credentials" | "google";
+  accessToken: string;
 };
 
 type UpdateUserPassword = {
@@ -54,4 +54,5 @@ type UpdateUserPassword = {
   newPassword: string;
   oldPassword: string;
   typeAccount: "credentials";
+  accessToken: string;
 };

@@ -1,22 +1,31 @@
+type GetUserPlaylists = {
+  userId: string;
+  accessToken: string;
+}
+
 type CreateNewPlaylist = {
   userId: string;
   playlistName: string;
+  accessToken: string;
 };
 
 type UpdatePlaylist = {
   userId: string;
   playlistId: string;
   playlistName: string;
+  accessToken: string;
 };
 
 type DeletePlaylist = {
   userId: string;
   playlistId: string;
+  accessToken: string;
 };
 
 type GetPlaylistsContainingMovie = {
   userId: string;
   movieSlug: string;
+  accessToken: string;
 }
 
 type GetUserMoviesFromPlaylist = {
@@ -24,4 +33,5 @@ type GetUserMoviesFromPlaylist = {
   playlistId: string;
   page: number;
   limit: number;
+  accessToken: string;
 }

@@ -1,38 +1,28 @@
 "use client";
 
 import SearchIcon from "@/components/icons/SearchIcon";
-import {
-  DialogBody,
-  DialogContent,
-  DialogHeader,
-  DialogRoot,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { InputGroup } from "@/components/ui/input-group";
 import { fetchDataMoviePreview } from "@/store/asyncThunks/movieAsyncThunk";
-import { AppDispatch } from "@/store/store";
-import { Box, Input, Kbd } from "@chakra-ui/react";
+import { AppDispatch, RootState } from "@/store/store";
+import { Box, Button, Dialog, Input, Kbd, Portal } from "@chakra-ui/react";
 import React, { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import SearchPreview from "./SearchPreview";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
-import { setIsOpenModalSearch } from "@/store/slices/systemSlice";
 import { toaster } from "@/components/ui/toaster";
 import SearchHistory from "./SearchHistory";
 import { createUserSearchHistory } from "@/store/asyncThunks/userAsyncThunk";
 import { useSession } from "next-auth/react";
+import { IoSearch } from "react-icons/io5";
+import { setIsShowModalSearch } from "@/store/slices/systemSlice";
 
-interface SearchDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
-  const [keyword, setKeyword] = useState("");
+const SearchDialog = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-  const { data: sesstion } = useSession();
+  const { data: sesstion }: any = useSession();
+  const { isShowModalSearch } = useSelector((state: RootState) => state.system);
+  const [keyword, setKeyword] = useState("");
 
   const fetchData = useCallback(
     _.debounce((searchTerm: string) => {
@@ -60,14 +50,16 @@ const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
       }
 
       router.push(`/search?keyword=${encodeURIComponent(keyword)}`);
-      dispatch(setIsOpenModalSearch(false));
+
       setKeyword("");
+      dispatch(setIsShowModalSearch(false));
 
       if (sesstion) {
         dispatch(
           createUserSearchHistory({
             userId: sesstion.user?.id as string,
             keyword: keyword as string,
+            accessToken: sesstion.user?.accessToken as string,
           })
         );
       }
@@ -75,36 +67,61 @@ const SearchDialog = ({ isOpen, onClose }: SearchDialogProps) => {
   };
 
   return (
-    <DialogRoot scrollBehavior="inside" open={isOpen} onOpenChange={onClose}>
-      <DialogContent
-        padding={1}
-        className="bg-[#2a314e] text-gray-50 border border-[#ffffff10] rounded-2xl backdrop-blur mx-4 lg:max-w-[560px] md:max-w-[520px] max-w-[420px]"
-      >
-        <DialogHeader p={1}>
-          <DialogTitle>
-            <InputGroup
-              startElement={<SearchIcon />}
-              endElement={<Kbd>Enter</Kbd>}
-              className="w-full"
-            >
-              <Input
-                onKeyDown={(e) => handleKeyDown(e)}
-                value={keyword}
-                onChange={(e) => handleSearch(e)}
-                className="font-normal text-gray-50 rounded-xl truncate bg-transparent border border-gray-400 focus:border-gray-100"
-                placeholder="Nhập tên phim cần tìm..."
-              />
-            </InputGroup>
-          </DialogTitle>
-        </DialogHeader>
-        <DialogBody p={1}>
-          <Box className="mt-4">
-            <SearchPreview keyword={keyword} />
-            <SearchHistory keyword={keyword} />
-          </Box>
-        </DialogBody>
-      </DialogContent>
-    </DialogRoot>
+    <Dialog.Root
+      scrollBehavior="inside"
+      open={isShowModalSearch}
+      onOpenChange={({ open }) => dispatch(setIsShowModalSearch(open))}
+    >
+      <Dialog.Trigger asChild>
+        <Button
+          className="2xl:min-w-60 lg:min-w-48 text-gray-50 lg:bg-[#ffffff2f] bg-transparent rounded-md"
+          size="sm"
+        >
+          <IoSearch />
+          <span className="flex-1 text-left ml-1 lg:block hidden">
+            Tìm kiếm phim ...
+          </span>
+        </Button>
+      </Dialog.Trigger>
+      <Portal>
+        <Dialog.Backdrop />
+        <Dialog.Positioner>
+          <Dialog.Content
+            padding={1}
+            className="bg-[#0f111af2] text-gray-50 border border-[#ffffff10] rounded-2xl backdrop-blur mx-4 lg:max-w-[560px] md:max-w-[520px] max-w-[420px]"
+          >
+            <Dialog.Header p={1}>
+              <Dialog.Title>
+                <InputGroup
+                  startElement={<SearchIcon />}
+                  endElement={<Kbd>Enter</Kbd>}
+                  className="w-full"
+                >
+                  <Input
+                    onKeyDown={(e) => handleKeyDown(e)}
+                    value={keyword}
+                    onChange={(e) => handleSearch(e)}
+                    css={{
+                      "&:focus-visible": {
+                        outline: "none",
+                      },
+                    }}
+                    className="font-normal text-gray-50 rounded-xl truncate bg-transparent border border-[#ffffff10] focus:border-gray-100"
+                    placeholder="Nhập tên phim cần tìm..."
+                  />
+                </InputGroup>
+              </Dialog.Title>
+            </Dialog.Header>
+            <Dialog.Body p={1}>
+              <Box className="mt-4">
+                <SearchPreview keyword={keyword} />
+                <SearchHistory keyword={keyword} />
+              </Box>
+            </Dialog.Body>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Portal>
+    </Dialog.Root>
   );
 };
 

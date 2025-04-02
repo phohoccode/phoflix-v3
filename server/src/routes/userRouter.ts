@@ -30,7 +30,7 @@ import { authMiddleware } from "../middleware/authMiddleware";
 const router = express.Router();
 
 // check token
-// router.use(authMiddleware);
+router.use(authMiddleware);
 
 // users
 router.get("/profile", getUserProfile);

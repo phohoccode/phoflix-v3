@@ -1,5 +1,5 @@
 import Loading from "@/app/loading";
-import MainPage from "@/components/csr/search/MainPage";
+import MainPage from "@/components/pages/search/MainPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
@@ -10,7 +10,7 @@ interface MoviePageProps {
 export async function generateMetadata({
   searchParams,
 }: MoviePageProps): Promise<Metadata> {
-  const params = await searchParams ?? {};
+  const params = (await searchParams) ?? {};
   const keyword = params.keyword ?? "hihihi";
 
   return {

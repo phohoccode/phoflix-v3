@@ -37,12 +37,14 @@ export const addFeedback = async ({
   userId,
   content,
   type,
+  accessToken,
 }: AddFeedback): Promise<any> => {
   try {
     const response = await fetch(`${BACKEND_URL}/feedback/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         movieSlug,
@@ -69,6 +71,7 @@ export const addFeedback = async ({
 export const deleteFeedback = async ({
   feedbackId,
   userId,
+  accessToken,
 }: DeleteFeedback): Promise<any> => {
   try {
     const params = new URLSearchParams({
@@ -82,6 +85,7 @@ export const deleteFeedback = async ({
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -103,12 +107,14 @@ export const updateContentFeedback = async ({
   feedbackId,
   userId,
   content,
+  accessToken,
 }: UpdateContentFeedback): Promise<any> => {
   try {
     const response = await fetch(`${BACKEND_URL}/feedback/update`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         feedbackId,
@@ -136,12 +142,14 @@ export const addReply = async ({
   content,
   type,
   parentId,
+  accessToken,
 }: AddReplyFeedback): Promise<any> => {
   try {
     const response = await fetch(`${BACKEND_URL}/feedback/reply`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         movieSlug,
@@ -187,12 +195,14 @@ export const addVote = async ({
   userId,
   feedbackId,
   voteType,
+  accessToken,
 }: VoteFeedback): Promise<any> => {
   try {
     const response = await fetch(`${BACKEND_URL}/feedback/vote`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         movieSlug,

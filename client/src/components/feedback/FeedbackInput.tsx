@@ -25,7 +25,7 @@ const FeedbackInput = ({
 }: FeedbackInputProps) => {
   const params = useParams();
   const dispatch: AppDispatch = useDispatch();
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const { replyId, feedbackType } = useSelector(
     (state: RootState) => state.feedback
   );
@@ -70,6 +70,7 @@ const FeedbackInput = ({
           userId: session?.user?.id as string,
           content: value,
           type: "comment",
+          accessToken: session?.user?.accessToken as string,
         });
       } else if (action === "reply") {
         response = await addReply({
@@ -78,6 +79,7 @@ const FeedbackInput = ({
           content: value,
           type: feedbackType,
           movieSlug: params.slug as string,
+          accessToken: session?.user?.accessToken as string,
         });
       }
 

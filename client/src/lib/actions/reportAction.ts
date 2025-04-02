@@ -4,13 +4,8 @@ export const createReportMovie = async ({
   description,
   title,
   movieName,
-}: {
-  userId: string;
-  movieSlug: string;
-  description: string;
-  title: string;
-  movieName: string;
-}) => {
+  accessToken,
+}: CreateReportMovie) => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BACKEND_URL}/user/reportMovie`,
@@ -18,6 +13,7 @@ export const createReportMovie = async ({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           userId,

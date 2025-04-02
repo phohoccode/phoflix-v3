@@ -2,12 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-interface GetFeedbacks {
-  movieSlug: string;
-  type: "review" | "comment";
-  limit: number;
-}
-
 export const getFeedbacks = createAsyncThunk(
   "feedback/getFeedbacks",
   async ({ movieSlug, type, limit }: GetFeedbacks) => {
@@ -38,12 +32,6 @@ export const getFeedbacks = createAsyncThunk(
 );
 
 // ========================= GET MORE FEEDBACK =========================
-interface GetMoreFeedbacks {
-  movieSlug: string;
-  type: "review" | "comment";
-  limit: number;
-  afterTime: number;
-}
 
 export const getMoreFeedbacks = createAsyncThunk(
   "feedback/getMoreFeedbacks",
@@ -77,12 +65,6 @@ export const getMoreFeedbacks = createAsyncThunk(
 
 // ========================= REPLY =========================
 
-interface GetReplyListFeedback {
-  parentId: string;
-  limit: number;
-  type: "review" | "comment";
-}
-
 export const getReplyListFeedback = createAsyncThunk(
   "feedback/getReplyListFeedback",
   async ({ parentId, limit, type }: GetReplyListFeedback) => {
@@ -113,13 +95,6 @@ export const getReplyListFeedback = createAsyncThunk(
     return data;
   }
 );
-
-interface GetMoreReplyListFeedback {
-  parentId: string;
-  limit: number;
-  type: "review" | "comment";
-  afterTime: number | string;
-}
 
 export const getMoreReplyListFeedback = createAsyncThunk(
   "feedback/getMoreReplyListFeedback",

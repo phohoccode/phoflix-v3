@@ -45,7 +45,7 @@ const MainPage = () => {
           <Box className="mt-6">
             <SkeletonMovieGrid
               limit={limit}
-              columns={{ base: 3, md: 3, lg: 5, xl: 6, "2xl": 8 }}
+              columns={{ base: 3, md: 4, lg: 5, xl: 6, "2xl": 8 }}
             />
           </Box>
         </Box>
@@ -73,7 +73,7 @@ const MainPage = () => {
         <Box className="mt-6">
           <MovieGrid
             items={items}
-            columns={{ base: 3, md: 3, lg: 5, xl: 6, "2xl": 8 }}
+            columns={{ base: 3, md: 4, lg: 5, xl: 6, "2xl": 8 }}
           />
         </Box>
 

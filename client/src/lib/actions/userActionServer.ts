@@ -5,6 +5,7 @@ const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 export const getUserProfile = async ({
   email,
   typeAccount,
+  accessToken,
 }: GetUserProfile): Promise<any> => {
   try {
     const params = new URLSearchParams({
@@ -13,7 +14,13 @@ export const getUserProfile = async ({
     });
 
     const response = await fetch(
-      `${BACKEND_URL}/user/profile?${params.toString()}`
+      `${BACKEND_URL}/user/profile?${params.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
 
     return response.json();
@@ -32,6 +39,7 @@ export const getUserMovies = async ({
   type,
   page,
   limit,
+  accessToken,
 }: GetUserMovies): Promise<any> => {
   try {
     const params = new URLSearchParams({
@@ -47,6 +55,7 @@ export const getUserMovies = async ({
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         cache: "no-store",
       }
@@ -97,16 +106,20 @@ export const deleteMovie = async ({
 };
 
 // ===================== GET PLAYLISTS  =====================
-interface GetUserPlaylists {
-  userId: string;
-}
 
 export const getUserPlaylists = async ({
   userId,
+  accessToken,
 }: GetUserPlaylists): Promise<any> => {
   try {
     const response = await fetch(
-      `${BACKEND_URL}/user/playlists?userId=${userId}`
+      `${BACKEND_URL}/user/playlists?userId=${userId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
 
     return response.json();
@@ -125,6 +138,7 @@ export const getUserMoviesFromPlaylist = async ({
   playlistId,
   page,
   limit,
+  accessToken,
 }: GetUserMoviesFromPlaylist): Promise<any> => {
   try {
     const params = new URLSearchParams({
@@ -135,7 +149,13 @@ export const getUserMoviesFromPlaylist = async ({
     });
 
     const response = await fetch(
-      `${BACKEND_URL}/user/playlist/movies?${params.toString()}`
+      `${BACKEND_URL}/user/playlist/movies?${params.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
     );
 
     return response.json();

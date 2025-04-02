@@ -24,7 +24,7 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
   );
   const { feedbackType } = useSelector((state: RootState) => state.feedback);
   const [open, setOpen] = useState(false);
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const [isPending, startTransition] = useTransition();
   const [statsByMovie, setStatsByMovie] = useState({
     averagePoint: 0,
@@ -82,6 +82,7 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
         point: Number(selectedReview?.value),
         content: reviewContent as string,
         type: "review",
+        accessToken: session?.user?.accessToken,
       });
 
       if (response?.status) {

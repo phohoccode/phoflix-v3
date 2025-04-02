@@ -15,6 +15,10 @@ export const handleGetUserProfile = async ({
   email,
   typeAccount,
 }: GetUserProfile) => {
+
+  console.log(">>> email", email);
+  console.log(">>> typeAccount", typeAccount);
+
   try {
     const sqlGetUserInfo = `
       SELECT

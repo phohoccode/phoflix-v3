@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar } from "@/components/ui/avatar";
-import { formatDataUnix } from "@/lib/utils";
+import { formatDateUnix } from "@/lib/utils";
 import { Box } from "@chakra-ui/react";
 import FeedbackActions from "../FeedbackActions";
 import { RootState } from "@/store/store";
@@ -36,7 +36,7 @@ const ReplyItem = ({ reply, parentId }: ReplyItemProps) => {
             <GenderIcon gender={reply?.author?.gender} />
           </Box>
           <span className="text-[10px] text-gray-500 ml-1">
-            {formatDataUnix(reply?.created_at)}
+            {formatDateUnix(reply?.created_at)}
           </span>
         </Box>
         {reply?.is_spam === 0 ? (

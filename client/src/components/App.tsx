@@ -2,17 +2,13 @@
 
 import { Box } from "@chakra-ui/react";
 import NavBar from "./layouts/header/NavBar";
-import SearchDialog from "./dialogs/search-dialog/SearchDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import {
   setIsOpenDrawer,
-  setIsOpenModalNotification,
-  setIsOpenModalSearch,
   setIsShowAuthDialog,
   setIsVisiable,
   setLastScrollY,
-  setLoaded,
   setWidth,
 } from "@/store/slices/systemSlice";
 import { useEffect } from "react";
@@ -24,17 +20,11 @@ import ScrollToTopButton from "./ScrollToTopButton";
 import { signOut, useSession } from "next-auth/react";
 
 const App = ({ children }: { children: React.ReactNode }) => {
-  const {
-    lastScrollY,
-    isOpenModalSearch,
-    isOpenDrawer,
-    isShowAuthDialog,
-    typeAuth,
-  } = useSelector((state: RootState) => state.system);
+  const { lastScrollY, isOpenDrawer, isShowAuthDialog, typeAuth } = useSelector(
+    (state: RootState) => state.system
+  );
   const dispatch: AppDispatch = useDispatch();
   const { data: sesstion, status }: any = useSession();
-
-  console.log(">>> sesstion", sesstion);
 
   useEffect(() => {
     if (status === "authenticated") {
@@ -52,7 +42,6 @@ const App = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     dispatch(setWidth(window.innerWidth));
-    dispatch(setLoaded(true));
   }, []);
 
   useEffect(() => {
@@ -93,11 +82,6 @@ const App = ({ children }: { children: React.ReactNode }) => {
       <DrawerCustom
         isOpen={isOpenDrawer}
         onClose={() => dispatch(setIsOpenDrawer(false))}
-      />
-
-      <SearchDialog
-        isOpen={isOpenModalSearch}
-        onClose={() => dispatch(setIsOpenModalSearch(false))}
       />
 
       <AuthDialog

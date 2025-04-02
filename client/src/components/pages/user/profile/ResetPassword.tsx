@@ -43,6 +43,7 @@ const ResetPassword = () => {
         oldPassword: values.oldPassword,
         newPassword: values.newPassword,
         typeAccount: session?.user?.typeAccount as "credentials",
+        accessToken: session?.user?.accessToken,
       });
 
       if (response?.status) {

@@ -119,7 +119,7 @@ const Home = () => {
       <SlideShow />
       <Box className="lg:px-14 max-w-[1900px] mt-12 mx-auto">
         <Box className="flex flex-col gap-12 overflow-hidden">
-          <Box className="bg-gradient-to-b rounded-lg from-[#282b3a] via-20% via-transparent">
+          <Box className="bg-gradient-to-b rounded-2xl from-[#282b3a] via-20% via-transparent">
             <MovieSection finalData={finalData} />
           </Box>
         </Box>

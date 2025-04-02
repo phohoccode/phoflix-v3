@@ -20,8 +20,8 @@ const PopoverNotification = () => {
         <Box className="cursor-pointer">
           <IconButton
             size="sm"
-            variant="solid"
-            className="lg:bg-[#ffffff5e] bg-transparent"
+            variant="outline"
+            className="bg-transparent text-gray-50 border-[#ffffff86]"
             rounded="full"
           >
             <IoNotifications />
@@ -36,8 +36,11 @@ const PopoverNotification = () => {
             className="bg-[#0f111af2] text-gray-50 border border-[#ffffff10] max-w-[320px]"
           >
             <Popover.Arrow />
-            <Popover.Body p={0}>
+            <Popover.Header p={0}>
               <HeaderNotification />
+            </Popover.Header>
+            <Popover.Body p={0}>
+              <div className="text-center p-4">Đang phát triển!</div>
             </Popover.Body>
 
             <Popover.Footer p={0}>

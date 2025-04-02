@@ -19,7 +19,6 @@ const MainPage = () => {
   );
   const dispatch: AppDispatch = useDispatch();
   const searchParams = useSearchParams();
-  const movieGridRef = useRef<HTMLDivElement | null>(null);
   const currentPage = searchParams.get("page") || 1;
   const country = searchParams.get("country") || "";
   const category = searchParams.get("category") || "";
@@ -50,7 +49,7 @@ const MainPage = () => {
         </h3>
         <FilterBox />
 
-        <Box className="mt-12" ref={movieGridRef}>
+        <Box className="mt-12">
           {!loading ? (
             <>
               {items?.length > 0 ? (
@@ -83,7 +82,6 @@ const MainPage = () => {
               totalItemsPerPage: pagination?.totalItemsPerPage,
             }}
             currentPage={currentPage}
-            ref={movieGridRef}
           />
         )}
       </Box>

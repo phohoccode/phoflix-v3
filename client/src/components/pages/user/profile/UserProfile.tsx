@@ -58,6 +58,7 @@ const UserProfile = () => {
         gender: values?.gender as any,
         avatar: sesstion.user?.image,
         typeAccount: sesstion.user?.typeAccount,
+        accessToken: sesstion.user?.accessToken,
       });
 
       if (!response?.status) {
@@ -90,15 +91,7 @@ const UserProfile = () => {
       </Box>
       <Box className="flex gap-8 sm:items-start items-center sm:flex-row flex-col">
         <UserAvatar />
-        <form
-          className="flex w-full flex-col gap-6 mt-3 flex-1"
-          // onKeyDown={(e) => {
-          //   if (e.key === "Enter") {
-          //     e.preventDefault();
-          //     handleUpdateUserProfile();
-          //   }
-          // }}
-        >
+        <Box className="flex w-full flex-col gap-6 mt-3 flex-1">
           <Field.Root required className="text-gray-50">
             <Field.Label>Email</Field.Label>
             <Input
@@ -127,8 +120,8 @@ const UserProfile = () => {
           <Field.Root required className="text-gray-50" gap={4}>
             <Field.Label>Giới tính</Field.Label>
             <RadioGroup.Root
-              variant="solid"
-              colorPalette="yellow"
+              colorPalette="whiteAlpha"
+              variant="subtle"
               value={values?.gender ?? "other"}
               onChange={(e: any) => {
                 setValues({
@@ -151,11 +144,9 @@ const UserProfile = () => {
           <Box className="md:max-w-24 max-w-full mt-6">
             <Button
               onClick={handleUpdateUserProfile}
-              className="w-full"
+              className="w-full hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)] bg-[#ffda7d] text-[#1e2939]"
               size="sm"
               loading={isPending}
-              variant="solid"
-              colorPalette="yellow"
             >
               Cập nhật
             </Button>
@@ -166,7 +157,7 @@ const UserProfile = () => {
               <span>Đổi mật khẩu nhấn vào</span> <ResetPassword />
             </Box>
           )}
-        </form>
+        </Box>
       </Box>
     </Box>
   );

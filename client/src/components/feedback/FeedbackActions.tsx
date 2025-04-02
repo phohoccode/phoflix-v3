@@ -24,7 +24,7 @@ import { toaster } from "../ui/toaster";
 import AlertDialog from "../dialogs/AlertDialog";
 
 const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
-  const { data: session } = useSession();
+  const { data: session }: any = useSession();
   const { feedbackData, repliesData, voteList, feedbackType } = useSelector(
     (state: RootState) => state.feedback
   );
@@ -78,16 +78,10 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
         feedbackId,
         movieSlug: params.slug as string,
         voteType,
+        accessToken: session?.user?.accessToken as string,
       });
 
       if (response?.status) {
-        toaster.create({
-          type: "success",
-          description: response?.message,
-          duration: 2000,
-        });
-
-        // Làm mới lượt bình chọn
         dispatch(getVoteListFeedback(params.slug as string));
       } else {
         toaster.create({
@@ -104,6 +98,7 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
       const response = await deleteFeedback({
         feedbackId,
         userId: session?.user?.id as string,
+        accessToken: session?.user?.accessToken as string,
       });
 
       if (response?.status) {
@@ -122,8 +117,6 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
           })
         );
 
-        console.log("parent_id", parentId);
-        console.log("rootId", rootId);
         // Làm mới reply khi xóa phản hồi con
         parentId &&
           dispatch(
