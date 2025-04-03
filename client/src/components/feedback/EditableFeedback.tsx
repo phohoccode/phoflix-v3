@@ -31,6 +31,26 @@ const EditableFeedback = ({
     setValue(target.value);
   };
 
+  const handleRefreshFeedback = () => {
+    !parentId &&
+      dispatch(
+        getFeedbacks({
+          movieSlug: params.slug as string,
+          type: feedbackType,
+          limit: 10,
+        })
+      );
+
+    parentId &&
+      dispatch(
+        getReplyListFeedback({
+          parentId: parentId as string,
+          type: feedbackType,
+          limit: 10,
+        })
+      );
+  };
+
   const updateFeedback = async () => {
     if (value?.trim() === "" || value === defaultValue) {
       setValue(defaultValue || "");
@@ -46,24 +66,7 @@ const EditableFeedback = ({
 
     if (response.status) {
       toaster.create({ type: "success", description: response.message });
-
-      !parentId &&
-        dispatch(
-          getFeedbacks({
-            movieSlug: params.slug as string,
-            type: feedbackType,
-            limit: 10,
-          })
-        );
-
-      parentId &&
-        dispatch(
-          getReplyListFeedback({
-            parentId: parentId as string,
-            type: feedbackType,
-            limit: 10,
-          })
-        );
+      handleRefreshFeedback();
     } else {
       toaster.create({ type: "error", description: response.message });
     }

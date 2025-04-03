@@ -93,6 +93,27 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
     });
   };
 
+  const handleRefreshFeedback = async () => {
+    // Làm mới feedback khi xóa phản hồi cha
+    await dispatch(
+      getFeedbacks({
+        movieSlug: params.slug as string,
+        type: feedbackType,
+        limit: 10,
+      })
+    );
+
+    // Làm mới reply khi xóa phản hồi con
+    parentId &&
+      dispatch(
+        getReplyListFeedback({
+          parentId: rootId as string,
+          type: feedbackType,
+          limit: 10,
+        })
+      );
+  };
+
   const handleDeleteFeedback = () => {
     startTransition(async () => {
       const response = await deleteFeedback({
@@ -108,24 +129,7 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
           duration: 2000,
         });
 
-        // Làm mới feedback khi xóa phản hồi cha
-        await dispatch(
-          getFeedbacks({
-            movieSlug: params.slug as string,
-            type: feedbackType,
-            limit: 10,
-          })
-        );
-
-        // Làm mới reply khi xóa phản hồi con
-        parentId &&
-          dispatch(
-            getReplyListFeedback({
-              parentId: rootId as string,
-              type: feedbackType,
-              limit: 10,
-            })
-          );
+        handleRefreshFeedback();
       } else {
         toaster.create({
           type: "error",

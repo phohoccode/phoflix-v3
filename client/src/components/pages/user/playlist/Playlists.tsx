@@ -36,7 +36,7 @@ const Playlists = ({ playlists }: PlaylistsProps) => {
     }
   }, [playlists]);
 
-  const handleChangePlaylist = async (playlist: any) => {
+  const handleChangePlaylist = (playlist: any) => {
     const params = new URLSearchParams(window.location.search);
 
     params.set("playlistId", playlist?.id.toString());

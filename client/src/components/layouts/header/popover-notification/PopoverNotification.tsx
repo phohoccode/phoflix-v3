@@ -1,27 +1,51 @@
 "use client";
 
 import { Box, IconButton, Popover, Portal } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { IoNotifications } from "react-icons/io5";
 import HeaderNotification from "./HeaderNotification";
 import Link from "next/link";
+import NotificationList from "@/components/notification/NotificationList";
+import { getNotifications } from "@/lib/actions/notificationActionClient";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { useSession } from "next-auth/react";
+import { setOpenNotification } from "@/store/slices/notificationSlice";
 
 const PopoverNotification = () => {
-  const [open, setOpen] = useState(false);
+  const dispatch: AppDispatch = useDispatch();
+  const [notifications, setNotifications] = useState<NotificationCustom[]>([]);
+  const [isPending, startTransition] = useTransition();
+  const { activeTab, openNotification } = useSelector(
+    (state: RootState) => state.notification
+  );
+  const { data: sesstion } = useSession();
+
+  useEffect(() => {
+    startTransition(async () => {
+      const response = await getNotifications({
+        limit: 5,
+        type: activeTab,
+        userId: activeTab === "individual" ? sesstion?.user?.id : null,
+      });
+
+      setNotifications(response?.result?.items ?? []);
+    });
+  }, [activeTab]);
 
   return (
     <Popover.Root
       size="xs"
       autoFocus={false}
-      open={open}
-      onOpenChange={({ open }) => setOpen(open)}
+      open={openNotification}
+      onOpenChange={({ open }) => dispatch(setOpenNotification(open))}
     >
       <Popover.Trigger asChild>
         <Box className="cursor-pointer">
           <IconButton
             size="sm"
             variant="outline"
-            className="bg-transparent text-gray-50 border-[#ffffff86]"
+            className="bg-transparent text-gray-50 lg:border-[#ffffff86] lg:border border-0"
             rounded="full"
           >
             <IoNotifications />
@@ -40,16 +64,24 @@ const PopoverNotification = () => {
               <HeaderNotification />
             </Popover.Header>
             <Popover.Body p={0}>
-              <div className="text-center p-4">Đang phát triển!</div>
+              <NotificationList
+                notifications={notifications}
+                loading={isPending}
+              />
             </Popover.Body>
-
-            <Popover.Footer p={0}>
-              <Box className="flex items-center justify-center w-full p-4">
-                <Link href="#" className="text-sm text-gray-200">
-                  Xem tất cả
-                </Link>
-              </Box>
-            </Popover.Footer>
+            {notifications?.length >= 5 && !isPending && (
+              <Popover.Footer p={0}>
+                <Box className="w-full p-2 border-t border-[#ffffff10]">
+                  <Link
+                    onClick={() => dispatch(setOpenNotification(false))}
+                    href={`/user/notification?tab=${activeTab}`}
+                    className="text-xs hover:text-[#ffd875] text-gray-200 w-full h-full block p-2 text-center"
+                  >
+                    Xem tất cả
+                  </Link>
+                </Box>
+              </Popover.Footer>
+            )}
           </Popover.Content>
         </Popover.Positioner>
       </Portal>

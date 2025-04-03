@@ -1,22 +1,15 @@
 "use client";
 
-import { Box, Button, HStack } from "@chakra-ui/react";
-import Link from "next/link";
+import { Box, HStack } from "@chakra-ui/react";
 import { useState } from "react";
 import { PaginationItems, PaginationRoot } from "../ui/pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { useParams } from "next/navigation";
-import {
-  changeQuery,
-  formatTypeMovie,
-  getIdFromLinkEmbed,
-  updateSearchParams,
-} from "@/lib/utils";
+import { changeQuery, formatTypeMovie, getIdFromLinkEmbed } from "@/lib/utils";
 import { setCurrentEpisode } from "@/store/slices/movieSlice";
 import { toaster } from "../ui/toaster";
-import { FaPlay } from "react-icons/fa6";
-import { BsPlayFill } from "react-icons/bs";
+import EpisodeItem from "./EpisodeItem";
 
 type Episode = {
   name: string;
@@ -55,7 +48,6 @@ const EpisodesList = ({
     episodes.slice(0, limitDisplay)
   );
   const dispatch: AppDispatch = useDispatch();
-  const params = useParams();
   const { windowWidth } = useSelector((state: RootState) => state.system);
   const [page, setPage] = useState(1);
   const title = server_name.includes("Vietsub") ? "Vietsub" : "Lồng tiếng";
@@ -101,36 +93,21 @@ const EpisodesList = ({
   return (
     <Box className="flex flex-col gap-4">
       <h3 className="text-gray-50 text-sm font-semibold">{title}</h3>
-      <Box  
+      <Box
         className={`grid grid-cols-${colums.base ?? 2} md:grid-cols-${
           colums.md ?? 4
-        } lg:grid-cols-${colums.lg ?? 6} xl:grid-cols-${colums.xl ?? 8} lg:gap-4 gap-2`}
+        } lg:grid-cols-${colums.lg ?? 6} xl:grid-cols-${
+          colums.xl ?? 8
+        } lg:gap-4 gap-2`}
       >
         {episodeDisplay?.map((item: any, index: number) => (
-          <Link
-            onClick={() => handleSetCurrentEpisode(item)}
-            href={
-              redirect
-                ? `/watching/${params?.slug}?id=${getIdFromLinkEmbed(
-                    item?.link_embed,
-                    8
-                  )}&episode=${item?.slug}&type=${formatTypeMovie(server_name)}`
-                : "#"
-            }
+          <EpisodeItem
             key={index}
-          >
-            <Button
-              size="md"
-              className={`w-full lg:h-[50px] h-[42px] shadow transition-all ${
-                currentEpisode?.link_embed === item?.link_embed
-                  ? "bg-[#ffd875] text-[#282b3a]"
-                  : "text-gray-50 bg-[#2a314e] hover:text-[#ffd875]"
-              }`}
-            >
-              <BsPlayFill />
-              {item?.name}
-            </Button>
-          </Link>
+            item={item}
+            server_name={server_name}
+            redirect={redirect}
+            handleSetCurrentEpisode={handleSetCurrentEpisode}
+          />
         ))}
       </Box>
 

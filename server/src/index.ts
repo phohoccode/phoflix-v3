@@ -5,6 +5,7 @@ import connection from "./database/connect";
 import authRouter from "./routes/authRouter";
 import userRouter from "./routes/userRouter";
 import feedbackRouter from "./routes/feedbackRouter";
+import notificationRouter from "./routes/notificationRouter";
 import cors from "cors";
 
 dotenv.config();
@@ -39,6 +40,7 @@ app.get("/", (req: Request, res: Response) => {
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/feedback", feedbackRouter);
+app.use("/notification", notificationRouter);
 
 // Lắng nghe máy chủ
 app.listen(port, () => {

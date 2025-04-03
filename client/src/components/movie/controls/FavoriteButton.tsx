@@ -48,7 +48,7 @@ const FavoriteButton = ({
     if (!sesstion) {
       return toaster.create({
         title: "Vui lòng đăng nhập để thực hiện hành động này.",
-        type: "info",
+        type: "error",
         duration: 2000,
       });
     }

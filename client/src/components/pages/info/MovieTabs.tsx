@@ -84,7 +84,17 @@ const MovieTabs = () => {
         }}
       >
         <Box className="mt-3">
-          <MovieSuggesstions title="Có thể bạn sẽ thích" />
+          <MovieSuggesstions
+            limit={15}
+            title="Có thể bạn sẽ thích"
+            columns={{
+              base: 3,
+              md: 4,
+              lg: 5,
+              xl: 4,
+              "2xl": 5,
+            }}
+          />
         </Box>
       </Tabs.Content>
     </Tabs.Root>

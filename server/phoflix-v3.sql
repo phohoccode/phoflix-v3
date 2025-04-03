@@ -16,12 +16,12 @@ CREATE TABLE
 CREATE TABLE
   `notification` (
     `id` CHAR(36) PRIMARY KEY NOT NULL,
-    `user_id` CHAR(36) NOT NULL,
-    `sender_id` CHAR(36) NULL,
+    `user_id` CHAR(36) DEFAULT NULL,
+    `sender_id` CHAR(36) DEFAULT NULL,
     `content` VARCHAR(255) NOT NULL,
     `href` VARCHAR(255) DEFAULT '#',
+    `image` VARCHAR(255) DEFAULT NULL,
     `type` ENUM ('community', 'individual') NOT NULL,
-    `is_read` TINYINT (1) DEFAULT 0,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,

@@ -7,6 +7,7 @@ const initialState: NotificationSlice = {
   },
   activeTab: "community",
   loading: false,
+  openNotification: false,
   error: false,
 };
 
@@ -17,9 +18,11 @@ const notificationSlice = createSlice({
     setActiveTab: (state, action) => {
       state.activeTab = action.payload;
     },
+    setOpenNotification: (state, action) => {
+      state.openNotification = action.payload;
+    },
   },
-  extraReducers: (builder) => {},
 });
 
-export const { setActiveTab } = notificationSlice.actions;
+export const { setActiveTab, setOpenNotification } = notificationSlice.actions;
 export default notificationSlice.reducer;

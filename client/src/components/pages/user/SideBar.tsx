@@ -36,7 +36,7 @@ const SideBar = () => {
   const pathname = usePathname();
 
   return (
-    <Box className="bg-[#25272f] p-4 rounded-2xl w-full lg:max-h-[600px] lg:p-10 lg:sticky lg:top-20 lg:w-72">
+    <Box className="bg-[#25272f] p-4 rounded-2xl w-full lg:max-h-[600px] lg:p-10 lg:w-72">
       <Box className="flex flex-col gap-6">
         <h4 className="text-center text-gray-50 text-lg lg:text-left">
           Quản lý tài khoản

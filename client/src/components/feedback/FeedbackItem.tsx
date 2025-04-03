@@ -78,7 +78,12 @@ const FeedbackItem = ({ feedback }: FeedbackItemProps) => {
         )}
 
         {showFeedbackId === feedback?._id && (
-          <FeedbackInput action="reply" autoFocus rootId={feedback?._id} />
+          <FeedbackInput
+            action="reply"
+            autoFocus
+            rootId={feedback?._id}
+            feedback={feedback}
+          />
         )}
 
         {feedback?.total_children > 0 && (

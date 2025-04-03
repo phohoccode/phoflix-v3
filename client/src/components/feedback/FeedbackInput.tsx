@@ -4,7 +4,7 @@ import { addFeedback, addReply } from "@/lib/actions/feedbackAction";
 import { AppDispatch, RootState } from "@/store/store";
 import { Box, Button, Textarea } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useState, useTransition } from "react";
 import { IoMdSend } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,11 +17,13 @@ import {
   setShowFeedbackId,
   setShowReplyId,
 } from "@/store/slices/feedbackSlice";
+import { createNotification } from "@/lib/actions/notificationActionClient";
 
 const FeedbackInput = ({
   action,
   autoFocus = false,
   rootId,
+  feedback,
 }: FeedbackInputProps) => {
   const params = useParams();
   const dispatch: AppDispatch = useDispatch();
@@ -29,6 +31,8 @@ const FeedbackInput = ({
   const { replyId, feedbackType } = useSelector(
     (state: RootState) => state.feedback
   );
+  const pathname = usePathname();
+  const { movie } = useSelector((state: RootState) => state.movie.movieInfo);
   const [isPending, startTransition] = useTransition();
   const [length, setLength] = useState(0);
   const [value, setValue] = useState("");
@@ -38,6 +42,69 @@ const FeedbackInput = ({
     const { value } = e.target;
     setValue(value);
     setLength(value.length);
+  };
+
+  const handleRefreshFeedback = async () => {
+    await Promise.all([
+      dispatch(
+        getFeedbacks({
+          movieSlug: params.slug as string,
+          type: feedbackType,
+          limit: 10,
+        })
+      ),
+
+      dispatch(
+        getReplyListFeedback({
+          parentId: rootId as string,
+          type: feedbackType,
+          limit: 10,
+        })
+      ),
+    ]);
+  };
+
+  const handleCreateNotification = async () => {
+    if (session?.user?.id !== feedback?.author?._id) {
+      const href = pathname.includes("info")
+        ? `/info/${params.slug}?cid=${feedback?._id}`
+        : `/watching/${params.slug}?cid=${feedback?._id}`;
+
+      await createNotification({
+        userId: feedback?.author?._id,
+        senderId: session?.user?.id,
+        type: "individual",
+        content: `${session?.user?.name} đã trả lời bình luận của bạn trong ${movie?.name}`,
+        href,
+        image: movie?.poster_url,
+        accessToken: session?.user?.accessToken,
+      });
+    }
+  };
+
+  const addNewComment = async () => {
+    const response = await addFeedback({
+      movieSlug: params.slug as string,
+      userId: session?.user?.id as string,
+      content: value,
+      type: "comment",
+      accessToken: session?.user?.accessToken as string,
+    });
+
+    return response;
+  };
+
+  const addNewReply = async () => {
+    const response = await addReply({
+      parentId: replyId as string,
+      userId: session?.user?.id as string,
+      content: value,
+      type: feedbackType,
+      movieSlug: params.slug as string,
+      accessToken: session?.user?.accessToken as string,
+    });
+
+    return response;
   };
 
   const handleAddNewComment = () => {
@@ -65,23 +132,14 @@ const FeedbackInput = ({
       let response: any = null;
 
       if (action === "comment") {
-        response = await addFeedback({
-          movieSlug: params.slug as string,
-          userId: session?.user?.id as string,
-          content: value,
-          type: "comment",
-          accessToken: session?.user?.accessToken as string,
-        });
+        response = await addNewComment();
       } else if (action === "reply") {
-        response = await addReply({
-          parentId: replyId as string,
-          userId: session?.user?.id as string,
-          content: value,
-          type: feedbackType,
-          movieSlug: params.slug as string,
-          accessToken: session?.user?.accessToken as string,
-        });
+        response = await addNewReply();
+
+        handleCreateNotification();
       }
+
+      console.log("response", response);
 
       if (response?.status) {
         setValue("");
@@ -97,23 +155,7 @@ const FeedbackInput = ({
         dispatch(setShowReplyId(null));
 
         // Làm mới danh sách bình luận
-        await Promise.all([
-          dispatch(
-            getFeedbacks({
-              movieSlug: params.slug as string,
-              type: feedbackType,
-              limit: 10,
-            })
-          ),
-
-          dispatch(
-            getReplyListFeedback({
-              parentId: rootId as string,
-              type: feedbackType,
-              limit: 10,
-            })
-          ),
-        ]);
+        handleRefreshFeedback();
       } else {
         toaster.create({
           description: response?.message,
@@ -128,6 +170,7 @@ const FeedbackInput = ({
     <Box className="flex flex-col justify-end gap-2 p-2 rounded-xl bg-[#ffffff10]">
       <Box className="relative">
         <Textarea
+          disabled={!session}
           autoFocus={autoFocus}
           maxLength={maxLength}
           autoresize

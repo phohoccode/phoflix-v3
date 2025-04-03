@@ -73,6 +73,7 @@ type FeedbackActionsProps = {
 
 type FeedbackInputProps = {
   action: "comment" | "reply";
+  feedback?: FeedbackItemProps["feedback"];
   autoFocus?: boolean;
   rootId?: string | null;
 };

@@ -10,9 +10,9 @@ const nextConfig: NextConfig = {
       type: "filesystem",
       compression: "gzip",
       allowCollectingMemory: true,
-    }
+    };
     return config;
-  }
+  },
 };
 
 export default nextConfig;

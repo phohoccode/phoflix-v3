@@ -79,10 +79,7 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
   if (!items || items?.length === 0) {
     return (
       <Box className="flex h-64 justify-center w-full items-center">
-        <EmptyData
-          title="Danh sách phim đang trống"
-          description="Hãy thêm phim vào danh sách của bạn"
-        />
+        <EmptyData title="Danh sách phim trống" />
       </Box>
     );
   }
