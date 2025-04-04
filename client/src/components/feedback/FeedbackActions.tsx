@@ -107,14 +107,15 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
     );
 
     // Làm mới reply khi xóa phản hồi con
-    parentId &&
+    if (parentId) {
       dispatch(
         getReplyListFeedback({
-          parentId: rootId as string,
+          parentId: parentId as string,
           type: feedbackType,
           limit: 10,
         })
       );
+    }
   };
 
   const handleDeleteFeedback = () => {

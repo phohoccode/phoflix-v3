@@ -3,13 +3,13 @@ import MainPage from "@/components/pages/search/MainPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
-interface SearchPageProps {
-  searchParams: { [keyof: string]: string | undefined };
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({
   searchParams,
-}: SearchPageProps): Promise<Metadata> {
+}: PageProps): Promise<Metadata> {
   const params = (await searchParams) ?? {};
   const keyword = params.keyword ?? "phohoccode";
 

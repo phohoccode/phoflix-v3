@@ -3,15 +3,15 @@ import MoviePage from "@/components/pages/info/MainPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
-interface MoviePageProps {
-  searchParams: { [keyof: string]: string | undefined };
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export async function generateMetadata({
   searchParams,
-}: MoviePageProps): Promise<Metadata> {
-  const params = (await searchParams) ?? {};
-  const name = params.name?.replace(/-/g, " ") ?? "hihihi";
+}: PageProps): Promise<Metadata> {
+  const params = await searchParams ?? {};
+  const name = typeof params.name === "string" ? params.name.replace(/-/g, " ") : "hihihi";
 
   return {
     title: `${name} - PHOFLIX-V3`,

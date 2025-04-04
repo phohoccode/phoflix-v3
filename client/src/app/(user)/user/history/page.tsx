@@ -5,9 +5,7 @@ import { Suspense } from "react";
 import MovieSection from "@/components/pages/user/MovieSection";
 
 interface PageProps {
-  searchParams: {
-    [key: string]: string | string[] | undefined;
-  };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const Page = async ({ searchParams }: PageProps) => {

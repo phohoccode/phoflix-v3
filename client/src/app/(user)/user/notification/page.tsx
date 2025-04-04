@@ -2,8 +2,8 @@ import { Suspense } from "react";
 import Loading from "@/app/loading";
 import MainPage from "@/components/pages/user/notification/MainPage";
 
-interface NotificationProps {
-  searchParams: { [keyof: string]: string | undefined };
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const tabs = [
@@ -11,7 +11,7 @@ const tabs = [
   { id: "individual", name: "cá nhân" },
 ];
 
-export async function generateMetadata({ searchParams }: NotificationProps) {
+export async function generateMetadata({ searchParams }: PageProps) {
   const params = (await searchParams) ?? {};
   const title =
     tabs.find((tab) => tab.id === params.tab)?.name ?? "Thông báo mới nhất";

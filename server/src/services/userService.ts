@@ -2,7 +2,7 @@ import connection from "../database/connect";
 import bcrypt from "bcrypt";
 import validator from "validator";
 import { v4 as uuidv4 } from "uuid";
-import {
+import type {
   CreateReportMovie,
   GetUserProfile,
   UpdateUserPassword,

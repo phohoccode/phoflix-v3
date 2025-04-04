@@ -168,10 +168,7 @@ export async function completeRegistration(token: string) {
 export async function resetPassword({
   email,
   password,
-}: {
-  email: string;
-  password: string;
-}): Promise<any> {
+}: ResetPassword): Promise<any> {
   try {
     const response = await fetch(`${BACKEND_URL}/auth/reset-password`, {
       method: "POST",
@@ -203,7 +200,6 @@ export const registerGoogleAccount = async ({
   password,
 }: RegisterGoogleAccount) => {
   try {
-
     console.log("password", password);
 
     const response = await fetch(`${BACKEND_URL}/auth/register`, {

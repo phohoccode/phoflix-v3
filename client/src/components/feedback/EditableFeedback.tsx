@@ -32,7 +32,7 @@ const EditableFeedback = ({
   };
 
   const handleRefreshFeedback = () => {
-    !parentId &&
+    if (!parentId) {
       dispatch(
         getFeedbacks({
           movieSlug: params.slug as string,
@@ -40,8 +40,9 @@ const EditableFeedback = ({
           limit: 10,
         })
       );
+    }
 
-    parentId &&
+    if (parentId) {
       dispatch(
         getReplyListFeedback({
           parentId: parentId as string,
@@ -49,6 +50,7 @@ const EditableFeedback = ({
           limit: 10,
         })
       );
+    }
   };
 
   const updateFeedback = async () => {

@@ -13,5 +13,6 @@ type Login = {
 };
 
 type ResetPassword = {
-  
-}
+  email: string;
+  password: string;
+};

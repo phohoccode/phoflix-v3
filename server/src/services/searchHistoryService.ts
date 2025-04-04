@@ -1,6 +1,6 @@
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
-import {
+import type {
   CreateSearchHistory,
   DeleteSearchHistory,
   GetUserSearchHistory,

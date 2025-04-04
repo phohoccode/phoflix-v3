@@ -1,5 +1,5 @@
 import connection from "../database/connect";
-import {
+import type {
   CreateNotification,
   GetNotifications,
 } from "../lib/types/Notification";

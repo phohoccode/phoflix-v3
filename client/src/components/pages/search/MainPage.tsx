@@ -64,7 +64,8 @@ const MainPage = () => {
     <RootLayout>
       <Box className="px-4 lg:pt-28 pt-24">
         <h3 className="inline-block xl:text-4xl lg:text-3xl md:text-2xl text-xl title-text font-bold">
-          Tìm thấy {pagination?.totalItems} kết quả cho từ khóa "{keyword}"
+          Tìm thấy {pagination?.totalItems} kết quả cho từ khóa &quot;{keyword}
+          &quot;
         </h3>
 
         <Box className="mt-8">
