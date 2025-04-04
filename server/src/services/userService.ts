@@ -2,12 +2,7 @@ import connection from "../database/connect";
 import bcrypt from "bcrypt";
 import validator from "validator";
 import { v4 as uuidv4 } from "uuid";
-import type {
-  CreateReportMovie,
-  GetUserProfile,
-  UpdateUserPassword,
-  UpdateUserProfile,
-} from "../lib/types/User";
+import { CreateReportMovie, GetUserProfile, UpdateUserPassword, UpdateUserProfile } from "@lib/types/User";
 
 const salt = bcrypt.genSaltSync(10);
 

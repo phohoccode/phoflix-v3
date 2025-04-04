@@ -1,12 +1,6 @@
+import { CreatePlaylist, DeletePlaylist, GetMoviesFromPlaylist, GetPlaylistsContainingMovie, UpdatePlaylist } from "@lib/types/Playlist";
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
-import type {
-  CreatePlaylist,
-  DeletePlaylist,
-  GetMoviesFromPlaylist,
-  GetPlaylistsContainingMovie,
-  UpdatePlaylist,
-} from "../lib/types/Playlist";
 
 export const handleCreatePlaylist = async ({
   userId,

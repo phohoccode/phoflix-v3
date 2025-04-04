@@ -1,15 +1,6 @@
+import { AddFeedback, AddReplyFeedback, DeleteFeedback, FeedbackVote, GetFeedbacks, GetReplyListFeedbacks, UpdateFeedbackContent, UserVoteFeedback } from "@lib/types/Feedback";
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
-import type {
-  FeedbackVote,
-  GetFeedbacks,
-  GetReplyListFeedbacks,
-  AddFeedback,
-  AddReplyFeedback,
-  DeleteFeedback,
-  UpdateFeedbackContent,
-  UserVoteFeedback,
-} from "../lib/types/Feedback";
 
 export const handleGetFeedbacks = async ({
   movieSlug,

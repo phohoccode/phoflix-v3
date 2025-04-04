@@ -1,11 +1,6 @@
+import { CheckMovieExists, CreateUserMovie, DeleteMovie, GetUserMovies } from "@lib/types/UserMovie";
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
-import type {
-  CheckMovieExists,
-  CreateUserMovie,
-  DeleteMovie,
-  GetUserMovies,
-} from "../lib/types/UserMovie";
 
 export const handleGetUserMovies = async ({
   userId,

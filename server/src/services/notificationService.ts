@@ -1,8 +1,5 @@
+import { CreateNotification, GetNotifications } from "@lib/types/Notification";
 import connection from "../database/connect";
-import type {
-  CreateNotification,
-  GetNotifications,
-} from "../lib/types/Notification";
 import { v4 as uuidv4 } from "uuid";
 
 export const handleGetNotifications = async ({
