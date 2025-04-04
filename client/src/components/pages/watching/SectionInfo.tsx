@@ -1,12 +1,12 @@
 "use client";
 
-import ChavronRightIcon from "@/components/icons/ChavronRightIcon";
 import { TagClassic } from "@/components/movie/TagClassic";
 import ShowMoreText from "@/components/ShowMoreText";
 import { formatStringForURL, generateUrlImage } from "@/lib/utils";
 import { Box, Image } from "@chakra-ui/react";
 import Link from "next/link";
 import { useState } from "react";
+import { FaArrowRight } from "react-icons/fa6";
 
 interface SectionInfoProps {
   data: any;
@@ -80,7 +80,7 @@ const SectionInfo = ({ data }: SectionInfoProps) => {
             )}`}
           >
             Thông tin phim
-            <ChavronRightIcon />
+            <FaArrowRight />
           </Link>
         </Box>
       </Box>

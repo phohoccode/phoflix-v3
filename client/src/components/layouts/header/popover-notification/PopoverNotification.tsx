@@ -21,6 +21,7 @@ const PopoverNotification = () => {
   );
   const { data: sesstion } = useSession();
 
+
   useEffect(() => {
     startTransition(async () => {
       const response = await getNotifications({

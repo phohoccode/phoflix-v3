@@ -27,8 +27,8 @@ const Page = async ({ searchParams }: PageProps) => {
   const { movies, totalItems, totalItemsPerPage } = response?.result || {};
 
   return (
-    <Suspense fallback={<Loading />}>
-      <h3 className="text-lg text-gray-50">Yêu thích</h3>
+    <Suspense fallback={<Loading height="h-1/2" />}>
+      <h3 className="text-lg text-gray-50">Phim yêu thích</h3>
       <MovieSection
         movies={movies}
         totalItems={totalItems}

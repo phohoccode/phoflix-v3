@@ -6,13 +6,13 @@ import { Button } from "@chakra-ui/react";
 import Link from "next/link";
 
 interface MovieActionsButtonProps {
-  item: any;
+  slug:string
 }
 
-const MovieActionsButton = ({ item }: MovieActionsButtonProps) => {
+const MovieActionsButton = ({ slug }: MovieActionsButtonProps) => {
   return (
     <>
-      <Link href={`/watching/${item?.slug}`}>
+      <Link href={`/watching/${slug}`}>
         <Button
           size="sm"
           className="hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)] bg-[#ffd875] text-gray-900"
@@ -21,7 +21,7 @@ const MovieActionsButton = ({ item }: MovieActionsButtonProps) => {
           Xem ngay
         </Button>
       </Link>
-      <Link href={`/info/${item?.slug}`}>
+      <Link href={`/info/${slug}`}>
         <Button
           size="sm"
           colorPalette="gray"

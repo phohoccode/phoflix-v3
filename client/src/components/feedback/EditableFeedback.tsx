@@ -2,7 +2,6 @@
 
 import { Editable, EditableInput } from "@chakra-ui/react";
 import { useState } from "react";
-import { toaster } from "../ui/toaster";
 import { updateContentFeedback } from "@/lib/actions/feedbackAction";
 import { useSession } from "next-auth/react";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +11,7 @@ import {
   getFeedbacks,
   getReplyListFeedback,
 } from "@/store/asyncThunks/feedbackAsyncThunk";
+import { handleShowToaster } from "@/lib/utils";
 
 const EditableFeedback = ({
   children,
@@ -64,12 +64,15 @@ const EditableFeedback = ({
       accessToken: session?.user?.accessToken as string,
     });
 
-    if (response.status) {
-      toaster.create({ type: "success", description: response.message });
+    if (response?.status) {
       handleRefreshFeedback();
-    } else {
-      toaster.create({ type: "error", description: response.message });
     }
+
+    handleShowToaster(
+      "Thông báo",
+      response?.message,
+      response?.status ? "success" : "error"
+    );
   };
 
   return (

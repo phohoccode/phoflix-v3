@@ -5,10 +5,13 @@ import { useState } from "react";
 import { PaginationItems, PaginationRoot } from "../ui/pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { useParams } from "next/navigation";
-import { changeQuery, formatTypeMovie, getIdFromLinkEmbed } from "@/lib/utils";
+import {
+  changeQuery,
+  formatTypeMovie,
+  getIdFromLinkEmbed,
+  handleShowToaster,
+} from "@/lib/utils";
 import { setCurrentEpisode } from "@/store/slices/movieSlice";
-import { toaster } from "../ui/toaster";
 import EpisodeItem from "./EpisodeItem";
 
 type Episode = {
@@ -29,6 +32,7 @@ interface EpisodesListProps {
     xl: number;
   };
   redirect?: boolean;
+  showToaster?: boolean;
 }
 
 const limitDisplay = 24;
@@ -43,6 +47,7 @@ const EpisodesList = ({
     xl: 8,
   },
   redirect = false,
+  showToaster = true,
 }: EpisodesListProps) => {
   const [episodeDisplay, setEpisodeDisplay] = useState(
     episodes.slice(0, limitDisplay)
@@ -80,13 +85,12 @@ const EpisodesList = ({
 
       dispatch(setCurrentEpisode(item));
 
-      // Show toast
-      toaster.create({
-        title: `Bạn đang xem ${item?.filename}`,
-        description: "Chúc bạn xem phim vui vẻ!",
-        placement: "top-end",
-        duration: 2500,
-      });
+      if (showToaster) {
+        handleShowToaster(
+          `Bạn đang xem ${item?.filename}`,
+          "Chúc bạn xem phim vui vẻ!"
+        );
+      }
     }
   };
 

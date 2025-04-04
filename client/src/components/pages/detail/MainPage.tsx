@@ -14,7 +14,7 @@ import "@/assets/css/movie.css";
 import Pagination from "@/components/Pagination";
 import SkeletonMovieGrid from "@/components/skeletons/SkeletonMovieGrid";
 import EmptyData from "@/components/EmptyData";
-import MovieGrid from "@/components/movie/movie-thumb/MovieGrid";
+import MovieGrid from "@/components/movie/movie-section/MovieGrid";
 
 const MainPage = () => {
   const params = useParams();
@@ -66,11 +66,11 @@ const MainPage = () => {
 
   return (
     <RootLayout>
-      <Box className="flex flex-col gap-4 px-4 lg:pt-28 pt-24">
-        <h3 className=" xl:text-4xl lg:text-3xl md:text-2xl text-xl title-text font-bold">
+      <Box className="px-4 lg:pt-28 pt-24">
+        <h3 className="inline-block xl:text-4xl lg:text-3xl md:text-2xl text-xl title-text font-bold">
           {titlePage}
         </h3>
-        <Box className="mt-6">
+        <Box className="mt-8">
           <MovieGrid
             items={items}
             columns={{ base: 3, md: 4, lg: 5, xl: 6, "2xl": 8 }}
@@ -78,13 +78,15 @@ const MainPage = () => {
         </Box>
 
         {!loading && (pagination?.totalItems as number) >= limit && (
-          <Pagination
-            pagination={{
-              totalItems: pagination?.totalItems as number,
-              totalItemsPerPage: pagination?.totalItemsPerPage as number,
-            }}
-            currentPage={currentPage}
-          />
+         <Box className="flex justify-center mt-6">
+            <Pagination
+              pagination={{
+                totalItems: pagination?.totalItems as number,
+                totalItemsPerPage: pagination?.totalItemsPerPage as number,
+              }}
+              currentPage={currentPage}
+            />
+         </Box>
         )}
       </Box>
     </RootLayout>

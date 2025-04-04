@@ -3,37 +3,40 @@
 import { Box } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import ActionsPlaylist from "./ActionsPlaylist";
 import { IoPlayCircleOutline } from "react-icons/io5";
 import { AppDispatch } from "@/store/store";
 import { useDispatch } from "react-redux";
 import { setSelectedPlaylistId } from "@/store/slices/userSlice";
+import ActionsPlaylist from "./ActionsPlaylist";
 interface PlaylistsProps {
-  playlists: any;
+  playlists: Playlist[];
 }
 
 const Playlists = ({ playlists }: PlaylistsProps) => {
   const router = useRouter();
+  const dispatch: AppDispatch = useDispatch();
   const params = useSearchParams();
   const playlistId = params.get("playlistId");
-  const dispatch: AppDispatch = useDispatch();
-  const [selectedPlaylist, setSelectedPlaylist] = useState(() => {
-    return (
-      playlists?.find((playlist: any) => playlist?.id === playlistId) ||
-      playlists?.[0]
-    );
-  });
+  const [selectedPlaylist, setSelectedPlaylist] = useState<Playlist | null>(
+    null
+  );
 
   useEffect(() => {
     if (playlistId) {
       const playlist = playlists?.find(
-        (playlist: any) => playlist?.id === playlistId
+        (playlist) => playlist?.id === playlistId
       );
 
-      dispatch(setSelectedPlaylistId(playlist?.id));
-    } else {
-      dispatch(setSelectedPlaylistId(playlists?.[0]?.id));
+      if (playlist) {
+        setSelectedPlaylist(playlist);
+        dispatch(setSelectedPlaylistId(playlist?.id));
+        return;
+      }
     }
+
+    // Nếu không có playlistId trong URL, chọn playlist đầu tiên
+    setSelectedPlaylist(playlists?.[0] || null);
+    dispatch(setSelectedPlaylistId(playlists?.[0]?.id) || null);
   }, [playlists]);
 
   const handleChangePlaylist = (playlist: any) => {

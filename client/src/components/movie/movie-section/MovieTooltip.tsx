@@ -2,11 +2,8 @@
 
 import { createPortal } from "react-dom";
 import "@/assets/css/animation.css";
-import { Box, Button, Image } from "@chakra-ui/react";
+import { Box, Image } from "@chakra-ui/react";
 import { generateUrlImage } from "@/lib/utils";
-import Link from "next/link";
-import PlayIcon from "@/components/icons/PlayIcon";
-import InfoIcon from "@/components/icons/InfoIcon";
 import { TagClassic } from "../TagClassic";
 import MovieActionsButton from "./MovieActionsButton";
 import { useState } from "react";
@@ -29,7 +26,6 @@ const MovieTooltip = ({ data, position }: MovieTooltipProps) => {
       style={{
         top: position.top,
         left: position.left,
-        // width: position.width,
         width: "420px",
         minHeight: position.height,
       }}
@@ -55,7 +51,7 @@ const MovieTooltip = ({ data, position }: MovieTooltipProps) => {
           {data?.origin_name ?? "Không xác định"}
         </p>
         <Box className="flex gap-2 items-center mb-4 mt-2">
-          <MovieActionsButton item={data} />
+          <MovieActionsButton slug={data?.slug} />
         </Box>
         <Box className="flex flex-wrap gap-2 items-center">
           <TagClassic text={data?.quality ?? "Không xác định"} />

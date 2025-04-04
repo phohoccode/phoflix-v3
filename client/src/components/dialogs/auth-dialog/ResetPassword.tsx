@@ -2,11 +2,10 @@
 
 import { PasswordInput } from "@/components/ui/password-input";
 import { toaster } from "@/components/ui/toaster";
-import { forgotPassword, resetPassword } from "@/lib/actions/authActionServer";
-import { isValidEmail } from "@/lib/utils";
-import { setIsShowAuthDialog, setTypeAuth } from "@/store/slices/systemSlice";
+import { resetPassword } from "@/lib/actions/authActionServer";
+import { setTypeAuth } from "@/store/slices/systemSlice";
 import { AppDispatch } from "@/store/store";
-import { Box, Button, Field, Input } from "@chakra-ui/react";
+import { Box, Button, Field } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useDispatch } from "react-redux";

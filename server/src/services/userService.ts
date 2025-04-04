@@ -15,10 +15,6 @@ export const handleGetUserProfile = async ({
   email,
   typeAccount,
 }: GetUserProfile) => {
-
-  console.log(">>> email", email);
-  console.log(">>> typeAccount", typeAccount);
-
   try {
     const sqlGetUserInfo = `
       SELECT
@@ -275,7 +271,7 @@ export const handleCreateReportMovie = async ({
 
     return {
       status: true,
-      message: "Tạo báo cáo thành công!",
+      message: "Cảm ơn bạn đã báo cáo! Chúng tôi sẽ xem xét và xử lý.",
       result: null,
       statusCode: 200,
     };

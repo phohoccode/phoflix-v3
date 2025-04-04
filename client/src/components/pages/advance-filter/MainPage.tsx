@@ -2,19 +2,19 @@
 
 import RootLayout from "@/components/layouts/RootLayout";
 import FilterBox from "./FilterBox";
-import { Box, SimpleGrid, Skeleton } from "@chakra-ui/react";
+import { Box, SimpleGrid } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import MovieCard from "@/components/movie/movie-thumb/MovieCard";
+import MovieCard from "@/components/movie/movie-section/MovieCard";
 import SkeletonMovieGrid from "@/components/skeletons/SkeletonMovieGrid";
 import EmptyData from "@/components/EmptyData";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { fetchDataMovieSearch } from "@/store/asyncThunks/movieAsyncThunk";
 import Pagination from "@/components/Pagination";
 import { useSearchParams } from "next/navigation";
 
 const MainPage = () => {
-  const { items, loading, error, pagination, titlePage } = useSelector(
+  const { items, loading, pagination } = useSelector(
     (state: RootState) => state.movie.searchMovie
   );
   const dispatch: AppDispatch = useDispatch();
@@ -43,17 +43,24 @@ const MainPage = () => {
 
   return (
     <RootLayout>
-      <Box className="flex flex-col gap-6 lg:pt-28 pt-24 px-4">
-        <h3 className="xl:text-4xl lg:text-3xl md:text-2xl text-xl title-text font-bold">
+      <Box className="lg:pt-28 pt-24 px-4">
+        <h3 className="inline-block title-text font-bold xl:text-4xl lg:text-3xl md:text-2xl text-xl">
           Lọc nâng cao
         </h3>
         <FilterBox />
 
-        <Box className="mt-12">
+        <Box>
           {!loading ? (
             <>
               {items?.length > 0 ? (
-                <SimpleGrid columns={{ base: 3, md: 4, lg: 5, xl: 8 }} gap={4}>
+                <SimpleGrid
+                  columns={{ base: 3, md: 4, lg: 5, xl: 8 }}
+                  gap={{
+                    base: 2,
+                    md: 3,
+                    lg: 4,
+                  }}
+                >
                   {items?.map((item: any, index: number) => (
                     <MovieCard key={index} data={item} orientation="vertical" />
                   ))}
@@ -76,13 +83,15 @@ const MainPage = () => {
         </Box>
 
         {pagination?.totalItems >= 24 && (
-          <Pagination
-            pagination={{
-              totalItems: pagination?.totalItems,
-              totalItemsPerPage: pagination?.totalItemsPerPage,
-            }}
-            currentPage={currentPage}
-          />
+          <Box className="flex justify-center mt-8">
+            <Pagination
+              pagination={{
+                totalItems: pagination?.totalItems,
+                totalItemsPerPage: pagination?.totalItemsPerPage,
+              }}
+              currentPage={currentPage}
+            />
+          </Box>
         )}
       </Box>
     </RootLayout>

@@ -20,8 +20,8 @@ import { BsArrowDownCircleFill, BsArrowUpCircleFill } from "react-icons/bs";
 import { FaReply } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { toaster } from "../ui/toaster";
 import AlertDialog from "../dialogs/AlertDialog";
+import { handleShowToaster } from "@/lib/utils";
 
 const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
   const { data: session }: any = useSession();
@@ -52,9 +52,15 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
   const handleToogleReply = (id: string) => {
     const isComment = action === "comment";
 
+    /**
+     * * Nếu đang mở feedback thì đóng lại, ngược lại mở ra
+     * * Nếu đang mở reply thì đóng lại, ngược lại mở ra
+     */
+
     const targetId =
       (isComment ? showFeedbackId : showReplyId) === id ? null : feedbackId;
 
+    // Đóng feedback/reply đang mở
     dispatch(
       isComment ? setShowFeedbackId(targetId) : setShowReplyId(targetId)
     );
@@ -64,11 +70,12 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
 
   const handleVote = (voteType: "like" | "dislike") => {
     if (!session) {
-      toaster.create({
-        type: "error",
-        description: "Vui lòng đăng nhập để thực hiện hành động này.",
-        duration: 2000,
-      });
+      handleShowToaster(
+        "Thông báo",
+        "Vui lòng đăng nhập để thực hiện hành động này.",
+        "error"
+      );
+
       return;
     }
 
@@ -84,11 +91,7 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
       if (response?.status) {
         dispatch(getVoteListFeedback(params.slug as string));
       } else {
-        toaster.create({
-          type: "error",
-          description: response?.message,
-          duration: 2000,
-        });
+        handleShowToaster("Thông báo", response?.message, "error");
       }
     });
   };
@@ -123,20 +126,14 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
       });
 
       if (response?.status) {
-        toaster.create({
-          type: "success",
-          description: response?.message,
-          duration: 2000,
-        });
-
         handleRefreshFeedback();
-      } else {
-        toaster.create({
-          type: "error",
-          description: response?.message,
-          duration: 2000,
-        });
       }
+
+      handleShowToaster(
+        "Thông báo",
+        response?.message,
+        response?.status ? "success" : "error"
+      );
     });
   };
 

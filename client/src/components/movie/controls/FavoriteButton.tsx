@@ -1,11 +1,11 @@
 "use client";
 
-import { toaster } from "@/components/ui/toaster";
 import {
   addNewMovie,
   checkMovieExists,
   deleteMovie,
 } from "@/lib/actions/userMovieAction";
+import { handleShowToaster } from "@/lib/utils";
 import { RootState } from "@/store/store";
 import { Box, Spinner } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
@@ -44,60 +44,69 @@ const FavoriteButton = ({
     setFavorite(response?.result?.exists ?? false);
   };
 
+  const handleAddNewMovie = async () => {
+    const response = await addNewMovie({
+      userId: sesstion.user?.id as string,
+      movieData: {
+        movieName: movie?.name,
+        movieSlug: movie?.slug,
+        moviePoster: movie?.poster_url,
+        movieThumbnail: movie?.thumb_url,
+      },
+      type: "favorite",
+      accessToken: sesstion?.user?.accessToken,
+    });
+
+    return response;
+  };
+
+  const handleDeleteMovie = async () => {
+    const response = await deleteMovie({
+      userId: sesstion.user?.id as string,
+      movieSlug: movie?.slug,
+      type: "favorite",
+      accessToken: sesstion?.user?.accessToken,
+    });
+
+    return response;
+  };
+
   const handleActionsFavorite = () => {
     if (!sesstion) {
-      return toaster.create({
-        title: "Vui lòng đăng nhập để thực hiện hành động này.",
-        type: "error",
-        duration: 2000,
-      });
+      handleShowToaster(
+        "Thông báo",
+        "Vui lòng đăng nhập để thực hiện hành động này.",
+        "error"
+      );
+
+      return;
     }
 
     let response: any = null;
 
     startTransition(async () => {
-      response = !favorite
-        ? await addNewMovie({
-            userId: sesstion.user?.id as string,
-            movieData: {
-              movieName: movie?.name,
-              movieSlug: movie?.slug,
-              moviePoster: movie?.poster_url,
-              movieThumbnail: movie?.thumb_url,
-            },
-            type: "favorite",
-            accessToken: sesstion?.user?.accessToken,
-          })
-        : await deleteMovie({
-            userId: sesstion.user?.id as string,
-            movieSlug: movie?.slug,
-            type: "favorite",
-            accessToken: sesstion?.user?.accessToken,
-          });
+      if (!favorite) {
+        response = await handleAddNewMovie();
+      } else {
+        response = await handleDeleteMovie();
+      }
 
       if (response?.status) {
-        setFavorite(response?.result?.action === "favorite" ? true : false);
-        toaster.create({
-          title: response?.message,
-          type: "success",
-          duration: 1000,
-        });
-
         handleCheckMovieExists();
-      } else {
-        toaster.create({
-          title: response?.message,
-          type: "error",
-          duration: 1000,
-        });
       }
+
+      handleShowToaster(
+        "Thông báo",
+        response?.message,
+        response?.status ? "success" : "error"
+      );
     });
   };
 
   return (
     <Box
       onClick={handleActionsFavorite}
-      className={`p-2 sm:min-w-16 cursor-pointer rounded-lg flex justify-center items-center gap-2 transition-all hover:bg-[#ffffff05] 
+      className={`p-2 select-none sm:min-w-16 cursor-pointer rounded-lg flex justify-center items-center gap-2 transition-all hover:bg-[#ffffff05] 
           ${placement === "vertical" ? "flex-col" : "flex-row"}
           ${isPending ? "opacity-50" : ""}
           ${favorite ? "text-[#ffd875]" : "text-gray-50"}

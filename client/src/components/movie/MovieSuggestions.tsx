@@ -10,7 +10,7 @@ import { AppDispatch, RootState } from "@/store/store";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import SkeletonMovieList from "../skeletons/SkeletonMovieGrid";
-import MovieGrid from "./movie-thumb/MovieGrid";
+import MovieGrid from "./movie-section/MovieGrid";
 import { Box } from "@chakra-ui/react";
 
 const data = [...categories, ...countries];

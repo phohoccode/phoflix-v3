@@ -7,9 +7,9 @@ import ErrorReportSelect from "./ErrorReportSelect";
 import { useState, useTransition } from "react";
 import ErrorDescriptionInput from "./ErrorDescriptionInput";
 import { useSession } from "next-auth/react";
-import { toaster } from "@/components/ui/toaster";
 import { createReportMovie } from "@/lib/actions/reportAction";
 import { setReportDescription, setReportError } from "@/store/slices/userSlice";
+import { handleShowToaster } from "@/lib/utils";
 
 interface ReportDialogProps {
   trigger: React.ReactNode;
@@ -26,32 +26,22 @@ const ReportDialog = ({ trigger }: ReportDialogProps) => {
 
   const handleCreateReport = () => {
     if (!sesstion) {
-      toaster.create({
-        description: "Vui lòng đăng nhập để tiếp tục.",
-        type: "error",
-        duration: 2000,
-      });
+      handleShowToaster(
+        "Thông báo",
+        "Vui lòng đăng nhập để báo cáo lỗi.",
+        "error"
+      );
 
       return;
     }
 
     if (!reportError) {
-      toaster.create({
-        description: "Vui lòng chọn lỗi cần báo cáo.",
-        type: "error",
-        duration: 2000,
-      });
-
+      handleShowToaster("Thông báo", "Vui lòng chọn lỗi cần báo cáo.", "error");
       return;
     }
 
     if (reportDescription.trim() === "") {
-      toaster.create({
-        description: "Vui lòng nhập mô tả lỗi.",
-        type: "error",
-        duration: 2000,
-      });
-
+      handleShowToaster("Thông báo", "Vui lòng nhập mô tả lỗi.", "error");
       return;
     }
 
@@ -65,22 +55,16 @@ const ReportDialog = ({ trigger }: ReportDialogProps) => {
         accessToken: sesstion?.user?.accessToken as string,
       });
 
-      if (response?.status) {
-        toaster.create({
-          description: "Báo cáo thành công.",
-          type: "success",
-          duration: 2000,
-        });
+      handleShowToaster(
+        "Thông báo",
+        response?.message,
+        response?.status ? "success" : "error"
+      );
 
+      if (response?.status) {
         dispatch(setReportError(""));
         dispatch(setReportDescription(""));
         setOpen(false);
-      } else {
-        toaster.create({
-          description: response?.message || "Báo cáo thất bại.",
-          type: "error",
-          duration: 2000,
-        });
       }
     });
   };

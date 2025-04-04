@@ -3,16 +3,15 @@
 import { Box } from "@chakra-ui/react";
 import { TbMessageFilled } from "react-icons/tb";
 
-interface CommentButtonProps {
+interface FeedbackButtonProps {
   placement?: "vertical" | "horizontal";
   responsiveText?: boolean;
 }
 
-const CommentButton = ({
+const FeedbackButton = ({
   placement = "horizontal",
   responsiveText = false,
-}: CommentButtonProps) => {
-  // Scroll to feedback section when clicked
+}: FeedbackButtonProps) => {
   const scrollToFeedback = () => {
     const feedbackSection = document.getElementById("feedback");
     if (feedbackSection) {
@@ -25,7 +24,7 @@ const CommentButton = ({
       onClick={() => {
         scrollToFeedback();
       }}
-      className={`p-2 sm:min-w-16 cursor-pointer rounded-lg text-gray-50 xs:flex hidden justify-center items-center gap-2 transition-all hover:bg-[#ffffff05] 
+      className={`p-2 select-none sm:min-w-16 cursor-pointer rounded-lg text-gray-50 xs:flex hidden justify-center items-center gap-2 transition-all hover:bg-[#ffffff05] 
           ${placement === "vertical" ? "flex-col" : "flex-row"}`}
     >
       <TbMessageFilled />
@@ -40,4 +39,4 @@ const CommentButton = ({
   );
 };
 
-export default CommentButton;
+export default FeedbackButton;

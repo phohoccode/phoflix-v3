@@ -1,9 +1,9 @@
 "use client";
 
-import ChavronRightIcon from "@/components/icons/ChavronRightIcon";
 import SkeletonMovieThumbTitle from "@/components/skeletons/SkeletonMovieThumbTitle";
 import { Box } from "@chakra-ui/react";
 import Link from "next/link";
+import { RiArrowRightWideLine } from "react-icons/ri";
 
 interface MovieThumbTitleProps {
   loading: boolean;
@@ -23,9 +23,7 @@ const MovieThumbTitle = ({
 
   return (
     <Box className="flex justify-between gap-2 items-center mb-6">
-      <h3
-        className={`lg:text-2xl md:text-xl text-lg font-bold inline-block text-gray-50`}
-      >
+      <h3 className="lg:text-2xl md:text-xl text-md font-bold inline-block text-gray-50">
         {title}
       </h3>
       <Link
@@ -33,7 +31,7 @@ const MovieThumbTitle = ({
         className="flex text-gray-50 text-sm gap-1 hover:text-[#ffd875] hover:translate-x-0.5 items-center lg:text-md transition-all"
       >
         Xem tất cả
-        <ChavronRightIcon />
+        <RiArrowRightWideLine />
       </Link>
     </Box>
   );

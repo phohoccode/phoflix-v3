@@ -23,7 +23,7 @@ const Footer = () => {
               xl: 4,
             }}
           >
-            <h3 className="text-2xl font-bold text-[#f9ca24]">Giới thiệu</h3>
+            <h3 className="text-2xl font-bold text-primary">Giới thiệu</h3>
             <p className="text-gray-100 mt-3 text-justify break-words">
               Chào mừng bạn đến với PHOFLIX-V3, nơi trải nghiệm điện ảnh trực
               tuyến trở nên dễ dàng và thú vị hơn bao giờ hết! Tại đây, bạn sẽ
@@ -40,7 +40,7 @@ const Footer = () => {
               xl: 4,
             }}
           >
-            <h3 className="text-2xl font-bold text-[#f9ca24]">Bản quyền</h3>
+            <h3 className="text-2xl font-bold text-primary">Bản quyền</h3>
             <p className="text-gray-100 mt-3 text-justify break-words">
               Tất cả nội dung của trang web này đều được tìm kiếm và thu thập ở
               các trang web phát video trực tuyến chính thống trên Internet,
@@ -57,9 +57,7 @@ const Footer = () => {
               xl: 4,
             }}
           >
-            <h3 className="text-2xl font-bold text-[#f9ca24]">
-              Liên hệ với tôi
-            </h3>
+            <h3 className="text-2xl font-bold text-primary">Liên hệ với tôi</h3>
             <Box className="flex flex-col gap-4 mt-3">
               <Link
                 href="https://github.com/phohoccode"

@@ -24,7 +24,7 @@ const MovieSection = ({
   type,
 }: MovieSectionProps) => {
   return (
-    <Box className="mt-12">
+    <Box className="mt-6">
       <MovieGrid
         colums={{
           base: 3,

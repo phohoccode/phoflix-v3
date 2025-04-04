@@ -1,10 +1,31 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { toaster } from "@/components/ui/toaster";
+
 import "dayjs/locale/vi";
 
 dayjs.locale("vi");
 dayjs.extend(relativeTime);
 
+export const handleShowToaster = (
+  title: string,
+  description: string,
+  type?: "error" | "warning" | "success" | "info",
+  duration?: number
+) => {
+  toaster.create({
+    title: title || "Thông báo",
+    description,
+    type: type || "info",
+    duration: duration || 2000,
+    // action: {
+    //   label: "Đóng",
+    //   onClick: () => {
+    //     toaster.dismiss();
+    //   },
+    // },
+  });
+};
 
 export const generateUrlImage = (url: string) => {
   if (url?.includes("https://phimimg.com")) {
@@ -116,6 +137,6 @@ export const formatDateUnix = (date: string | number) => {
   return dayjs.unix(Number(date)).fromNow(); // Trả về thời gian tương đối từ hiện tại
 };
 
-export const formatDate = (date:string) => {
-  return dayjs(date).fromNow(); 
-}
+export const formatDate = (date: string) => {
+  return dayjs(date).fromNow();
+};

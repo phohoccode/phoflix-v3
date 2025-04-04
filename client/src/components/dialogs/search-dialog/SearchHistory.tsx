@@ -14,16 +14,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { GoClockFill } from "react-icons/go";
 import { BsXLg } from "react-icons/bs";
 import AlertDialog from "../AlertDialog";
-import { toaster } from "@/components/ui/toaster";
 import Link from "next/link";
 import { setIsShowModalSearch } from "@/store/slices/systemSlice";
+import { handleShowToaster } from "@/lib/utils";
 
 interface SearchHistoryProps {
   keyword: string;
 }
 
 const SearchHistory = ({ keyword }: SearchHistoryProps) => {
-  const { items, loading, error } = useSelector(
+  const { items, loading } = useSelector(
     (state: RootState) => state.user.searchHistory
   );
   const dispatch: AppDispatch = useDispatch();
@@ -82,12 +82,7 @@ const SearchHistory = ({ keyword }: SearchHistoryProps) => {
           );
         }
 
-        toaster.create({
-          title: "Thông báo",
-          description: message,
-          duration: 2000,
-          type: status ? "success" : "error",
-        });
+        handleShowToaster("Thông báo", message, status ? "success" : "error");
       });
     }
   };

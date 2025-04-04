@@ -1,10 +1,12 @@
 "use client";
+
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
 import MovieCard from "./MovieCard";
 import SkeletonMovieThumb from "@/components/skeletons/SkeletonMovieThumb";
 import { Box } from "@chakra-ui/react";
 import Error from "../Error";
+
+import "swiper/css";
 import "@/assets/css/swiper_custom.css";
 
 interface MovieThumbProps {

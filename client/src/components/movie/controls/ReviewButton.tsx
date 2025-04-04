@@ -1,7 +1,7 @@
 "use client";
 
 import ReviewDialog from "@/components/dialogs/review-dialog/ReviewDialog";
-import { toaster } from "@/components/ui/toaster";
+import { handleShowToaster } from "@/lib/utils";
 import { Button } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { MdReviews } from "react-icons/md";
@@ -9,18 +9,18 @@ import { MdReviews } from "react-icons/md";
 const ReviewButton = () => {
   const { data: session } = useSession();
 
-  const handleErrorWhenNotLogin = () => {
-    toaster.create({
-      description: "Bạn cần đăng nhập để thực hiện hành động này",
-      type: "error",
-      duration: 1500,
-    });
+  const handleNotSesstion = () => {
+    handleShowToaster(
+      "Thông báo",
+      "Bạn cần đăng nhập để thực hiện hành động này",
+      "error"
+    );
   };
 
   if (!session) {
     return (
       <Button
-        onClick={handleErrorWhenNotLogin}
+        onClick={handleNotSesstion}
         className="p-2 md:min-w-32 text-gray-50 rounded-full bg-[#3556b6]"
       >
         <MdReviews />

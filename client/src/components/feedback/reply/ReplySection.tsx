@@ -3,7 +3,7 @@
 import { getReplyListFeedback } from "@/store/asyncThunks/feedbackAsyncThunk";
 import { AppDispatch, RootState } from "@/store/store";
 import { Box, Spinner } from "@chakra-ui/react";
-import { useTransition, useState, useEffect } from "react";
+import { useTransition, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 import ReplyList from "./ReplyList";

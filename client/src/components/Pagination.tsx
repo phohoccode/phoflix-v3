@@ -2,8 +2,8 @@
 
 import { PaginationItems, PaginationRoot } from "@/components/ui/pagination";
 import { Box, HStack } from "@chakra-ui/react";
-import { toaster } from "./ui/toaster";
 import { useRouter } from "next/navigation";
+import { handleShowToaster } from "@/lib/utils";
 
 interface PaginationProps {
   pagination: {
@@ -11,10 +11,16 @@ interface PaginationProps {
     totalItemsPerPage: number | string;
   };
   currentPage: string | number;
+  showToaster?: boolean;
   ref?: any;
 }
 
-const Pagination = ({ pagination, currentPage, ref }: PaginationProps) => {
+const Pagination = ({
+  pagination,
+  currentPage,
+  ref,
+  showToaster = true,
+}: PaginationProps) => {
   const { totalItems, totalItemsPerPage } = pagination;
   const router = useRouter();
 
@@ -26,17 +32,14 @@ const Pagination = ({ pagination, currentPage, ref }: PaginationProps) => {
 
     window.scrollTo({ top: 0, behavior: "smooth" });
 
+    // Cuộn lướt đến vị trí ref nếu có
     if (ref?.current) {
       ref.current.scrollIntoView({ behavior: "smooth" });
     }
 
-    // Show toast
-    toaster.create({
-      title: `Bạn đang xem trang ${page}`,
-      description: "Chúc bạn xem phim vui vẻ!",
-      placement: "top-end",
-      duration: 1500,
-    });
+    if (showToaster) {
+      handleShowToaster(`Trang ${page}`, "Chúc bạn xem phim vui vẻ!");
+    }
   };
 
   return (

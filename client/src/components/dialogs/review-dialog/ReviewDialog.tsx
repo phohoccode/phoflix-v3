@@ -1,7 +1,7 @@
 "use client";
 
 import { AppDispatch, RootState } from "@/store/store";
-import { Box, Button, Dialog, Portal } from "@chakra-ui/react";
+import { Box, Button, CloseButton, Dialog, Portal } from "@chakra-ui/react";
 import { useDispatch, useSelector } from "react-redux";
 import ReviewSummary from "./ReviewSummary";
 import ReviewEmo from "./ReviewEmo";
@@ -9,9 +9,9 @@ import ReviewComment from "./ReviewComment";
 import { useEffect, useState, useTransition } from "react";
 import { addFeedback, getStatsByMovie } from "@/lib/actions/feedbackAction";
 import { useSession } from "next-auth/react";
-import { toaster } from "@/components/ui/toaster";
 import { setReviewContent } from "@/store/slices/userSlice";
 import { getFeedbacks } from "@/store/asyncThunks/feedbackAsyncThunk";
+import { handleShowToaster } from "@/lib/utils";
 
 interface ReviewDialogProps {
   trigger: React.ReactNode;
@@ -49,29 +49,27 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
         totalReviews: response?.result?.total_reviews,
       });
     } else {
-      toaster.create({
-        description: response?.message,
-        type: "error",
-        duration: 1500,
-      });
+      handleShowToaster("Thông báo", response?.message, "error");
     }
   };
 
   const handleAddNewReview = () => {
     if (!session) {
-      toaster.create({
-        description: "Bạn cần đăng nhập để thực hiện hành động này",
-        type: "error",
-        duration: 1500,
-      });
+      handleShowToaster(
+        "Thông báo",
+        "Bạn cần đăng nhập để thực hiện hành động này",
+        "error"
+      );
+
+      return;
     }
 
     if (reviewContent?.trim() === "") {
-      toaster.create({
-        description: "Nội dung đánh giá không được để trống",
-        type: "error",
-        duration: 1500,
-      });
+      handleShowToaster(
+        "Thông báo",
+        "Nội dung đánh giá không được để trống",
+        "error"
+      );
       return;
     }
 
@@ -86,11 +84,7 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
       });
 
       if (response?.status) {
-        toaster.create({
-          description: response?.message,
-          type: "success",
-          duration: 1500,
-        });
+        handleShowToaster("Thông báo", response?.message, "success");
 
         // làm mới feedback khi feedbackType là review
 
@@ -113,11 +107,7 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
         // Reset review content
         dispatch(setReviewContent(""));
       } else {
-        toaster.create({
-          description: response?.message,
-          type: "error",
-          duration: 1500,
-        });
+        handleShowToaster("Thông báo", response?.message, "error");
       }
     });
   };
@@ -137,6 +127,13 @@ const ReviewDialog = ({ trigger }: ReviewDialogProps) => {
           }}
         >
           <Dialog.Content className="relative text-gray-50 bg-[#2a314e] rounded-2xl backdrop-blur max-w-[600px] mx-4">
+            <Dialog.CloseTrigger
+              asChild
+              className="absolute top-2 right-2 text-gray-300 hover:text-gray-100 hover:bg-transparent"
+            >
+              <CloseButton size="sm" />
+            </Dialog.CloseTrigger>
+
             <Dialog.Header>
               <Dialog.Title className="text-center">{movie?.name}</Dialog.Title>
               <ReviewSummary

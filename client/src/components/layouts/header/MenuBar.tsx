@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import Link from "next/link";
 import CategoryAndCountryList from "./CategoryAndCountryList";
 import { categories, countries } from "@/lib/defines/data";
 import { usePathname } from "next/navigation";
+import { IoIosArrowDown } from "react-icons/io";
 
 const menu = [
   { name: "Trang chủ", path: "/" },
@@ -39,7 +39,7 @@ const MenuBar = () => {
         onMouseLeave={() => setOpenDropdown(null)}
       >
         <span>Quốc gia</span>
-        <ChevronDownIcon />
+        <IoIosArrowDown />
         {openDropdown === "country" && (
           <CategoryAndCountryList data={countries} type="quoc-gia" />
         )}
@@ -50,7 +50,7 @@ const MenuBar = () => {
         onMouseLeave={() => setOpenDropdown(null)}
       >
         <span>Thể loại</span>
-        <ChevronDownIcon />
+        <IoIosArrowDown />
         {openDropdown === "category" && (
           <CategoryAndCountryList data={categories} type="the-loai" />
         )}

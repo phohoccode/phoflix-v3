@@ -17,7 +17,7 @@ const ReportFilmButton = ({
     <ReportDialog
       trigger={
         <Box
-          className={`p-2 sm:min-w-16 cursor-pointer rounded-lg flex justify-center items-center gap-2 text-gray-50 transition-all hover:bg-[#ffffff05] ${
+          className={`p-2 select-none sm:min-w-16 cursor-pointer rounded-lg flex justify-center items-center gap-2 text-gray-50 transition-all hover:bg-[#ffffff05] ${
             placement === "vertical" ? "flex-col" : "flex-row"
           }`}
         >

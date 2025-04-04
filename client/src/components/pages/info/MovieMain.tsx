@@ -6,11 +6,11 @@ import PlayIcon from "@/components/icons/PlayIcon";
 import { useParams } from "next/navigation";
 import MovieTabs from "./MovieTabs";
 import FavoriteButton from "@/components/movie/controls/FavoriteButton";
-import PlaylistButton from "@/components/movie/controls/PlaylistButton";
+import PlaylistPopover from "@/components/playlist/PlaylistPopover";
 import ShareButton from "@/components/movie/controls/ShareButton";
 import ReviewButton from "@/components/movie/controls/ReviewButton";
 import FeedbackSection from "@/components/feedback/FeedbackSection";
-import CommentButton from "@/components/movie/controls/CommentButton";
+import CommentButton from "@/components/movie/controls/FeedbackButton";
 
 const MovieMain = () => {
   const params = useParams();
@@ -35,7 +35,7 @@ const MovieMain = () => {
           <Box className="flex justify-between gap-6 flex-1 items-center">
             <Box className="flex gap-4">
               <FavoriteButton placement="vertical" />
-              <PlaylistButton placement="vertical" />
+              <PlaylistPopover placement="vertical" />
               <ShareButton placement="vertical" />
               <CommentButton placement="vertical" />
             </Box>

@@ -3,7 +3,7 @@
 import { AppDispatch, RootState } from "@/store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Box } from "@chakra-ui/react";
-import SlideShow from "@/components/movie/slide-show/SlideShow";
+import SlideShow from "@/components/movie/slide-section/SlideShow";
 import { useEffect, useRef, useState } from "react";
 import {
   fetchDataMovie,

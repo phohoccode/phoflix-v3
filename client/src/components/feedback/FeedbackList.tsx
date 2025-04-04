@@ -16,7 +16,7 @@ import EmptyData from "../EmptyData";
 import { BiSolidMessageDetail } from "react-icons/bi";
 
 const FeedbackList = () => {
-  const { items, loading, hasMore } = useSelector(
+  const { items, hasMore } = useSelector(
     (state: RootState) => state.feedback.feedbackData
   );
   const { feedbackType } = useSelector((state: RootState) => state.feedback);

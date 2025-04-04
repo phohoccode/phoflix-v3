@@ -13,11 +13,12 @@ import {
 } from "@/store/slices/systemSlice";
 import { useEffect } from "react";
 import DrawerCustom from "./layouts/drawer/DrawerCustom";
-import { toaster, Toaster } from "./ui/toaster";
+import { Toaster } from "./ui/toaster";
 import Footer from "./layouts/Footer";
 import AuthDialog from "./dialogs/auth-dialog/AuthDialog";
 import ScrollToTopButton from "./ScrollToTopButton";
 import { signOut, useSession } from "next-auth/react";
+import { handleShowToaster } from "@/lib/utils";
 
 const App = ({ children }: { children: React.ReactNode }) => {
   const { lastScrollY, isOpenDrawer, isShowAuthDialog, typeAuth } = useSelector(
@@ -29,11 +30,11 @@ const App = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (status === "authenticated") {
       if (!sesstion.user?.email) {
-        toaster.create({
-          type: "error",
-          description: "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.",
-          duration: 2000,
-        });
+        handleShowToaster(
+          "Thông báo",
+          "Phiên đăng nhập hết hạn! Vui lòng đăng nhập lại để sử dụng đầy đủ chức năng.",
+          "error"
+        );
 
         signOut();
       }

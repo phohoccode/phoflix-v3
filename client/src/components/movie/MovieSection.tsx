@@ -11,13 +11,12 @@ const MovieSection = ({ finalData }: MovieSectionProps) => {
   return (
     <Box className="flex flex-col gap-12 lg:p-8 p-4">
       {finalData?.map(
-        ({ title, link, data, gradient, orientation }: any, index: number) => (
+        ({ title, link, data, orientation }: any, index: number) => (
           <Box key={index}>
             <MovieCollection
               title={title}
               link={link}
               data={data}
-              gradient={gradient}
               orientation={orientation}
             />
           </Box>

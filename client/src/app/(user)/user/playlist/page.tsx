@@ -1,8 +1,9 @@
 import Loading from "@/app/loading";
 import { auth } from "@/auth";
 import MovieSection from "@/components/pages/user/MovieSection";
-import ActionsPlaylist from "@/components/pages/user/playlist/ActionsPlaylist";
-import Playlists from "@/components/pages/user/playlist/Playlists";
+import ActionsPlaylist from "@/components/playlist/ActionsPlaylist";
+import Playlists from "@/components/playlist/Playlists";
+
 import {
   getUserMoviesFromPlaylist,
   getUserPlaylists,
@@ -74,11 +75,11 @@ const Page = async ({ searchParams }: PageProps) => {
         </ActionsPlaylist>
       </Box>
 
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading height="h-1/6" />}>
         <Playlists playlists={playlists} />
       </Suspense>
 
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<Loading height="h-1/2" />}>
         <MovieSection
           movies={movies}
           totalItems={totalItems}

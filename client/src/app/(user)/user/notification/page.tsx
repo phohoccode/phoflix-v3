@@ -1,20 +1,28 @@
-import { auth } from "@/auth";
-import { getNotifications } from "@/lib/actions/notificationActionServer";
 import { Suspense } from "react";
 import Loading from "@/app/loading";
-import NotificationTabs from "@/components/pages/user/notification/NotificationTabs";
-import NotificationList from "@/components/notification/NotificationList";
-import Link from "next/link";
-import SeeMoreNotifications from "@/components/pages/user/notification/SeeMoreNotifications";
 import MainPage from "@/components/pages/user/notification/MainPage";
 
-interface PageProps {
-  searchParams: {
-    [key: string]: string | string[] | undefined;
+interface NotificationProps {
+  searchParams: { [keyof: string]: string | undefined };
+}
+
+const tabs = [
+  { id: "community", name: "cộng đồng" },
+  { id: "individual", name: "cá nhân" },
+];
+
+export async function generateMetadata({ searchParams }: NotificationProps) {
+  const params = (await searchParams) ?? {};
+  const title =
+    tabs.find((tab) => tab.id === params.tab)?.name ?? "Thông báo mới nhất";
+
+  return {
+    title: `Thông báo ${title} - PHOFLIX-V3`,
+    description: "Xem phim chất lượng cao, miễn phí và cập nhật nhanh nhất.",
   };
 }
 
-const Page = async ({ searchParams }: PageProps) => {
+const Page = () => {
   return (
     <Suspense fallback={<Loading />}>
       <MainPage />

@@ -16,6 +16,7 @@ import { createUserSearchHistory } from "@/store/asyncThunks/userAsyncThunk";
 import { useSession } from "next-auth/react";
 import { IoSearch } from "react-icons/io5";
 import { setIsShowModalSearch } from "@/store/slices/systemSlice";
+import { handleShowToaster } from "@/lib/utils";
 
 const SearchDialog = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -41,11 +42,7 @@ const SearchDialog = () => {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (keyword.trim() === "") {
-        toaster.create({
-          title: "Thông báo",
-          description: "Bạn muốn tìm gì thế?",
-          duration: 2000,
-        });
+        handleShowToaster("Thông báo", "Bạn muốn tìm gì thế?");
         return;
       }
 
@@ -106,7 +103,7 @@ const SearchDialog = () => {
                         outline: "none",
                       },
                     }}
-                    className="font-normal text-gray-50 rounded-xl truncate bg-transparent border border-[#ffffff10] focus:border-gray-100"
+                    className="font-normal text-gray-50 rounded-xl truncate bg-transparent border border-[#ffffff10] focus:border-gray-400"
                     placeholder="Nhập tên phim cần tìm..."
                   />
                 </InputGroup>

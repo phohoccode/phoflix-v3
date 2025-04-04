@@ -2,9 +2,9 @@
 
 import { Box } from "@chakra-ui/react";
 import { useEffect, useState, useTransition } from "react";
-import NotificationTabs from "./NotificationTabs";
+import NotificationTabs from "../../../notification/NotificationTabs";
 import NotificationList from "@/components/notification/NotificationList";
-import SeeMoreNotifications from "./SeeMoreNotifications";
+import SeeMoreNotifications from "../../../notification/SeeMoreNotifications";
 import { getNotifications } from "@/lib/actions/notificationActionClient";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";

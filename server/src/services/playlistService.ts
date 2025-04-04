@@ -44,7 +44,7 @@ export const handleCreatePlaylist = async ({
     if (rows.affectedRows === 0) {
       return {
         status: false,
-        message: "Tạo playlist thất bại",
+        message: "Tạo danh sách phát thất bại",
         result: null,
         statusCode: 400,
       };
@@ -52,7 +52,7 @@ export const handleCreatePlaylist = async ({
 
     return {
       status: true,
-      message: "Tạo playlist thành công",
+      message: "Tạo danh sách phát thành công!",
       result: {
         id: playlistId,
         userId,

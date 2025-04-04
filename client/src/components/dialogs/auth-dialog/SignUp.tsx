@@ -1,9 +1,8 @@
 "use client";
 
 import { PasswordInput } from "@/components/ui/password-input";
-import { toaster } from "@/components/ui/toaster";
 import { register } from "@/lib/actions/authActionServer";
-import { isValidEmail } from "@/lib/utils";
+import { handleShowToaster, isValidEmail } from "@/lib/utils";
 import { setIsShowAuthDialog, setTypeAuth } from "@/store/slices/systemSlice";
 import { AppDispatch } from "@/store/store";
 import { Box, Button, Field, Input } from "@chakra-ui/react";
@@ -149,20 +148,15 @@ const SignUp = () => {
         avatar: "/images/avatars/01.jpg",
       });
 
-      if (response?.status) {
-        toaster.create({
-          description: response?.message,
-          type: "success",
-          duration: 3000,
-        });
+      handleShowToaster(
+        "Thông báo",
+        response?.message,
+        response?.status ? "success" : "error"
+      );
 
+      // Chỉ đóng dialog khi đăng ký thành công
+      if (response?.status) {
         dispatch(setIsShowAuthDialog(false));
-      } else {
-        toaster.create({
-          description: response?.message,
-          type: "error",
-          duration: 3000,
-        });
       }
     });
   };

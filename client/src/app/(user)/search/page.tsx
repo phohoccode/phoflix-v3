@@ -3,15 +3,15 @@ import MainPage from "@/components/pages/search/MainPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
 
-interface MoviePageProps {
+interface SearchPageProps {
   searchParams: { [keyof: string]: string | undefined };
 }
 
 export async function generateMetadata({
   searchParams,
-}: MoviePageProps): Promise<Metadata> {
+}: SearchPageProps): Promise<Metadata> {
   const params = (await searchParams) ?? {};
-  const keyword = params.keyword ?? "hihihi";
+  const keyword = params.keyword ?? "phohoccode";
 
   return {
     title: `Xem phim ${keyword} - Thuyết minh, Vietsub mới nhất - PHOFLIX-V3`,

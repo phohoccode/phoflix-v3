@@ -8,7 +8,6 @@ import { useParams, usePathname } from "next/navigation";
 import { useState, useTransition } from "react";
 import { IoMdSend } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
-import { toaster } from "../ui/toaster";
 import {
   getFeedbacks,
   getReplyListFeedback,
@@ -18,6 +17,7 @@ import {
   setShowReplyId,
 } from "@/store/slices/feedbackSlice";
 import { createNotification } from "@/lib/actions/notificationActionClient";
+import { handleShowToaster } from "@/lib/utils";
 
 const FeedbackInput = ({
   action,
@@ -109,22 +109,16 @@ const FeedbackInput = ({
 
   const handleAddNewComment = () => {
     if (!session) {
-      toaster.create({
-        description: "Vui lòng đăng nhập để bình luận",
-        type: "error",
-        duration: 1500,
-      });
-
+      handleShowToaster(
+        "Thông báo",
+        "Vui lòng đăng nhập để bình luận",
+        "error"
+      );
       return;
     }
 
     if (value.trim() === "") {
-      toaster.create({
-        description: "Nội dung không được để trống",
-        type: "error",
-        duration: 1500,
-      });
-
+      handleShowToaster("Thông báo", "Nội dung không được để trống", "error");
       return;
     }
 
@@ -139,30 +133,22 @@ const FeedbackInput = ({
         handleCreateNotification();
       }
 
-      console.log("response", response);
-
       if (response?.status) {
         setValue("");
         setLength(0);
-
-        toaster.create({
-          description: response?.message,
-          type: "success",
-          duration: 1500,
-        });
 
         dispatch(setShowFeedbackId(null));
         dispatch(setShowReplyId(null));
 
         // Làm mới danh sách bình luận
         handleRefreshFeedback();
-      } else {
-        toaster.create({
-          description: response?.message,
-          type: "error",
-          duration: 1500,
-        });
       }
+
+      handleShowToaster(
+        "Thông báo",
+        response?.message,
+        response?.status ? "success" : "error"
+      );
     });
   };
 

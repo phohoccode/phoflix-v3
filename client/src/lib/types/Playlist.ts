@@ -35,3 +35,12 @@ type GetUserMoviesFromPlaylist = {
   limit: number;
   accessToken: string;
 }
+
+type Playlist = {
+  created_at: string;
+  id: string;
+  name: string;
+  totalMovie: number;
+  updated_at: string;
+  user_id: string;
+};

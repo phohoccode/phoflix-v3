@@ -39,7 +39,7 @@ const AlertDialog = ({
             zIndex: "9999 !important",
           }}
         >
-          <Dialog.Content className="relative text-gray-50 bg-[rgba(40,43,58,0.8)] rounded-2xl backdrop-blur max-w-[420px] mx-4">
+          <Dialog.Content className="relative text-gray-50 bg-[#2a314e] rounded-2xl backdrop-blur max-w-[420px] mx-4">
             <Dialog.Header>
               <Dialog.Title>{title}</Dialog.Title>
             </Dialog.Header>
@@ -66,7 +66,10 @@ const AlertDialog = ({
               </Button>
             </Dialog.Footer>
 
-            <Dialog.CloseTrigger asChild className="absolute top-2 right-2 text-gray-300 hover:text-gray-100 hover:bg-transparent">
+            <Dialog.CloseTrigger
+              asChild
+              className="absolute top-2 right-2 text-gray-300 hover:text-gray-100 hover:bg-transparent"
+            >
               <CloseButton size="sm" />
             </Dialog.CloseTrigger>
           </Dialog.Content>

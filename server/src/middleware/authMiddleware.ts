@@ -30,10 +30,8 @@ export const authMiddleware = async (
       if (!decoded) throw new Error();
     }
 
-    console.log("Xác thực token thành công!");
     next();
   } catch (error) {
-    console.log(error);
     return res.status(401).json({
       status: false,
       message: "Token không hợp lệ hoặc đã hết hạn!",

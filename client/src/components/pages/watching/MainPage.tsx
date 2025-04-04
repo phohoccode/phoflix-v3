@@ -16,7 +16,7 @@ import EmptyData from "@/components/EmptyData";
 import { addNewMovie } from "@/lib/actions/userMovieAction";
 import { useSession } from "next-auth/react";
 import FavoriteButton from "@/components/movie/controls/FavoriteButton";
-import PlaylistButton from "@/components/movie/controls/PlaylistButton";
+import PlaylistButton from "@/components/playlist/PlaylistPopover";
 import ShareButton from "@/components/movie/controls/ShareButton";
 import ReportFilmButton from "@/components/movie/controls/ReportFilmButton";
 import CommentSection from "@/components/feedback/FeedbackSection";
@@ -94,7 +94,7 @@ const MainPage = () => {
   return (
     <Box className="flex flex-col gap-12 max-w-[1620px] mx-auto lg:px-14">
       <Box className="lg:mt-32 mt-24">
-        <h3 className=" xl:text-4xl lg:text-3xl px-4 md:text-2xl text-xl title-text font-bold mb-6 sm:block hidden">
+        <h3 className="xl:text-4xl lg:text-3xl px-4 md:text-2xl text-xl title-text font-bold mb-6 sm:inline-block hidden">
           {movie?.name} - {currentEpisode?.name}
         </h3>
         <Box className="flex flex-col lg:px-4">
@@ -139,7 +139,7 @@ const MainPage = () => {
         <Box className="w-full h-[0.5px] bg-[#ffffff10]"></Box>
 
         <MovieSuggesstions
-          columns={{ base: 3, md: 3, lg: 5, xl: 6, "2xl": 8 }}
+          columns={{ base: 3, md: 4, lg: 5, xl: 6, "2xl": 8 }}
           title="Đề xuất cho bạn"
           limit={24}
         />

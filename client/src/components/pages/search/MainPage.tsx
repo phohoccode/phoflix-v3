@@ -10,14 +10,13 @@ import { useDispatch, useSelector } from "react-redux";
 import Pagination from "@/components/Pagination";
 import SkeletonMovieList from "@/components/skeletons/SkeletonMovieGrid";
 import EmptyData from "@/components/EmptyData";
-import MovieGrid from "@/components/movie/movie-thumb/MovieGrid";
-import { useSession } from "next-auth/react";
+import MovieGrid from "@/components/movie/movie-section/MovieGrid";
 import "@/assets/css/movie.css";
 
 const MainPage = () => {
   const searchParams = useSearchParams();
   const dispatch: AppDispatch = useDispatch();
-  const { items, loading, error, pagination, titlePage } = useSelector(
+  const { items, loading, pagination } = useSelector(
     (state: RootState) => state.movie.searchMovie
   );
   const currentPage = Number(searchParams.get("page")) || 1;
@@ -63,12 +62,12 @@ const MainPage = () => {
 
   return (
     <RootLayout>
-      <Box className="flex flex-col gap-4 px-4 lg:pt-28 pt-24">
+      <Box className="px-4 lg:pt-28 pt-24">
         <h3 className="inline-block xl:text-4xl lg:text-3xl md:text-2xl text-xl title-text font-bold">
           Tìm thấy {pagination?.totalItems} kết quả cho từ khóa "{keyword}"
         </h3>
 
-        <Box className="mt-6">
+        <Box className="mt-8">
           <MovieGrid
             items={items}
             columns={{ base: 3, md: 4, lg: 5, xl: 6, "2xl": 8 }}
@@ -76,13 +75,15 @@ const MainPage = () => {
         </Box>
 
         {!loading && (pagination?.totalItems as number) >= limit && (
-          <Pagination
-            pagination={{
-              totalItems: pagination?.totalItems as number,
-              totalItemsPerPage: pagination?.totalItemsPerPage as number,
-            }}
-            currentPage={currentPage}
-          />
+          <Box className="flex justify-center mt-6">
+            <Pagination
+              pagination={{
+                totalItems: pagination?.totalItems as number,
+                totalItemsPerPage: pagination?.totalItemsPerPage as number,
+              }}
+              currentPage={currentPage}
+            />
+          </Box>
         )}
       </Box>
     </RootLayout>

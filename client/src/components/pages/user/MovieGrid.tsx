@@ -1,7 +1,6 @@
 "use client";
 
 import EmptyData from "@/components/EmptyData";
-import { toaster } from "@/components/ui/toaster";
 import { deleteMovie } from "@/lib/actions/userMovieAction";
 import { RootState } from "@/store/store";
 import { Box, SimpleGrid } from "@chakra-ui/react";
@@ -10,6 +9,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import MovieItem from "./MovieItem";
 import { useSession } from "next-auth/react";
+import { handleShowToaster } from "@/lib/utils";
 
 interface MovieGridProps {
   items: any;
@@ -60,20 +60,14 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
     setSlug("");
 
     if (response?.status) {
-      toaster.create({
-        title: response?.message,
-        type: "success",
-        duration: 2000,
-      });
-
       router.refresh();
-    } else {
-      toaster.create({
-        title: response?.message,
-        type: "error",
-        duration: 2000,
-      });
     }
+
+    handleShowToaster(
+      "Thông báo",
+      response?.message,
+      response?.status ? "success" : "error"
+    );
   };
 
   if (!items || items?.length === 0) {
@@ -87,7 +81,11 @@ const MovieGrid = ({ items, colums, userId, type }: MovieGridProps) => {
   return (
     <SimpleGrid
       columns={colums || { base: 2, md: 3, lg: 5, xl: 6, "2xl": 8 }}
-      gap={4}
+      gap={{
+        base: 2,
+        md: 3,
+        lg: 4,
+      }}
     >
       {items?.map((item: any, index: number) => (
         <MovieItem

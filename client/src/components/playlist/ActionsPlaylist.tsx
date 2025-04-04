@@ -7,9 +7,17 @@ import {
   deletePlaylist,
   updatePlaylist,
 } from "@/lib/actions/playlistAction";
-import { Button, Dialog, IconButton, Input, Portal } from "@chakra-ui/react";
+import { handleShowToaster } from "@/lib/utils";
+import {
+  Button,
+  CloseButton,
+  Dialog,
+  IconButton,
+  Input,
+  Portal,
+} from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { MdDelete } from "react-icons/md";
 
@@ -18,7 +26,7 @@ interface ActionsPlaylistProps {
   children: React.ReactNode;
   value?: string;
   playlistId?: string;
-  trigger?: () => void;
+  callback?: () => void;
 }
 
 const ActionsPlaylist = ({
@@ -26,7 +34,7 @@ const ActionsPlaylist = ({
   value,
   children,
   playlistId,
-  trigger,
+  callback,
 }: ActionsPlaylistProps) => {
   const [playlistName, setPlaylistName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -42,62 +50,89 @@ const ActionsPlaylist = ({
     }
   }, [action, value, isOpen]);
 
+  const handleCreateNewPlaylist = async () => {
+    const response = await createNewPlaylist({
+      userId: session?.user?.id as string,
+      playlistName: playlistName as string,
+      accessToken: session?.user?.accessToken as string,
+    });
+
+    return response;
+  };
+
+  const handleUpdatePlaylist = async () => {
+    const response = await updatePlaylist({
+      userId: session?.user?.id as string,
+      playlistId: playlistId as string,
+      playlistName: playlistName as string,
+      accessToken: session?.user?.accessToken as string,
+    });
+
+    return response;
+  };
+
+  const handleDeletePlaylist = async () => {
+    const response = await deletePlaylist({
+      userId: session?.user?.id as string,
+      playlistId: playlistId as string,
+      accessToken: session?.user?.accessToken as string,
+    });
+
+    // Xóa playlistId và playlistName khỏi URL để set lại selectedPlaylist mặc định
+    const params = new URLSearchParams(window.location.search);
+    params.delete("playlistId");
+    params.delete("playlistName");
+
+    router.replace(`?${params.toString()}`);
+
+    return response;
+  };
+
   const handleActionPlaylist = (action: "update" | "delete" | "create") => {
     if (playlistName?.trim() === "") {
-      toaster.create({
-        description: "Tên danh sách không được để trống",
-        type: "error",
-        duration: 1500,
-      });
+      handleShowToaster(
+        "Thông báo",
+        "Tên danh sách không được để trống",
+        "error"
+      );
       return;
     }
 
     startTransition(async () => {
       let response: any = null;
 
-      if (action === "create") {
-        response = await createNewPlaylist({
-          userId: session?.user?.id as string,
-          playlistName: playlistName as string,
-          accessToken: session?.user?.accessToken as string,
-        });
-      } else if (action === "update") {
-        response = await updatePlaylist({
-          userId: session?.user?.id as string,
-          playlistId: playlistId as string,
-          playlistName: playlistName as string,
-          accessToken: session?.user?.accessToken as string,
-        });
-      } else if (action === "delete") {
-        response = await deletePlaylist({
-          userId: session?.user?.id as string,
-          playlistId: playlistId as string,
-          accessToken: session?.user?.accessToken as string,
-        });
+      switch (action) {
+        case "create":
+          response = await handleCreateNewPlaylist();
+          break;
+        case "update":
+          response = await handleUpdatePlaylist();
+          break;
+        case "delete":
+          response = await handleDeletePlaylist();
+          break;
+        default:
+          break;
       }
 
-      if (!response?.status) {
-        toaster.create({
-          description: response?.message,
-          type: "error",
-        });
-      } else {
-        toaster.create({
-          description: response?.message,
-          type: "success",
-        });
-
+      if (response?.status) {
         setPlaylistName("");
         setIsOpen(false);
 
-        // trigger khi thêm mới danh sách
-        if (trigger) {
-          trigger();
+        // Thực hiện hành động sau khi xóa thành công
+        if (callback) {
+          callback();
         }
 
-        // Update data
+        // Cập nhật dữ liệu trên trang hiện tại
         router.refresh();
       }
+
+      handleShowToaster(
+        "Thông báo",
+        response?.message,
+        response?.status ? "success" : "error"
+      );
     });
   };
 
@@ -117,6 +152,13 @@ const ActionsPlaylist = ({
           }}
         >
           <Dialog.Content className="relative text-gray-50 max-w-[320px] bg-[#2a314e] rounded-2xl backdrop-blur mx-4 my-auto">
+            <Dialog.CloseTrigger
+              asChild
+              className="absolute top-2 right-2 text-gray-300 hover:text-gray-100 hover:bg-transparent"
+            >
+              <CloseButton size="sm" />
+            </Dialog.CloseTrigger>
+
             <Dialog.Header>
               <Dialog.Title>
                 {action === "create" ? "Tạo danh sách" : "Sửa danh sách"}

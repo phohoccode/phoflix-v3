@@ -1,8 +1,10 @@
 "use client";
 
-import MovieThumb from "@/components/movie/movie-thumb/MovieThumb";
-import MovieThumbTitle from "@/components/movie/movie-thumb/MovieThumbTitle";
+import MovieSwiper from "@/components/movie/movie-section/MovieSwiper";
+import MovieTitle from "@/components/movie/movie-section/MovieTitle";
 import { Box } from "@chakra-ui/react";
+
+import "@/assets/css/animation.css";
 
 interface MovieCollectionProps {
   title: string;
@@ -12,7 +14,6 @@ interface MovieCollectionProps {
     error: boolean;
     items: any[];
   };
-  gradient: string;
   orientation: "horizontal" | "vertical";
 }
 
@@ -20,20 +21,18 @@ const MovieCollection = ({
   title,
   link,
   data,
-  gradient,
   orientation,
 }: MovieCollectionProps) => {
   return (
-    <Box>
-      <MovieThumbTitle
+    <Box className="effect-fade-in">
+      <MovieTitle
         loading={data?.loading}
         href={link}
         title={title}
-        gradient={gradient}
         error={data?.error}
       />
       <Box>
-        <MovieThumb
+        <MovieSwiper
           items={data?.items}
           loading={data?.loading}
           error={data?.error}

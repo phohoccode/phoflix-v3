@@ -1,7 +1,5 @@
 "use client";
 
-import { PasswordInput } from "@/components/ui/password-input";
-import { PinInput } from "@/components/ui/pin-input";
 import { toaster } from "@/components/ui/toaster";
 import { forgotPassword } from "@/lib/actions/authActionServer";
 import { isValidEmail } from "@/lib/utils";

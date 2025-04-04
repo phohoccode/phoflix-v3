@@ -5,7 +5,7 @@ import Link from "next/link";
 import { RootState } from "@/store/store";
 import { useSelector } from "react-redux";
 import { TagClassic } from "../TagClassic";
-import MovieActionsButton from "../movie-thumb/MovieActionsButton";
+import MovieActionsButton from "../movie-section/MovieActionsButton";
 import { useState } from "react";
 import "@/assets/css/movie.css";
 import { generateUrlImage } from "@/lib/utils";
@@ -58,7 +58,7 @@ const SlideItem = ({ item }: any) => {
               ))}
             </Box>
             <Box className="flex gap-2 items-center mt-6">
-              <MovieActionsButton item={item} />
+              <MovieActionsButton slug={item?.slug} />
             </Box>
           </>
         )}
