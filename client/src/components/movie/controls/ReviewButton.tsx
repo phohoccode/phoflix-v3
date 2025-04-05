@@ -32,9 +32,9 @@ const ReviewButton = () => {
   return (
     <ReviewDialog
       trigger={
-        <Button className="p-2 md:min-w-32 text-gray-50 rounded-full bg-[#3556b6]">
+        <Button className="lg:p-2 px-2 py-1 md:min-w-32 text-gray-50 rounded-full bg-[#3556b6]">
           <MdReviews />
-          <span className="texts-sm hidden xs:block">Đánh giá</span>
+          <span className="md:texts-sm text-xs hidden xs:block">Đánh giá</span>
         </Button>
       }
     />

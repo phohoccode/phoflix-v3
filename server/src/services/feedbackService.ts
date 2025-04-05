@@ -1,7 +1,8 @@
+import { convertStringToObject } from "../lib/utils";
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
 
-interface GetFeedbacks  {
+interface GetFeedbacks {
   movieSlug: string;
   type: "review" | "comment";
   limit: number;
@@ -100,8 +101,8 @@ export const handleGetFeedbacks = async ({
     // Format lại dữ liệu trả về
     const finalFeedbacks = feedbacks.map((feedback: any) => ({
       ...feedback,
-      author: feedback?.author ? JSON.parse(feedback?.author) : null,
-      reviews: feedback?.reviews ? JSON.parse(feedback?.reviews) : null,
+      author: convertStringToObject(feedback?.author) ?? null,
+      reviews: convertStringToObject(feedback?.reviews) ?? null,
     }));
 
     return {
@@ -251,10 +252,8 @@ export const handleGetReplyListFeedbacks = async ({
     // Format lại dữ liệu trả về
     const finalReplyFeedback = replies.map((feedback: any) => ({
       ...feedback,
-      author: JSON.parse(feedback?.author),
-      mention_user: feedback?.mention_user
-        ? JSON.parse(feedback?.mention_user)
-        : null,
+      author: convertStringToObject(feedback.author) ?? null,
+      mention_user: convertStringToObject(feedback.mention_user) ?? null,
     }));
 
     return {

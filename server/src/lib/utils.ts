@@ -74,3 +74,16 @@ export const generateHtmlSendMail = ({
         </div>
     `;
 };
+
+export const convertStringToObject = (str: string) => {
+  if (typeof str !== "string") {
+    return str;
+  }
+
+  try {
+    return JSON.parse(str);
+  } catch (error) {
+    console.error("Lỗi khi chuyển đổi chuỗi thành đối tượng:", error);
+    return str;
+  }
+};

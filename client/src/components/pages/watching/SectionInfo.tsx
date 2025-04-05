@@ -6,7 +6,8 @@ import { formatStringForURL, generateUrlImage } from "@/lib/utils";
 import { Box, Image } from "@chakra-ui/react";
 import Link from "next/link";
 import { useState } from "react";
-import { FaArrowRight } from "react-icons/fa6";
+import { RiArrowRightWideFill } from "react-icons/ri";
+
 
 interface SectionInfoProps {
   data: any;
@@ -80,7 +81,7 @@ const SectionInfo = ({ data }: SectionInfoProps) => {
             )}`}
           >
             Thông tin phim
-            <FaArrowRight />
+            <RiArrowRightWideFill />
           </Link>
         </Box>
       </Box>

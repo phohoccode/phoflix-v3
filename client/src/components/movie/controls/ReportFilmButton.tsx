@@ -23,7 +23,7 @@ const ReportFilmButton = ({
         >
           <FaFlag />
           <span
-            className={`text-xs whitespace-nowrap ${
+            className={`md:text-xs text-[10px] whitespace-nowrap ${
               !responsiveText ? "block" : "hidden xs:block"
             }`}
           >

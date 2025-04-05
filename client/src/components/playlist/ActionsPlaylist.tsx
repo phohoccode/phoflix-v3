@@ -17,12 +17,12 @@ import {
   Portal,
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 import { MdDelete } from "react-icons/md";
 
 interface ActionsPlaylistProps {
-  action: "update" | "create";
+  action: "update" | "create" | "delete";
   children: React.ReactNode;
   value?: string;
   playlistId?: string;
@@ -38,7 +38,11 @@ const ActionsPlaylist = ({
 }: ActionsPlaylistProps) => {
   const [playlistName, setPlaylistName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const [loading, setLoading] = useState({
+    create: false,
+    update: false,
+    delete: false,
+  });
   const { data: session }: any = useSession();
   const router = useRouter();
 
@@ -88,7 +92,9 @@ const ActionsPlaylist = ({
     return response;
   };
 
-  const handleActionPlaylist = (action: "update" | "delete" | "create") => {
+  const handleActionPlaylist = async (
+    action: "update" | "delete" | "create"
+  ) => {
     if (playlistName?.trim() === "") {
       handleShowToaster(
         "Thông báo",
@@ -98,42 +104,44 @@ const ActionsPlaylist = ({
       return;
     }
 
-    startTransition(async () => {
-      let response: any = null;
+    let response: any = null;
 
-      switch (action) {
-        case "create":
-          response = await handleCreateNewPlaylist();
-          break;
-        case "update":
-          response = await handleUpdatePlaylist();
-          break;
-        case "delete":
-          response = await handleDeletePlaylist();
-          break;
-        default:
-          break;
+    setLoading((prev) => ({ ...prev, [action]: true }));
+
+    switch (action) {
+      case "create":
+        response = await handleCreateNewPlaylist();
+        break;
+      case "update":
+        response = await handleUpdatePlaylist();
+        break;
+      case "delete":
+        response = await handleDeletePlaylist();
+        break;
+      default:
+        break;
+    }
+
+    setLoading((prev) => ({ ...prev, [action]: false }));
+
+    if (response?.status) {
+      setPlaylistName("");
+      setIsOpen(false);
+
+      // Thực hiện hành động sau khi xóa thành công
+      if (callback) {
+        callback();
       }
 
-      if (response?.status) {
-        setPlaylistName("");
-        setIsOpen(false);
+      // Cập nhật dữ liệu trên trang hiện tại
+      router.refresh();
+    }
 
-        // Thực hiện hành động sau khi xóa thành công
-        if (callback) {
-          callback();
-        }
-
-        // Cập nhật dữ liệu trên trang hiện tại
-        router.refresh();
-      }
-
-      handleShowToaster(
-        "Thông báo",
-        response?.message,
-        response?.status ? "success" : "error"
-      );
-    });
+    handleShowToaster(
+      "Thông báo",
+      response?.message,
+      response?.status ? "success" : "error"
+    );
   };
 
   return (
@@ -195,7 +203,7 @@ const ActionsPlaylist = ({
                   }
                   title="Xác nhận xóa"
                   content="Bạn có chắc chắn muốn xóa danh sách này không?"
-                  loading={isPending}
+                  loading={loading.delete}
                   confirmCallback={() => handleActionPlaylist("delete")}
                 />
               )}
@@ -209,7 +217,7 @@ const ActionsPlaylist = ({
                 </Button>
               </Dialog.ActionTrigger>
               <Button
-                loading={action === "create" ? isPending : false}
+                loading={loading[action]}
                 onClick={() => handleActionPlaylist(action)}
                 size="xs"
                 className="min-w-24 bg-[#ffd875] text-gray-800 hover:shadow-[0_5px_10px_10px_rgba(255,218,125,.15)]"
