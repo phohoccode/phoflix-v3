@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
 
 interface ActionsPlaylistProps {

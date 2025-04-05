@@ -10,7 +10,7 @@ import { RootState } from "@/store/store";
 import { Box, Button, Popover, Portal } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { handleShowToaster } from "@/lib/utils";
@@ -28,7 +28,7 @@ const PlaylistPopover = ({
 }: PlaylistPopoverProps) => {
   const [playlists, setPlaylists] = useState<any[]>([]);
   const [playlistIds, setPlaylistIds] = useState<string[]>([]);
-  const [isPending, startTransition] = useTransition();
+  const [idCheckbox, setIdCheckbox] = useState<string | null>(null);
   const { movie } = useSelector((state: RootState) => state.movie.movieInfo);
   const { data: session }: any = useSession();
   const params = useParams();
@@ -97,26 +97,26 @@ const PlaylistPopover = ({
     return response;
   };
 
-  const handleActionsPlaylist = (value: string, checked: boolean) => {
+  const handleActionsPlaylist = async (value: string, checked: boolean) => {
     let response: any = null;
 
-    startTransition(async () => {
-      if (checked) {
-        response = await handleAddNewMovieFromPlaylist(value);
-      } else {
-        response = await handleDeleteMovieFromPlaylist(value);
-      }
+    setIdCheckbox(value);
+    if (checked) {
+      response = await handleAddNewMovieFromPlaylist(value);
+    } else {
+      response = await handleDeleteMovieFromPlaylist(value);
+    } 
+    setIdCheckbox(null);
 
-      if (response?.status) {
-        handleGetPlaylistIds();
-      }
+    if (response?.status) {
+      handleGetPlaylistIds();
+    }
 
-      handleShowToaster(
-        "Thông báo",
-        response?.message,
-        response?.status ? "success" : "error"
-      );
-    });
+    handleShowToaster(
+      "Thông báo",
+      response?.message,
+      response?.status ? "success" : "error"
+    );
   };
 
   const handleNotSession = () => {
@@ -166,6 +166,7 @@ const PlaylistPopover = ({
                 {playlists?.map((playlist, index) => (
                   <CheckboxPlaylist
                     key={index}
+                    idCheckbox={idCheckbox}
                     playlist={playlist}
                     playlistIds={playlistIds}
                     callback={handleActionsPlaylist}

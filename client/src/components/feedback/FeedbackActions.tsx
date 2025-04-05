@@ -12,10 +12,10 @@ import {
   setShowReplyId,
 } from "@/store/slices/feedbackSlice";
 import { AppDispatch, RootState } from "@/store/store";
-import { Box } from "@chakra-ui/react";
+import { Box, Spinner } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { BsArrowDownCircleFill, BsArrowUpCircleFill } from "react-icons/bs";
 import { FaReply } from "react-icons/fa6";
 import { MdDelete } from "react-icons/md";
@@ -45,7 +45,8 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
     session?.user?.id as string
   );
 
-  const [isPending, startTransition] = useTransition();
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [typeVote, setTypeVote] = useState<"like" | "dislike" | null>(null);
   const dispatch: AppDispatch = useDispatch();
   const params = useParams();
 
@@ -68,7 +69,7 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
     dispatch(setReplyId(id));
   };
 
-  const handleVote = (voteType: "like" | "dislike") => {
+  const handleVote = async (voteType: "like" | "dislike") => {
     if (!session) {
       handleShowToaster(
         "Thông báo",
@@ -79,25 +80,26 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
       return;
     }
 
-    startTransition(async () => {
-      const response = await addVote({
-        userId: session?.user?.id as string,
-        feedbackId,
-        movieSlug: params.slug as string,
-        voteType,
-        accessToken: session?.user?.accessToken as string,
-      });
-
-      if (response?.status) {
-        dispatch(getVoteListFeedback(params.slug as string));
-      } else {
-        handleShowToaster("Thông báo", response?.message, "error");
-      }
+    setTypeVote(voteType);
+    const response = await addVote({
+      userId: session?.user?.id as string,
+      feedbackId,
+      movieSlug: params.slug as string,
+      voteType,
+      accessToken: session?.user?.accessToken as string,
     });
+    setTypeVote(null);
+
+    if (response?.status) {
+      dispatch(getVoteListFeedback(params.slug as string));
+    } else {
+      handleShowToaster("Thông báo", response?.message, "error");
+    }
   };
 
   const handleRefreshFeedback = async () => {
     // Làm mới feedback khi xóa phản hồi cha
+
     await dispatch(
       getFeedbacks({
         movieSlug: params.slug as string,
@@ -118,24 +120,24 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
     }
   };
 
-  const handleDeleteFeedback = () => {
-    startTransition(async () => {
-      const response = await deleteFeedback({
-        feedbackId,
-        userId: session?.user?.id as string,
-        accessToken: session?.user?.accessToken as string,
-      });
-
-      if (response?.status) {
-        handleRefreshFeedback();
-      }
-
-      handleShowToaster(
-        "Thông báo",
-        response?.message,
-        response?.status ? "success" : "error"
-      );
+  const handleDeleteFeedback = async () => {
+    setLoadingDelete(true);
+    const response = await deleteFeedback({
+      feedbackId,
+      userId: session?.user?.id as string,
+      accessToken: session?.user?.accessToken as string,
     });
+    setLoadingDelete(false);
+
+    if (response?.status) {
+      handleRefreshFeedback();
+    }
+
+    handleShowToaster(
+      "Thông báo",
+      response?.message,
+      response?.status ? "success" : "error"
+    );
   };
 
   return (
@@ -145,7 +147,7 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
         className={`cursor-pointer hover:text-[#25d366] flex gap-1 items-center 
           ${isLiked ? "text-[#25d366]" : "text-gray-400 "}`}
       >
-        <BsArrowUpCircleFill />
+        {typeVote === "like" ? <Spinner /> : <BsArrowUpCircleFill />}
         {totalLiked > 0 && <span className="text-xs">{totalLiked}</span>}
       </Box>
 
@@ -154,7 +156,7 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
         className={`cursor-pointer hover:text-[#d33d25] flex gap-1 items-center 
           ${isDisliked ? "text-[#d33d25]" : "text-gray-400 "}`}
       >
-        <BsArrowDownCircleFill />
+        {typeVote === "dislike" ? <Spinner /> : <BsArrowUpCircleFill />}
         {totalDisliked > 0 && <span className="text-xs">{totalDisliked}</span>}
       </Box>
 
@@ -176,7 +178,7 @@ const FeedbackActions = ({ action, data, rootId }: FeedbackActionsProps) => {
           }
           title="Xóa phản hồi"
           content="Bạn có chắc chắn muốn xóa phản hồi này không?"
-          loading={isPending}
+          loading={loadingDelete}
           confirmCallback={handleDeleteFeedback}
         />
       )}

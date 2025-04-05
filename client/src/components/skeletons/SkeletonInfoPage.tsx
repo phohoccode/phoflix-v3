@@ -5,7 +5,7 @@ import { Box, GridItem, SimpleGrid, Skeleton } from "@chakra-ui/react";
 const SkeletonInfoPage = () => {
   return (
     <>
-      <Box className="h-0 relative lg:pt-[32%] md:pt-[46%] sm:pt-[50%] pt-[50%]">
+      <Box className="h-0 relative lg:pt-[32%] md:pt-[46%] sm:pt-[50%] pt-[60%]">
         <Skeleton className="absolute inset-0 w-full h-full" />
       </Box>
       <Box className="max-w-[1620px] mx-auto lg:px-14">

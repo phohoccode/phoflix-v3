@@ -18,9 +18,12 @@ const SkeletonWachingPage = () => {
               height="100%"
             />
           </Box>
-          <Box className="p-4 bg-[#08080a] flex gap-4">
-            <Skeleton className="sm:min-w-16 min-w-7" height="5" />
-            <Skeleton className="sm:min-w-16 min-w-7" height="5" />
+          <Box className="p-4 bg-[#08080a] flex justify-between items-center">
+            <Box className="flex gap-4 items-center">
+              <Skeleton className="sm:min-w-16 min-w-7" height="5" />
+              <Skeleton className="sm:min-w-16 min-w-7" height="5" />
+              <Skeleton className="sm:min-w-16 min-w-7" height="5" />
+            </Box>
             <Skeleton className="sm:min-w-16 min-w-7" height="5" />
           </Box>
         </Box>
@@ -39,7 +42,7 @@ const SkeletonWachingPage = () => {
               </Box>
               <Box className="flex flex-col gap-2 w-full">
                 <Skeleton width="80%" height="5" />
-                <Skeleton width="50%" height="3"/>
+                <Skeleton width="50%" height="3" />
                 <Box className="flex gap-2 mt-2 flex-wrap">
                   {[...Array(6)].map((_, index) => (
                     <Skeleton key={index} width="64px" height="5" />
