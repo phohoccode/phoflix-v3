@@ -1,6 +1,12 @@
-import { CreateNotification, GetNotifications } from "@lib/types/Notification";
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
+
+interface GetNotifications {
+  limit: number;
+  type: "community" | "individual";
+  userId?: string;
+  afterTime?: number;
+}
 
 export const handleGetNotifications = async ({
   limit,
@@ -78,6 +84,16 @@ export const handleGetNotifications = async ({
     };
   }
 };
+
+// 
+interface CreateNotification {
+  senderId: string;
+  type: "community" | "individual";
+  content: string;
+  userId?: string | null;
+  href?: string | null;
+  image?: string | null;
+}
 
 export const handleCreateNotification = async ({
   userId,

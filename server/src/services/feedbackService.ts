@@ -1,6 +1,12 @@
-import { AddFeedback, AddReplyFeedback, DeleteFeedback, FeedbackVote, GetFeedbacks, GetReplyListFeedbacks, UpdateFeedbackContent, UserVoteFeedback } from "@lib/types/Feedback";
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
+
+interface GetFeedbacks  {
+  movieSlug: string;
+  type: "review" | "comment";
+  limit: number;
+  afterTime?: number;
+}
 
 export const handleGetFeedbacks = async ({
   movieSlug,
@@ -121,6 +127,13 @@ export const handleGetFeedbacks = async ({
 };
 
 // ===================== GET REPLY LIST FEEDBACKS =====================
+
+interface GetReplyListFeedbacks {
+  parentId: string;
+  type: "review" | "comment";
+  limit: number;
+  afterTime?: number;
+}
 
 export const handleGetReplyListFeedbacks = async ({
   parentId,
@@ -267,6 +280,14 @@ export const handleGetReplyListFeedbacks = async ({
 
 // ==================== ADD NEW FEEDBACK ====================
 
+interface AddFeedback {
+  movieSlug: string;
+  type: "review" | "comment";
+  userId: string;
+  content?: string;
+  point?: number;
+}
+
 export const handleAddFeedback = async ({
   movieSlug,
   point,
@@ -322,6 +343,11 @@ export const handleAddFeedback = async ({
 
 // ==================== DELETE FEEDBACK ====================
 
+interface DeleteFeedback {
+  userId: string;
+  feedbackId: string;
+}
+
 export const handleDeleteFeedback = async ({
   userId,
   feedbackId,
@@ -363,6 +389,11 @@ export const handleDeleteFeedback = async ({
 };
 
 // ==================== UPDATE CONTENT FEEDBACK ====================
+interface UpdateFeedbackContent {
+  feedbackId: string;
+  userId: string;
+  content: string;
+}
 
 export const handleUpdateFeedbackContent = async ({
   feedbackId,
@@ -546,6 +577,14 @@ const addComment = async ({
 
 // ==================== ADD NEW REPLY ====================
 
+interface AddReplyFeedback {
+  movieSlug: string;
+  userId: string;
+  content: string;
+  type: "review" | "comment";
+  parentId: string;
+}
+
 export const handleAddReplyFeedback = async ({
   movieSlug,
   userId,
@@ -653,6 +692,13 @@ export const handleGetStatsByMovie = async (movieSlug: string) => {
 
 // ==================== VOTE FOR FEEDBACK ====================
 
+interface FeedbackVote {
+  userId: string;
+  feedbackId: string;
+  voteType: "like" | "dislike";
+  movieSlug: string;
+}
+
 export async function createFeedbackVote({
   userId,
   feedbackId,
@@ -750,6 +796,12 @@ export async function createFeedbackVote({
 }
 
 // ==================== GET VOTE LIST ====================
+
+interface UserVoteFeedback {
+  feedback_id: string;
+  type: "like" | "dislike";
+  user_id: string;
+}
 
 export const handleGetVoteList = async (movieSlug: string) => {
   try {

@@ -5,10 +5,10 @@ import validator from "validator";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import { decryptData, encryptData, generateHtmlSendMail } from "../lib/utils";
-import { UserLogin, UserRegister } from "@lib/types/Auth";
 
 dotenv.config();
 
+// Cấu hình transporter gửi email bằng nodemailer (SMTP Gmail)
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
@@ -20,6 +20,21 @@ const transporter = nodemailer.createTransport({
 });
 
 const salt = bcrypt.genSaltSync(10);
+
+// ==============================
+// Interface: UserLogin
+// ==============================
+
+interface UserLogin {
+  email: string;
+  password: string;
+  typeAccount: string;
+}
+
+// ==============================
+// Hàm: handleUserLogin
+// Mô tả: Đăng nhập người dùng bằng email, mật khẩu và loại tài khoản
+// ==============================
 
 export const handleUserLogin = async ({
   email,
@@ -36,16 +51,15 @@ export const handleUserLogin = async ({
     }
 
     const sqlCheckAccount = `
-      select * 
-      from users 
-      where email = ? and type_account = ?
+      SELECT * FROM users 
+      WHERE email = ? AND type_account = ?
     `;
 
     const [rows]: any = await connection
       .promise()
       .query(sqlCheckAccount, [email, typeAccount]);
 
-    // check account exist
+    // Kiểm tra mật khẩu có khớp không
     const isCorrectPassword = bcrypt.compareSync(
       password,
       rows[0]?.password ?? ""
@@ -60,7 +74,7 @@ export const handleUserLogin = async ({
       };
     }
 
-    // check account banned
+    // Kiểm tra tài khoản bị khóa
     if (rows[0].status === "banned") {
       return {
         status: false,
@@ -70,13 +84,12 @@ export const handleUserLogin = async ({
       };
     }
 
-    const expiresAccess = 60 * 60 * 24; // 1 day
-
+    // Tạo accessToken (JWT-like)
+    const expiresAccess = 60 * 60 * 24; // 1 ngày
     const dataAccessToken = {
       userId: rows[0]?.id,
       role: rows[0]?.role,
     };
-
     const accessToken = encryptData(dataAccessToken, expiresAccess);
 
     return {
@@ -101,28 +114,39 @@ export const handleUserLogin = async ({
   }
 };
 
+// ==============================
+// Interface: CompleteRegistration
+// ==============================
+
+interface CompleteRegistration {
+  email: string;
+  password: string | null;
+  typeAccount: string;
+  name: string;
+  avatar: string;
+}
+
+// ==============================
+// Hàm: handleCompleteRegistration
+// Mô tả: Hoàn tất đăng ký tài khoản (thường dùng sau xác thực email hoặc với Google)
+// ==============================
+
 export const handleCompleteRegistration = async ({
   email,
   password,
   typeAccount,
   name,
   avatar,
-}: {
-  email: string;
-  password: string | null;
-  typeAccount: string;
-  name: string;
-  avatar: string;
-}) => {
+}: CompleteRegistration) => {
   try {
     const userId = uuidv4();
-
     const hashPassword = password && bcrypt.hashSync(password, salt);
 
     const sqlRegisterAccount = `
       INSERT INTO users 
         (id, email, password, type_account, username, avatar) 
-        values (?, ?, ?, ?, ?, ?)`;
+      VALUES (?, ?, ?, ?, ?, ?)
+    `;
 
     const [rowsInsert]: any = await connection
       .promise()
@@ -162,6 +186,24 @@ export const handleCompleteRegistration = async ({
   }
 };
 
+// ==============================
+// Interface: UserRegister
+// ==============================
+
+interface UserRegister {
+  email: string;
+  name: string;
+  password: string;
+  typeAccount: "credentials" | "google";
+  avatar: string;
+}
+
+// ==============================
+// Hàm: handleUserRegister
+// Mô tả: Đăng ký tài khoản mới. Nếu là "credentials" thì gửi email xác nhận.
+// Nếu là "google" thì đăng ký trực tiếp.
+// ==============================
+
 export const handleUserRegister = async ({
   email,
   password,
@@ -189,7 +231,7 @@ export const handleUserRegister = async ({
       }
     }
 
-    const sqlCheckEmailExist = `select * from users where email = ? and type_account = ?`;
+    const sqlCheckEmailExist = `SELECT * FROM users WHERE email = ? AND type_account = ?`;
 
     const [rows]: any = await connection
       .promise()
@@ -203,8 +245,6 @@ export const handleUserRegister = async ({
       };
     }
 
-    // nếu là tài khoản google thì hoàn tất đăng ký
-    // ngược lại thì gửi email xác nhận đăng ký
     if (typeAccount === "google") {
       return handleCompleteRegistration({
         email,
@@ -214,13 +254,14 @@ export const handleUserRegister = async ({
         avatar,
       });
     } else if (typeAccount === "credentials") {
-      const expiresInSeconds = 60; // 1 minutes
+      const expiresInSeconds = 60; // 1 phút
       const data = { email, password, name, avatar, typeAccount };
       const token = encryptData(data, expiresInSeconds);
       const link = `${process.env.CLIENT_URL}/auth/verify-token?action=register&token=${token}`;
+
       const html = generateHtmlSendMail({
         title: "Hoàn tất đăng ký tài khoản",
-        content: `Nhấn vào liên kết dưới đây để hoàn tất đăng ký tài khoản. Lưu ý rằng liên kết này sẽ hết hạn sau ${expiresInSeconds} giây.`,
+        content: `Nhấn vào liên kết dưới đây để hoàn tất đăng ký tài khoản. Liên kết sẽ hết hạn sau ${expiresInSeconds} giây.`,
         conntentLink: "Hoàn tất đăng ký",
         link,
       });
@@ -248,6 +289,11 @@ export const handleUserRegister = async ({
   }
 };
 
+// ==============================
+// Hàm: handleForgotPassword
+// Mô tả: Gửi email đặt lại mật khẩu
+// ==============================
+
 export const handleForgotPassword = async (
   email: string,
   typeAccount: "credentials"
@@ -261,7 +307,7 @@ export const handleForgotPassword = async (
       };
     }
 
-    const sql_find_user = `select * from users where email = ? and type_account = ?`;
+    const sql_find_user = `SELECT * FROM users WHERE email = ? AND type_account = ?`;
 
     const [rows]: any = await connection
       .promise()
@@ -275,12 +321,13 @@ export const handleForgotPassword = async (
       };
     }
 
-    const expiresInSeconds = 60; // 1 minutes
+    const expiresInSeconds = 60; // 1 phút
     const token = encryptData({ email }, expiresInSeconds);
     const link = `${process.env.CLIENT_URL}/auth/verify-token?action=reset-password&token=${token}`;
+
     const html = generateHtmlSendMail({
       title: "Đặt lại mật khẩu",
-      content: `Nhấn vào liên kết dưới đây để đặt lại mật khẩu. Lưu ý rằng liên kết này sẽ hết hạn sau ${expiresInSeconds} giây.`,
+      content: `Nhấn vào liên kết dưới đây để đặt lại mật khẩu. Liên kết sẽ hết hạn sau ${expiresInSeconds} giây.`,
       conntentLink: "Đặt lại mật khẩu",
       link,
     });
@@ -306,6 +353,11 @@ export const handleForgotPassword = async (
     };
   }
 };
+
+// ==============================
+// Hàm: handleVerifyToken
+// Mô tả: Xác minh token từ email (đăng ký / đặt lại mật khẩu)
+// ==============================
 
 export const handleVerifyToken = async (token: string) => {
   try {
@@ -340,6 +392,11 @@ export const handleVerifyToken = async (token: string) => {
   }
 };
 
+// ==============================
+// Hàm: handleResetPassword
+// Mô tả: Đặt lại mật khẩu sau khi xác thực qua token
+// ==============================
+
 export const handleResetPassword = async ({
   email,
   password,
@@ -357,7 +414,7 @@ export const handleResetPassword = async ({
       };
     }
 
-    const sql_find_user = `select * from users where email = ?`;
+    const sql_find_user = `SELECT * FROM users WHERE email = ?`;
 
     const [rowsSelect]: any = await connection
       .promise()
@@ -372,8 +429,7 @@ export const handleResetPassword = async ({
     }
 
     const hashPassword = bcrypt.hashSync(password, salt);
-
-    const sql_update_password = `update users set password = ? where email = ?`;
+    const sql_update_password = `UPDATE users SET password = ? WHERE email = ?`;
 
     const [rowsUpdate]: any = await connection
       .promise()

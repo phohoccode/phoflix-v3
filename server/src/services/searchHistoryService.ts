@@ -1,10 +1,14 @@
-import { CreateSearchHistory, DeleteSearchHistory, GetUserSearchHistory } from "@lib/types/SearchHistory";
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
 
+interface GetUserSearchHistory {
+  id: string;
+  limit: number;
+}
+
 export const handleGetUserSearchHistory = async ({
   id,
-  limit = 10,
+  limit,
 }: GetUserSearchHistory) => {
   try {
     const sqlGetUserSearchHistory = `
@@ -36,6 +40,12 @@ export const handleGetUserSearchHistory = async ({
     };
   }
 };
+
+//  
+interface CreateSearchHistory {
+  userId: string;
+  keyword: string;
+}
 
 export const handleCreateSearchHistory = async ({
   userId,
@@ -122,6 +132,12 @@ export const handleCreateSearchHistory = async ({
     };
   }
 };
+
+// 
+interface DeleteSearchHistory {
+  id: string;
+  userId: string;
+}
 
 export const handleDeleteSearchHistory = async ({
   id,

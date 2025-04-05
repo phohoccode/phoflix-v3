@@ -2,9 +2,13 @@ import connection from "../database/connect";
 import bcrypt from "bcrypt";
 import validator from "validator";
 import { v4 as uuidv4 } from "uuid";
-import { CreateReportMovie, GetUserProfile, UpdateUserPassword, UpdateUserProfile } from "@lib/types/User";
 
 const salt = bcrypt.genSaltSync(10);
+
+interface GetUserProfile {
+  email: string;
+  typeAccount: "credentials" | "google";
+}
 
 export const handleGetUserProfile = async ({
   email,
@@ -58,6 +62,14 @@ export const handleGetUserProfile = async ({
 };
 
 // ========================= UPDATE USER PROFILE =========================
+
+interface UpdateUserProfile {
+  userId: string;
+  username: string;
+  gender: "other" | "female" | "male";
+  avatar: string;
+  typeAccount: "credentials" | "google";
+}
 
 export const handleUpdateUserProfile = async ({
   userId,
@@ -129,6 +141,13 @@ export const handleUpdateUserProfile = async ({
 };
 
 // ========================= UPDATE USER PASSWORD =========================
+
+interface UpdateUserPassword {
+  email: string;
+  newPassword: string;
+  oldPassword: string;
+  typeAccount: "credentials" | "google";
+}
 
 export const handleUpdateUserPassword = async ({
   email,
@@ -210,6 +229,14 @@ export const handleUpdateUserPassword = async ({
 };
 
 // ========================= CREATE REPORT MOVIE =========================
+interface CreateReportMovie {
+  userId: string;
+  movieSlug: string;
+  description: string;
+  title: string;
+  movieName: string;
+}
+
 export const handleCreateReportMovie = async ({
   userId,
   movieSlug,

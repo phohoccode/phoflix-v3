@@ -1,6 +1,10 @@
-import { CreatePlaylist, DeletePlaylist, GetMoviesFromPlaylist, GetPlaylistsContainingMovie, UpdatePlaylist } from "@lib/types/Playlist";
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
+
+interface CreatePlaylist {
+  userId: string;
+  playlistName: string;
+}
 
 export const handleCreatePlaylist = async ({
   userId,
@@ -98,6 +102,13 @@ export const handleGetPlaylists = async (userId: string) => {
   }
 };
 
+//  ======================== Update playlist ========================
+interface UpdatePlaylist {
+  userId: string;
+  playlistId: string;
+  playlistName: string;
+}
+
 export const handleUpdatePlaylist = async ({
   userId,
   playlistId,
@@ -153,6 +164,12 @@ export const handleUpdatePlaylist = async ({
     };
   }
 };
+
+// ======================== Delete playlist ========================
+interface DeletePlaylist {
+  userId: string;
+  playlistId: string;
+}
 
 export const handleDeletePlaylist = async ({
   userId,
@@ -211,11 +228,18 @@ export const handleDeletePlaylist = async ({
 
 // ======================== Get movies from playlist ========================
 
+interface GetMoviesFromPlaylist {
+  userId: string;
+  page: number;
+  limit: number;
+  playlistId: string;
+}
+
 export const handleGetMovieFromPlaylist = async ({
   userId,
   playlistId,
-  page = 1,
-  limit = 10,
+  page,
+  limit,
 }: GetMoviesFromPlaylist) => {
   try {
     const sqlCheckPlaylistExists = `
@@ -288,6 +312,11 @@ export const handleGetMovieFromPlaylist = async ({
 };
 
 // ======================== Get playlists containing movie ========================
+interface GetPlaylistsContainingMovie {
+  userId: string;
+  movieSlug: string;
+}
+
 export const handleGetPlaylistsContainingMovie = async ({
   userId,
   movieSlug,

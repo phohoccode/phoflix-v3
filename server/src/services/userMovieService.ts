@@ -1,6 +1,12 @@
-import { CheckMovieExists, CreateUserMovie, DeleteMovie, GetUserMovies } from "@lib/types/UserMovie";
 import connection from "../database/connect";
 import { v4 as uuidv4 } from "uuid";
+
+interface GetUserMovies {
+  userId: string;
+  type: string;
+  limit: number;
+  page: number;
+}
 
 export const handleGetUserMovies = async ({
   userId,
@@ -53,6 +59,12 @@ export const handleGetUserMovies = async ({
 
 // ====================== CHECK MOVIE EXISTS ======================
 
+interface CheckMovieExists {
+  userId: string;
+  movieSlug: string;
+  type: string;
+}
+
 export const handleCheckMovieExists = async ({
   userId,
   movieSlug,
@@ -86,6 +98,18 @@ export const handleCheckMovieExists = async ({
 };
 
 // ====================== ADD NEW MOVIE ======================
+
+interface CreateUserMovie {
+  userId: string;
+  movieData: {
+    movieName: string;
+    movieSlug: string;
+    moviePoster: string;
+    movieThumbnail: string;
+  };
+  playlistId?: string;
+  type?: "history" | "favorite" | "playlist";
+}
 
 export const handleAddMovie = async ({
   userId,
@@ -376,6 +400,14 @@ const addMovieToPlaylist = async ({
 };
 
 // ====================== DELETE MOVIE ======================
+
+interface DeleteMovie {
+  userId: string;
+  movieSlug: string;
+  type: string;
+  playlistId?: string | null;
+  movieId?: string | null;
+}
 
 export const handleDeleteMovie = async ({
   userId,
